@@ -1,7 +1,7 @@
-import { ISelectOffer, Offre } from "../../../core/entities/Offre";
-import { IOfferRepository } from "../../../core/ports/persistence/IOfferRepository";
-import { OffersMapper } from "../../../core/mappers/OffersMapper";
-import { pool, query } from "../../../database";
+import { ISelectOffer, Offre } from "../../core/entities/Offre";
+import { IOfferRepository } from "../../core/ports/persistence/IOfferRepository";
+import { OffersMapper } from "../../core/mappers/OffersMapper";
+import { pool, query } from "../../database";
 import Cursor from "pg-cursor";
 
 export class OfferRepository implements IOfferRepository {

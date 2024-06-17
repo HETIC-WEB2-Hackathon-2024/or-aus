@@ -3,7 +3,7 @@ import express, { NextFunction, Request, Response } from "express";
 import { InvalidRequestError, auth } from "express-oauth2-jwt-bearer";
 
 import { GetFirstOffersUseCase } from "../api/GetFirstOffersUseCase";
-import { OfferRepository } from "../spi/repositories/OfferRepository";
+import { OfferRepository } from "../spi/OfferRepository";
 
 const OffersRouter = Router();
 
