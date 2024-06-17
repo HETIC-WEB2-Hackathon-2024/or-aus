@@ -1,9 +1,8 @@
 import cors from "cors";
-import express, { NextFunction, Request, Response } from "express";
-import { InvalidRequestError, auth } from "express-oauth2-jwt-bearer";
+import express from "express";
+import { auth } from "express-oauth2-jwt-bearer";
 
-import { GetFirstOffersUseCase } from "./infrastructure/api/GetFirstOffersUseCase";
-import { OfferRepository } from "./infrastructure/spi/OfferRepository";
+import OffersRouter from "./infrastructure/routes/OffersRoutes";
 
 const port = 3000;
 const app = express();
@@ -21,24 +20,7 @@ const jwtCheck = auth({
 // enforce that all incoming requests are authenticated
 app.use(jwtCheck);
 
-app.get("/v1/offres", async function (req: Request, res: Response, next: NextFunction) {
-    try {
-        const limit = parseInt(req.body.limit as string);
-        if (!limit) {
-            throw new InvalidRequestError("limit must be set");
-        }
-
-        const offres = await new GetFirstOffersUseCase(new OfferRepository()).execute(limit);
-
-        const response = offres.map((offre) => offre.toDto());
-
-        res.json(response);
-    } catch (error) {
-        if (error instanceof InvalidRequestError)
-            res.status(parseInt(error.code)).send({ error: error.message, reason: error });
-        else res.status(500).send({ error: "Internal Server Error", reason: error });
-    }
-});
+app.use("/v1/offres", OffersRouter);
 
 app.listen(port, () => {
     console.log(`Server started on http://localhost:${port}`);
