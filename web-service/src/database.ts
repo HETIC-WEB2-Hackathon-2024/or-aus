@@ -17,15 +17,15 @@ process.on("exit", function () {
  * @param sqlStatement a string containing the SQL statement
  * @returns an array of rows
  */
-export async function query(sqlStatement: string): Promise<any[]> {
+export async function query(sqlStatement: string, options: string[]): Promise<any[]> {
     let rows = [];
     const client = await pool.connect();
-    const response = await client.query(sqlStatement);
+    const response = await client.query(sqlStatement, options);
     rows = response.rows;
     client.release();
     return rows;
 }
 
-export function getFirstOffres(count: number = 3): Promise<any[]> {
-    return query(`SELECT * FROM offre LIMIT ${count}`);
-}
+// export function getFirstOffres(count: number = 3): Promise<any[]> {
+//     return query(`SELECT * FROM offre LIMIT ${count}`);
+// }

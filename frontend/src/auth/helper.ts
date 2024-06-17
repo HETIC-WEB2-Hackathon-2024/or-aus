@@ -13,10 +13,10 @@ async function makeUrl(path: string) {
   return `${domainSlash}${slashlessPath}`;
 }
 
-export async function authenticatedGet(token: string, path: string) {
+export async function authenticatedGet(token: string, path: string, limit: number = 50) {
   const url = await makeUrl(path);
   const headers = makeHeaders(token);
-  const response = await fetch(url, { headers });
+  const response = await fetch(`${url}?limit=${limit}`, { headers });
   const data = await response.json();
   return data;
 }
