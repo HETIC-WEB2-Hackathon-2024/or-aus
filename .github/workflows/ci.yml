@@ -1,0 +1,36 @@
+name: Continuous Integration
+
+on:
+    pull_request:
+        branches:
+            - "**"
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+            - name: Setup node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: "20.x"
+            - name: Install dependencies
+              run: |
+                  cd web-service
+                  npm ci
+            - name: Run tests
+              run: |
+                  cd web-service
+                  npm run test
+            - name: Upload test results
+              if: failure()
+              uses: actions/upload-artifact@v3
+              with:
+                  name: test-results
+                  path: web-service/test-results
+            - name: Notify on failure
+              if: failure()
+              run: |
+                  echo "Tests failed"
