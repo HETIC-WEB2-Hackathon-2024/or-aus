@@ -12,7 +12,8 @@ export class OfferRepository implements IOfferRepository {
             JOIN secteur ON secteur.id = offre.secteur_id
             LIMIT $1`;
             const res = await query(statement, [limit.toString()]);
-            return res;
+            const data = res.map((el) => new OffersMapper(el))
+            return data;
         } catch (e) {
             console.error("database query failed", e);
             throw e;
