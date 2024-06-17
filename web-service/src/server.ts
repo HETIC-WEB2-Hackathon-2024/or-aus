@@ -1,7 +1,9 @@
-import express from "express";
-import { auth } from "express-oauth2-jwt-bearer";
 import cors from "cors";
-import { getFirstOffres } from "./database";
+import express, { NextFunction, Request, Response } from "express";
+import { InvalidRequestError, auth } from "express-oauth2-jwt-bearer";
+
+import { GetFirstOffersUseCase } from "./infrastructure/api/GetFirstOffersUseCase";
+import { OfferRepository } from "./infrastructure/spi/OfferRepository";
 
 const port = 3000;
 const app = express();
@@ -11,23 +13,33 @@ const app = express();
 app.use(cors());
 
 const jwtCheck = auth({
-  audience: "api.aus.floless.fr",
-  issuerBaseURL: "https://adopte-un-stagiaire.eu.auth0.com/",
-  tokenSigningAlg: "RS256",
+    audience: "api.aus.floless.fr",
+    issuerBaseURL: "https://adopte-un-stagiaire.eu.auth0.com/",
+    tokenSigningAlg: "RS256",
 });
 
 // enforce that all incoming requests are authenticated
 app.use(jwtCheck);
 
-app.get("/v1/offres", async function (_, res) {
-  try {
-    const offres = await getFirstOffres();
-    res.send(offres);
-  } catch (error) {
-    res.status(500).send({ error: "Internal Server Error", reason: error });
-  }
+app.get("/v1/offres", async function (req: Request, res: Response, next: NextFunction) {
+    try {
+        const limit = parseInt(req.body.limit as string);
+        if (!limit) {
+            throw new InvalidRequestError("limit must be set");
+        }
+
+        const offres = await new GetFirstOffersUseCase(new OfferRepository()).execute(limit);
+
+        const response = offres.map((offre) => offre.toDto());
+
+        res.json(response);
+    } catch (error) {
+        if (error instanceof InvalidRequestError)
+            res.status(parseInt(error.code)).send({ error: error.message, reason: error });
+        else res.status(500).send({ error: "Internal Server Error", reason: error });
+    }
 });
 
 app.listen(port, () => {
-  console.log(`Server started on http://localhost:${port}`);
+    console.log(`Server started on http://localhost:${port}`);
 });

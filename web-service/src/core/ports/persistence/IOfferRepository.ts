@@ -1,5 +1,5 @@
-import { Offre } from "../../entities/Offre";
+import { ISelectOffer, Offre } from "../../entities/Offre";
 
 export interface IOfferRepository {
-    execute: (limit: number) => Promise<Offre[]>;
+    getFirstOffers(limit: number): Promise<ISelectOffer[]>;
 }

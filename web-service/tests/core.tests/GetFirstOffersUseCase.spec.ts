@@ -2,10 +2,12 @@ import { Offre } from "../../src/core/entities/Offre";
 import { IOfferRepository } from "../../src/core/ports/persistence/IOfferRepository";
 import { OfferRepository } from "../../src/infrastructure/spi/OfferRepository";
 
-describe("Get first offers", () => {
-    it("Should get first offers", async () => {
+describe("Get first offers use case", () => {
+    it("Should get 3 first offers", async () => {
         const offerRepository: IOfferRepository = new OfferRepository();
-        const offers: Offre[] = await offerRepository.execute(3);
-        expect(offers.length).toBe(3);
+        const offersRaw = await offerRepository.getFirstOffers(3);
+        expect(offersRaw.length).toBe(3);
     });
+
+    it("Should fetch the 3 first offers", async () => {});
 });
