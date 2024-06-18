@@ -82,9 +82,6 @@ export default function Header({ currentView }: HeaderProps) {
                         >
                             Sélection
                         </Link>
-                        {/* <Link to="#" className="text-muted-foreground transition-colors hover:text-foreground">
-                        Entreprises
-                        </Link> */}
                     </div>
                 </nav>
                 <Sheet>
@@ -103,33 +100,52 @@ export default function Header({ currentView }: HeaderProps) {
                     <SheetContent side="left">
                         <nav className="grid gap-6 text-lg font-medium">
                             <Link
-                                to="/"
+                                to="/dashboard"
                                 className="flex items-center gap-2 text-lg font-semibold"
                             >
-                                <Package2 className="h-6 w-6" />
-                                <span className="sr-only">Acme Inc</span>
+                                <img
+                                    className="w-64"
+                                    src="/assets/logo.png"
+                                    alt=""
+                                />
                             </Link>
                             <Link
                                 to="dashboard"
-                                className="hover:text-foreground"
+                                className={`${
+                                    currentView === "dashboard"
+                                        ? "text-primary"
+                                        : "text-secondary"
+                                } `}
                             >
                                 Dashboard
                             </Link>
                             <Link
                                 to="offres"
-                                className="text-muted-foreground hover:text-foreground"
+                                className={`${
+                                    currentView === "offres"
+                                        ? "text-primary"
+                                        : "text-secondary"
+                                } `}
                             >
                                 Offres
                             </Link>
                             <Link
                                 to="parametres"
-                                className="text-muted-foreground hover:text-foreground"
+                                className={`${
+                                    currentView === "parametres"
+                                        ? "text-primary"
+                                        : "text-secondary"
+                                } `}
                             >
                                 Paramètres
                             </Link>
                             <Link
                                 to="selection"
-                                className="text-muted-foreground hover:text-foreground"
+                                className={`${
+                                    currentView === "selection"
+                                        ? "text-primary"
+                                        : "text-secondary"
+                                } `}
                             >
                                 Ma sélection
                             </Link>
