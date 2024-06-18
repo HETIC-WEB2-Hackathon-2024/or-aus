@@ -1,5 +1,3 @@
-import { Link } from "react-router-dom";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -23,15 +21,18 @@ export default function Settings() {
             className="grid gap-4 text-sm text-muted-foreground"
             x-chunk="dashboard-04-chunk-0"
           >
-            <Link to="#localisation" className="font-semibold text-primary">
+            <a
+              href="#localisation-anchor"
+              className="font-semibold text-primary"
+            >
               Localisation
-            </Link>
-            <Link to="#password">Mot de passe </Link>
-            <Link to="#">Email</Link>
-            <Link to="#">Numéro de téléphone</Link>
+            </a>
+            <a href="#password-anchor">Mot de passe </a>
+            <a href="#email-anchor">Email</a>
+            <a href="#phone-anchor">Numéro de téléphone</a>
           </nav>
           <div className="grid gap-6">
-            <Card x-chunk="dashboard-04-chunk-1" id="localisation">
+            <Card x-chunk="dashboard-04-chunk-1" id="localisation-anchor">
               <CardHeader>
                 <CardTitle>Localisation</CardTitle>
                 <CardDescription>Changez votre localisation</CardDescription>
@@ -47,7 +48,7 @@ export default function Settings() {
                 <Button>Enregistrer</Button>
               </CardFooter>
             </Card>
-            <Card x-chunk="dashboard-04-chunk-2" id="password">
+            <Card x-chunk="dashboard-04-chunk-2" id="password-anchor">
               <CardHeader>
                 <CardTitle>Mot de passe</CardTitle>
                 <CardDescription>Modifier votre mot de passe</CardDescription>
@@ -62,7 +63,7 @@ export default function Settings() {
                 <Button>Enregistrer</Button>
               </CardFooter>
             </Card>
-            <Card x-chunk="dashboard-04-chunk-2" id="password">
+            <Card x-chunk="dashboard-04-chunk-2" id="email-anchor">
               <CardHeader>
                 <CardTitle>Email</CardTitle>
                 <CardDescription>Modifier votre adresse-mail</CardDescription>
@@ -77,10 +78,12 @@ export default function Settings() {
                 <Button>Enregistrer</Button>
               </CardFooter>
             </Card>
-            <Card x-chunk="dashboard-04-chunk-2" id="password">
+            <Card x-chunk="dashboard-04-chunk-2" id="phone-anchor">
               <CardHeader>
                 <CardTitle>Numéro de téléphone</CardTitle>
-                <CardDescription>Modifier votre numéro de téléphone</CardDescription>
+                <CardDescription>
+                  Modifier votre numéro de téléphone
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <form className="flex gap-5">
