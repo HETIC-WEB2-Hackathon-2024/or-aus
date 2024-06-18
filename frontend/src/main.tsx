@@ -11,7 +11,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         domain="or-aus.eu.auth0.com"
         clientId="yq89EpaAOUiwyXNJKq7VgTeIg7iGJBw0"
         authorizationParams={{
-          audience: "api.aus.floless.fr",
+          audience: "api.or.aus.floless.fr",
           redirect_uri: window.location.origin
         }}
       >
