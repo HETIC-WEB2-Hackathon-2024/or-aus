@@ -1,6 +1,6 @@
-import { Offre } from "../../core/Offre";
-import { IUseCase } from "../../shared/IUseCase";
-import { IOfferRepository } from "../persistence/IOfferRepository";
+import { Offre } from "../domain/Offre";
+import { IUseCase } from "../../../shared/IUseCase";
+import { IOfferRepository } from "./IOfferRepository";
 
 interface IGetFirstOffersDto {
     limit: number;

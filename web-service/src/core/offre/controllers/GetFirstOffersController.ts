@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { GetFirstOffersUseCase } from "../application/api/GetFirstOffersUseCase";
+import { GetFirstOffersUseCase } from "../ports/GetFirstOffersUseCase";
 import { InvalidRequestError } from "express-oauth2-jwt-bearer";
 
 export class GetFirstOffersController {

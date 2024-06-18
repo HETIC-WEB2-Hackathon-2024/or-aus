@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { GetFirstOffersUseCase } from "./application/api/GetFirstOffersUseCase";
+import { GetFirstOffersUseCase } from "./core/offre/ports/GetFirstOffersUseCase";
 import { pool } from "./database";
-import { PostgresRepository } from "./infrastructure/spi/PostgresRepository";
+import { PostgresRepository } from "./adapter.spi.postgresql/PostgresRepository";
 import { ApiServer } from "./presentation/ApiServer";
-import { GetFirstOffersController } from "./presentation/GetFirstOffersController";
+import { GetFirstOffersController } from "./core/offre/controllers/GetFirstOffersController";
 
 export async function main(): Promise<void> {
     // Inject
