@@ -5,7 +5,7 @@ import { IController } from "../../../shared/IController";
 import { InvalidRequestError } from "express-oauth2-jwt-bearer";
 import { GetUserSecteurOffersCountUseCase } from "../ports/GetUserSecteurOffersCountUseCase";
 
-export class GetUserSecteurffersCountController implements IController {
+export class GetUserSecteurOffersCountController implements IController {
     public constructor(private readonly _useCase: GetUserSecteurOffersCountUseCase) {
         this.handle = this.handle.bind(this);
     }
