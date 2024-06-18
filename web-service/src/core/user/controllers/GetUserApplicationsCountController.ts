@@ -17,7 +17,7 @@ export class GetUserApplicationsCountController implements IController {
             const user_id = parseInt(req.query.user_id as string);
             if (!user_id) throw new InvalidRequestError("user_id must be set");
 
-            const result = await this._useCase.execute({ user_id: 10 });
+            const result = await this._useCase.execute({ user_id });
             res.json(result);
         } catch (error) {
             if (error instanceof InvalidRequestError)

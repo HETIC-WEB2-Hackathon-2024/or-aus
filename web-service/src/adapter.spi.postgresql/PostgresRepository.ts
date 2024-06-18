@@ -12,7 +12,7 @@ export class PostgresRepository implements IOfferRepository, IUserRepository {
         throw new Error("Method not implemented.");
     }
 
-    async getUserApplicationsCount(user_id: TUserId): Promise<number> {
+    async getUserApplicationsCount({ id: user_id }: TUserId): Promise<number> {
         const client = await this._pool.connect();
         try {
             const query =

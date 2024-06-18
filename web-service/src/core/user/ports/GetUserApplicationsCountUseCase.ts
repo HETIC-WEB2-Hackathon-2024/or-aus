@@ -6,7 +6,7 @@ export class GetUserApplicationsCountUseCase implements IUseCase<IGetRegisteredA
     public constructor(private readonly _userRepository: IUserRepository) {}
 
     public async execute(input: IGetRegisteredApplicationsDto): Promise<number> {
-        const registeredCount = await this._userRepository.getUserApplicationsCount(input.user_id);
+        const registeredCount = await this._userRepository.getUserApplicationsCount({ id: input.user_id });
 
         return registeredCount;
     }
