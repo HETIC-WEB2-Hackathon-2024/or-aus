@@ -1,7 +1,11 @@
 import { Pool } from "pg";
 
 import { IOfferRepository } from "../core/offre/ports/IOfferRepository";
-import { ICandidatRepository, ICandidatSecteurOffersStatsResponse } from "../core/candidat/ports/ICandidatRepository";
+import {
+    ICandidatCommuneOffersStatsResponse,
+    ICandidatRepository,
+    ICandidatSecteurOffersStatsResponse,
+} from "../core/candidat/ports/ICandidatRepository";
 import { Offre } from "../core/offre/domain/Offre";
 import { IOfferFilter } from "../core/offre/filter/IOfferFilter";
 import { FilterHelper } from "../core/offre/shared/Filter-helper";
@@ -28,7 +32,9 @@ export class PostgresRepository implements IOfferRepository, ICandidatRepository
 
             const {
                 rows: [result],
-            } = await client.query<ICandidatSecteurOffersStatsResponse>(query, [input.id]);
+            } = await client.query<Omit<ICandidatSecteurOffersStatsResponse, "comparison_percentage">>(query, [
+                input.id,
+            ]);
 
             return {
                 current_month: +result.current_month,
@@ -44,13 +50,37 @@ export class PostgresRepository implements IOfferRepository, ICandidatRepository
         throw new Error("Method not implemented.");
     }
 
-    async getCandidatCandidaturesCount(input: TCandidatId): Promise<number> {
+    async getCandidatCandidaturesCount(
+        input: TCandidatId
+    ): Promise<Omit<ICandidatCommuneOffersStatsResponse, "comparison_percentage">> {
         const client = await this._pool.connect();
         try {
-            const query =
-                "SELECT COUNT(*) as count FROM candidat AS c JOIN candidat_offres AS co ON co.candidat_id = c.id WHERE c.id = $1;";
-            const result = await client.query<{ count: number }>(query, [input.id]);
-            return result.rows[0].count;
+            const query = `
+                SELECT 
+                    COUNT(CASE WHEN date_trunc('month', o.date) = date_trunc('month', CURRENT_DATE) THEN 1 END) AS current_month,
+                    COUNT(CASE WHEN date_trunc('month', o.date) = date_trunc('month', CURRENT_DATE - INTERVAL '1 month') THEN 1 END) AS previous_month,
+                    co.nom_commune AS commune,
+                    co.code_postal AS code_postal
+                FROM candidat AS ca
+                JOIN candidat_communes AS cc ON ca.id = cc.candidat_id
+                JOIN commune AS co ON cc.commune_id = co.id
+                JOIN offre AS o ON co.id = o.commune_id
+                WHERE ca.id = 1
+                GROUP BY co.nom_commune, co.code_postal;
+                `;
+
+            const {
+                rows: [result],
+            } = await client.query<Omit<ICandidatCommuneOffersStatsResponse, "comparison_percentage">>(query, [
+                input.id,
+            ]);
+
+            return {
+                current_month: +result.current_month,
+                previous_month: +result.previous_month,
+                commune: result.commune,
+                code_postal: result.code_postal,
+            };
         } finally {
             client.release();
         }
