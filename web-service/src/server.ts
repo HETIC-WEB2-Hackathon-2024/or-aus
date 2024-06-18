@@ -1,45 +1,26 @@
-import cors from "cors";
-import express, { NextFunction, Request, Response } from "express";
-import { InvalidRequestError, auth } from "express-oauth2-jwt-bearer";
+import { Router } from "express";
+import { GetFirstOffersUseCase } from "./application/api/GetFirstOffersUseCase";
+import { pool } from "./database";
+import { PostgresRepository } from "./infrastructure/spi/PostgresRepository";
+import { ApiServer } from "./presentation/ApiServer";
+import { GetFirstOffersController } from "./presentation/GetFirstOffersController";
 
-import { GetFirstOffersUseCase } from "./infrastructure/api/GetFirstOffersUseCase";
-import { OfferRepository } from "./infrastructure/spi/OfferRepository";
+export async function main(): Promise<void> {
+    // Inject
+    const poolClient = pool;
+    const postgreRepository = new PostgresRepository(poolClient);
+    const getFirstOffersUseCase = new GetFirstOffersUseCase(postgreRepository);
+    const getFirstOffersController = new GetFirstOffersController(getFirstOffersUseCase);
 
-const port = 3000;
-const app = express();
+    // Routing
+    const offersRouter = Router();
+    offersRouter.route("/v1/offres").get(getFirstOffersController.handle);
 
-// make sure we hare handling CORS properly
-// See more on CORS: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
-app.use(cors());
+    // Configure and listen
+    const app = new ApiServer();
+    app.addRoute(offersRouter);
 
-const jwtCheck = auth({
-    audience: "api.aus.floless.fr",
-    issuerBaseURL: "https://adopte-un-stagiaire.eu.auth0.com/",
-    tokenSigningAlg: "RS256",
-});
+    app.listen(3000);
+}
 
-// enforce that all incoming requests are authenticated
-app.use(jwtCheck);
-
-app.get("/v1/offres", async function (req: Request, res: Response, next: NextFunction) {
-    try {
-        const limit = parseInt(req.body.limit as string);
-        if (!limit) {
-            throw new InvalidRequestError("limit must be set");
-        }
-
-        const offres = await new GetFirstOffersUseCase(new OfferRepository()).execute(limit);
-
-        const response = offres.map((offre) => offre.toDto());
-
-        res.json(response);
-    } catch (error) {
-        if (error instanceof InvalidRequestError)
-            res.status(parseInt(error.code)).send({ error: error.message, reason: error });
-        else res.status(500).send({ error: "Internal Server Error", reason: error });
-    }
-});
-
-app.listen(port, () => {
-    console.log(`Server started on http://localhost:${port}`);
-});
+main();
