@@ -15,5 +15,5 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             echo "SELECT * FROM offre limit 10;" > migration.sql
-            echo "PGPASSWORD="aus2025" > .env
+            echo "PGPASSWORD=aus2025" > .env
             docker container run --env-file .env -v ./migration.sql:/sql/migration.sql --rm --network=web postgis/postgis:16-3.4-alpine psql -h postgres-aus -p 5432 -U aus-user -d aus -f /sql/migration.sql
