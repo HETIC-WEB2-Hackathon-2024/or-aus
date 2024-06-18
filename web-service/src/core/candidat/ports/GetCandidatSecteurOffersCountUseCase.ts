@@ -1,11 +1,11 @@
 import { IUseCase } from "../../../shared/IUseCase";
-import { TUserId } from "../domain/Candidat";
-import { IUserRepository } from "./ICandidatRepository";
+import { TCandidatId } from "../domain/Candidat";
+import { ICandidatRepository } from "./ICandidatRepository";
 
-export class GetCandidatSecteurOffersCountUseCase implements IUseCase<TUserId, number> {
-    public constructor(private readonly _userRepository: IUserRepository) {}
+export class GetCandidatSecteurOffersCountUseCase implements IUseCase<TCandidatId, number> {
+    public constructor(private readonly _userRepository: ICandidatRepository) {}
 
-    async execute(input: TUserId): Promise<number> {
+    async execute(input: TCandidatId): Promise<number> {
         const secteurOffersCount = await this._userRepository.getCandidatSecteurOffersCount(input);
 
         return secteurOffersCount;

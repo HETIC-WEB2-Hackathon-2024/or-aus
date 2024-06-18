@@ -1,16 +1,16 @@
 import { Pool } from "pg";
 
 import { IOfferRepository } from "../core/offre/ports/IOfferRepository";
-import { IUserRepository } from "../core/candidat/ports/ICandidatRepository";
+import { ICandidatRepository } from "../core/candidat/ports/ICandidatRepository";
 import { Offre } from "../core/offre/domain/Offre";
-import { TUserId } from "../core/candidat/domain/Candidat";
 import { IOfferFilter } from "../core/offre/filter/IOfferFilter";
 import { FilterHelper } from "../core/offre/shared/Filter-helper";
+import { TCandidatId } from "../core/candidat/domain/Candidat";
 
-export class PostgresRepository implements IOfferRepository, IUserRepository {
+export class PostgresRepository implements IOfferRepository, ICandidatRepository {
     public constructor(private readonly _pool: Pool) {}
 
-    async getCandidatSecteurOffersCount(input: TUserId): Promise<number> {
+    async getCandidatSecteurOffersCount(input: TCandidatId): Promise<number> {
         const client = await this._pool.connect();
         try {
             const query =
@@ -22,11 +22,11 @@ export class PostgresRepository implements IOfferRepository, IUserRepository {
         }
     }
 
-    async getRegisteredOffers(input: TUserId): Promise<Offre[]> {
+    async getRegisteredOffers(input: TCandidatId): Promise<Offre[]> {
         throw new Error("Method not implemented.");
     }
 
-    async getCandidatCandidaturesCount(input: TUserId): Promise<number> {
+    async getCandidatCandidaturesCount(input: TCandidatId): Promise<number> {
         const client = await this._pool.connect();
         try {
             const query =

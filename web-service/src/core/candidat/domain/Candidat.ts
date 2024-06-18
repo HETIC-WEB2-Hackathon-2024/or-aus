@@ -10,4 +10,4 @@ export class Candidat {
     ) {}
 }
 
-export type TUserId = Pick<Candidat, "id">;
+export type TCandidatId = Pick<Candidat, "id">;

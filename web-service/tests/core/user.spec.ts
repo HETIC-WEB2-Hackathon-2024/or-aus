@@ -1,7 +1,7 @@
 import { pool } from "../../src/database";
 
 import { PostgresRepository } from "../../src/adapter.spi.postgresql/PostgresRepository";
-import { IUserRepository } from "../../src/core/candidat/ports/ICandidatRepository";
+import { ICandidatRepository } from "../../src/core/candidat/ports/ICandidatRepository";
 
 jest.mock("../../src/database", () => {
     const pool = {
@@ -14,7 +14,7 @@ jest.mock("../../src/database", () => {
 });
 
 describe("Get number of applications", () => {
-    let repository: IUserRepository;
+    let repository: ICandidatRepository;
     beforeEach(() => {
         repository = new PostgresRepository(pool);
     });
