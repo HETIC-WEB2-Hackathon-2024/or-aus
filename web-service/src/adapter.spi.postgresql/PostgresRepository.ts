@@ -13,9 +13,6 @@ interface IQuery {
 
 export class PostgresRepository implements IOfferRepository, IUserRepository {
     public constructor(private readonly _pool: Pool) {}
-    getFirsts(limit: number): Promise<Offre[]> {
-        throw new Error("Method not implemented.");
-    }
 
     createOffersQueryWithFilters(limit: number, filters: IOfferFilter): IQuery {
         let optionNumber = 2;
