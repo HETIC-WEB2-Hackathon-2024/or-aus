@@ -1,55 +1,45 @@
-import styled from "@emotion/styled";
-import { Box, CssBaseline, Toolbar } from "@mui/material";
-import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
-import { TopMenu } from "./TopMenu";
+import { Outlet, RouterProvider, createBrowserRouter, useLocation } from "react-router-dom";
 import { Dashboard } from "./dashboard/Dashboard";
-import { AppTheme } from "./Theme";
+import Header, { TCurrentView } from "./common/Header";
 
 const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Layout />,
-    children: [
-      {
-        path: "dashboard",
-        element: <Dashboard />,
-      },
-      {
-        path: "offres",
-        element: <Box>Offres</Box>,
-      },
-      {
-        path: "parametres",
-        element: <Box>Paramètres</Box>,
-      },
-      {
-        path: "selection",
-        element: <Box>Ma sélection</Box>,
-      },
-    ],
-  },
+    {
+        path: "/",
+        element: <Layout />,
+        children: [
+            {
+                path: "dashboard",
+                element: <Dashboard />,
+            },
+            {
+                path: "offres",
+                element: <div>Offres</div>,
+            },
+            {
+                path: "parametres",
+                element: <div>Paramètres</div>,
+            },
+            {
+                path: "selection",
+                element: <div>Ma sélection</div>,
+            },
+        ],
+    },
 ]);
-const MainBox = styled(Box)`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-`;
 
 function Layout() {
-  return (
-    <AppTheme>
-      <MainBox>
-        <CssBaseline />
-        <TopMenu />
-        <Box component="main">
-          <Toolbar />
-          <Outlet />
-        </Box>
-      </MainBox>
-    </AppTheme>
-  );
+    const location = useLocation();
+    const currentPath = location.pathname.split("/")[1];
+    const currentView = currentPath as TCurrentView; // Default to 'home' if no path segment
+
+    return (
+        <>
+            <Header currentView={currentView} />
+            <Outlet />
+        </>
+    );
 }
 
 export function App() {
-  return <RouterProvider router={router} />;
+    return <RouterProvider router={router} />;
 }
