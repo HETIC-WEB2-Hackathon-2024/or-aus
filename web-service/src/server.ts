@@ -6,6 +6,8 @@ import { GetUserApplicationsCountController } from "./core/user/controllers/GetU
 import { GetUserApplicationsCountUseCase } from "./core/user/ports/GetUserApplicationsCountUseCase";
 import { GetOffersUseCase } from "./core/offre/ports/GetOffersUseCase";
 import { GetOffersController } from "./core/offre/controllers/GetOffersController";
+import { GetUserSecteurOffersCountUseCase } from "./core/user/ports/GetUserSecteurOffersCountUseCase";
+import { GetUserSecteurOffersCountController } from "./core/user/controllers/GetUserSecteurOffersCountController";
 
 export async function main(): Promise<void> {
     // Inject
@@ -15,6 +17,12 @@ export async function main(): Promise<void> {
     // Get application stats
     const getUserApplicationsCountUseCase = new GetUserApplicationsCountUseCase(postgreRepository);
     const getUserApplicationsCountController = new GetUserApplicationsCountController(getUserApplicationsCountUseCase);
+
+    const getUserSecteurOffersCountUseCase = new GetUserSecteurOffersCountUseCase(postgreRepository);
+    const getUserSecteurOffersCountController = new GetUserSecteurOffersCountController(
+        getUserSecteurOffersCountUseCase
+    );
+
     // Offers
     const getOffersUseCase = new GetOffersUseCase(postgreRepository);
     const getOffersController = new GetOffersController(getOffersUseCase);
@@ -22,9 +30,9 @@ export async function main(): Promise<void> {
     // Routing
     const offersRouter = Router();
     offersRouter.route("/v1/offres").get(getOffersController.handle);
-
     const userRouter = Router();
     userRouter.route("/v1/users/getApplicationCount").get(getUserApplicationsCountController.handle);
+    userRouter.route("/v1/users/getSecteurOffersCount").get(getUserSecteurOffersCountController.handle);
 
     // Configure and listen
     const app = new ApiServer();

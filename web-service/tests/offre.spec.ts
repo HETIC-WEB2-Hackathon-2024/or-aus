@@ -1,6 +1,5 @@
-import { PostgresRepository } from "../src/adapter.spi.postgresql/PostgresRepository";
 import { IOfferFilter } from "../src/core/offre/filter/IOfferFilter";
-import { IOfferRepository } from "../src/core/offre/ports/IOfferRepository";
+import { FilterHelper } from "../src/core/offre/shared/Filter-helper";
 import { pool } from "../src/database";
 
 jest.mock("../src/database", () => {
@@ -81,8 +80,7 @@ describe("Get offers", () => {
                 entreprise: "SpaceX",
                 search: "Alien",
             };
-            const repository: IOfferRepository = new PostgresRepository(pool);
-            const queryWithFilters = await repository.createOffersQueryWithFilters(50, filters);
+            const queryWithFilters = FilterHelper.createOffersQueryWithFilters(50, filters);
 
             expect(queryWithFilters).toHaveProperty("options");
             expect(queryWithFilters).toHaveProperty("query");
