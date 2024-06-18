@@ -3,6 +3,6 @@ import { TUserId } from "../domain/Utilisateur";
 
 export interface IUserRepository {
     getRegisteredOffers(user_id: TUserId): Promise<Offre[]>;
-    getUserSecteurOffersCount(user_id: TUserId): Promise<number>;
-    getUserApplicationsCount(user_id: TUserId): Promise<number>;
+    getCandidatSecteurOffersCount(user_id: TUserId): Promise<number>;
+    getCandidatCandidaturesCount(user_id: TUserId): Promise<number>;
 }

@@ -1,5 +1,5 @@
 import { TUserId } from "../domain/Utilisateur";
 
-export interface IGetRegisteredApplicationsDto {
+export interface IGetRegisteredCandidaturesDto {
     user_id: number;
 }
