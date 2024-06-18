@@ -4,8 +4,8 @@ import { PostgresRepository } from "../src/adapter.spi.postgresql/PostgresReposi
 import { pool } from "../src/database";
 import { IOfferFilter } from "../src/core/offre/filter/IOfferFilter";
 
-jest.mock("../../src/database", () => {
-    const originalModule = jest.requireActual("../../src/database");
+jest.mock("../src/database", () => {
+    const originalModule = jest.requireActual("../src/database");
     return {
         ...originalModule,
         pool: {
