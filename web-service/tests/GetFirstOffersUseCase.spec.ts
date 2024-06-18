@@ -1,10 +1,10 @@
-import { IOfferRepository } from "../../src/core/offre/ports/IOfferRepository";
+import { IOfferRepository } from "../src/core/offre/ports/IOfferRepository";
 
-import { PostgresRepository } from "../../src/adapter.spi.postgresql/PostgresRepository";
-import { pool } from "../../src/database";
+import { PostgresRepository } from "../src/adapter.spi.postgresql/PostgresRepository";
+import { pool } from "../src/database";
 
-jest.mock("../../src/database", () => {
-    const originalModule = jest.requireActual("../../src/database");
+jest.mock("../src/database", () => {
+    const originalModule = jest.requireActual("../src/database");
     return {
         ...originalModule,
         pool: {
