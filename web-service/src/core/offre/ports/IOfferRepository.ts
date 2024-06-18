@@ -3,5 +3,4 @@ import { IOfferFilter } from "../filter/IOfferFilter";
 
 export interface IOfferRepository {
     getOffers(limit: number, filters: IOfferFilter): Promise<Offre[]>;
-    createOffersQueryWithFilters(limit: number, filters: IOfferFilter): { query: string; options: string[] };
 }
