@@ -1,7 +1,7 @@
 import { Pool } from "pg";
 
 import { IOfferRepository } from "../core/offre/ports/IOfferRepository";
-import { ICandidatRepository } from "../core/candidat/ports/ICandidatRepository";
+import { ICandidatRepository, ICandidatSecteurOffersStatsResponse } from "../core/candidat/ports/ICandidatRepository";
 import { Offre } from "../core/offre/domain/Offre";
 import { IOfferFilter } from "../core/offre/filter/IOfferFilter";
 import { FilterHelper } from "../core/offre/shared/Filter-helper";
@@ -10,13 +10,22 @@ import { TCandidatId } from "../core/candidat/domain/Candidat";
 export class PostgresRepository implements IOfferRepository, ICandidatRepository {
     public constructor(private readonly _pool: Pool) {}
 
-    async getCandidatSecteurOffersCount(input: TCandidatId): Promise<number> {
+    async getCandidatSecteurOffersStats(input: TCandidatId): Promise<ICandidatSecteurOffersStatsResponse> {
         const client = await this._pool.connect();
         try {
-            const query =
-                "SELECT COUNT(*) FROM candidat_secteurs AS cs JOIN offre AS o ON cs.secteur_id = o.secteur_id WHERE cs.candidat_id = $1;";
-            const result = await client.query<{ count: number }>(query, [input.id]);
-            return result.rows[0].count;
+            const query = `
+                SELECT
+                    COUNT(CASE WHEN date_trunc('month', o.date) = date_trunc('month', CURRENT_DATE) THEN 1 END) AS current_month,
+                    COUNT(CASE WHEN date_trunc('month', o.date) = date_trunc('month', CURRENT_DATE - INTERVAL '1 month') THEN 1 END) AS previous_month
+                FROM candidat_secteurs AS cs
+                JOIN offre AS o ON cs.secteur_id = o.secteur_id
+                WHERE cs.candidat_id = $1;`;
+            const result = await client.query<ICandidatSecteurOffersStatsResponse>(query, [input.id]);
+
+            return {
+                ...result.rows[0],
+                comparison_percentage: 0,
+            };
         } finally {
             client.release();
         }
