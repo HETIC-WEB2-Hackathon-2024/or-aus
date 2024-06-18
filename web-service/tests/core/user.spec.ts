@@ -44,7 +44,6 @@ describe("Get number of applications", () => {
             release: jest.fn(),
         });
         const candidat_id: TCandidatId = { id: 10 };
-        const offersSecteurStats = await repository.getCandidatSecteurOffersStats(candidat_id);
         const response = await new GetCandidatSecteurOffersStatsUseCase(repository).execute(candidat_id);
 
         expect(pool.connect).toHaveBeenCalled();
@@ -62,7 +61,6 @@ describe("Get number of applications", () => {
         });
 
         const candidat_id: TCandidatId = { id: 10 };
-        const offersCommuneStats = await repository.getCandidatCommuneOffersStats(candidat_id);
         const response = await new GetCandidatCommuneOffersStatsUseCase(repository).execute(candidat_id);
 
         expect(pool.connect).toHaveBeenCalled();
