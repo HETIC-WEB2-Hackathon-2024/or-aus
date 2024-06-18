@@ -5,7 +5,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import { Dashboard } from "./pages/dashboard/Dashboard";
-import Settings from "./pages/dashboard/Settings";
+import Settings from "./pages/settings/Settings";
 
 import Header, { TCurrentView } from "./common/Header";
 
@@ -32,6 +32,10 @@ const router = createBrowserRouter([
       },
     ],
   },
+  {
+    path: "*",
+    element: <div>404 <a href="/">retour /</a></div>
+  }
 ]);
 
 function Layout() {
