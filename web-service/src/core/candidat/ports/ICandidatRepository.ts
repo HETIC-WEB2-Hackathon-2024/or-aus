@@ -5,6 +5,7 @@ export interface ICandidatSecteurOffersStatsResponse {
     current_month: number;
     previous_month: number;
     comparison_percentage: string;
+    secteur: string;
 }
 
 export interface ICandidatRepository {

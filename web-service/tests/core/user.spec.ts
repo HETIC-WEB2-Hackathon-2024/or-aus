@@ -35,7 +35,9 @@ describe("Get number of applications", () => {
     });
 
     it("should return the -50% comparison for 5 current month / 10 previous month", async () => {
-        const mockQuery = jest.fn().mockResolvedValue({ rows: [{ previous_month: 10, current_month: 5 }] });
+        const mockQuery = jest
+            .fn()
+            .mockResolvedValue({ rows: [{ previous_month: 10, current_month: 5, secteur: "Défense" }] });
         (pool.connect as jest.Mock).mockResolvedValue({
             query: mockQuery,
             release: jest.fn(),

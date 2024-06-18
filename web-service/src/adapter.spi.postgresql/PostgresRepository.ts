@@ -18,15 +18,22 @@ export class PostgresRepository implements IOfferRepository, ICandidatRepository
             const query = `
                 SELECT
                     COUNT(CASE WHEN date_trunc('month', o.date) = date_trunc('month', CURRENT_DATE) THEN 1 END) AS current_month,
-                    COUNT(CASE WHEN date_trunc('month', o.date) = date_trunc('month', CURRENT_DATE - INTERVAL '1 month') THEN 1 END) AS previous_month
+                    COUNT(CASE WHEN date_trunc('month', o.date) = date_trunc('month', CURRENT_DATE - INTERVAL '1 month') THEN 1 END) AS previous_month,
+                    s.secteur
                 FROM candidat_secteurs AS cs
                 JOIN offre AS o ON cs.secteur_id = o.secteur_id
-                WHERE cs.candidat_id = $1;`;
-            const result = await client.query<ICandidatSecteurOffersStatsResponse>(query, [input.id]);
+                JOIN secteur AS s ON cs.secteur_id = s.id
+                WHERE cs.candidat_id = $1
+                GROUP BY s.secteur`;
+
+            const {
+                rows: [result],
+            } = await client.query<ICandidatSecteurOffersStatsResponse>(query, [input.id]);
 
             return {
-                current_month: +result.rows[0].current_month,
-                previous_month: +result.rows[0].previous_month,
+                current_month: +result.current_month,
+                previous_month: +result.previous_month,
+                secteur: result.secteur,
             };
         } finally {
             client.release();
