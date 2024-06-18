@@ -5,7 +5,7 @@ import React from "react";
 
 export function Dashboard() {
   // const { getAccessTokenSilently } = useAuth0();
-  const [loading, setLoading] = React.useState(true);
+  // const [loading, setLoading] = React.useState(true);
   // const [data, setData] = React.useState<any[] | null>(null);
   // const [error, setError] = React.useState<string | null>(null);
   // React.useEffect(() => {
@@ -24,6 +24,6 @@ export function Dashboard() {
   // }, []);
 
   return <div>
-    {loading ? "chargement" : "pas chargement"}
+    Dashboard
   </div>
 }
