@@ -20,23 +20,23 @@ export default function Header({ currentView }: HeaderProps) {
     return (
         <div className="flex w-full flex-col">
             <header className="sticky top-0 flex h-16 items-center justify-between gap-4 border-b bg-background px-4 md:px-6">
-                <div className="flex justify-end gap-4 md:ml-auto md:gap-2 lg:gap-4">
+                <div className="whitespace-nowrap w-96">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <div className="flex items-center border px-6 py-2 rounded-lg gap-4 cursor-pointer">
+                            <div className="flex items-center border px-6 py-2 rounded-lg gap-4 cursor-pointer w-96">
                                 <CircleUser className="h-6 w-6" />
-                                Florent Fauchille
+                                <div>Florent Fauchille</div>
                             </div>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
+                        <DropdownMenuContent align="start" className="w-96">
                             <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem>Logout</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
-                <nav className="hidden w-full flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
-                    <div className="flex-col gap-6 w-full justify-center text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
+                <nav className="hidden w-full flex-col gap-6 text-lg font-medium  md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
+                    <div className="flex-col gap-6 w-full justify-start pl-2 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
                         <Link
                             to="dashboard"
                             className={`${
