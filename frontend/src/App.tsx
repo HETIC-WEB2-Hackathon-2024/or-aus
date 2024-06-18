@@ -1,5 +1,5 @@
 import { Outlet, RouterProvider, createBrowserRouter, useLocation } from "react-router-dom";
-import { Dashboard } from "./dashboard/Dashboard";
+import { Dashboard } from "./pages/dashboard/Dashboard";
 import Header, { TCurrentView } from "./common/Header";
 
 const router = createBrowserRouter([
