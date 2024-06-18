@@ -1,6 +1,7 @@
-import { IOfferRepository } from "../../src/core/ports/persistence/IOfferRepository";
+import { IOfferRepository } from "../../src/application/persistence/IOfferRepository";
+
+import { PostgresRepository } from "../../src/infrastructure/spi/PostgresRepository";
 import { pool } from "../../src/database";
-import { OfferRepository } from "../../src/infrastructure/spi/OfferRepository";
 
 jest.mock("../../src/database", () => {
     const originalModule = jest.requireActual("../../src/database");
@@ -10,11 +11,11 @@ jest.mock("../../src/database", () => {
             connect: jest.fn(),
             end: jest.fn(),
         },
-        query: jest.fn(),
     };
 });
-describe("Get first offers use case", () => {
-    let mockClient: { query: any; release: any };
+
+describe("PostgresSQL Repository", () => {
+    let mockClient: { query: jest.Mock; release: jest.Mock };
 
     beforeAll(() => {
         mockClient = {
@@ -22,42 +23,42 @@ describe("Get first offers use case", () => {
                 rows: [
                     {
                         id: 1,
-                        secteur: "secteur1",
-                        metier: "metier1",
-                        titreEmploi: "Job 1",
-                        entreprise: "Company 1",
-                        lieu: "Location 1",
-                        descriptionCourte: "Short Desc 1",
-                        contrat: "Contract 1",
-                        typeContrat: "Type 1",
-                        description: "Description 1",
-                        commune: "Commune 1",
+                        secteur_id: 1,
+                        metier_id: 1,
+                        titre_emploi: "Alien",
+                        entreprise: "SpaceX",
+                        lieu: "Lune",
+                        description_courte: "Pas de description",
+                        contrat: "X",
+                        type_contrat: "X",
+                        description: "Pas de description",
+                        commune_id: 1,
                     },
                     {
                         id: 2,
-                        secteur: "secteur2",
-                        metier: "metier2",
-                        titreEmploi: "Job 2",
-                        entreprise: "Company 2",
-                        lieu: "Location 2",
-                        descriptionCourte: "Short Desc 2",
-                        contrat: "Contract 2",
-                        typeContrat: "Type 2",
-                        description: "Description 2",
-                        commune: "Commune 2",
+                        secteur_id: 2,
+                        metier_id: 2,
+                        titre_emploi: "Marchand de sable",
+                        entreprise: "Sommeil",
+                        lieu: "Plage",
+                        description_courte: "Pas de description",
+                        contrat: "X",
+                        type_contrat: "X",
+                        description: "Pas de description",
+                        commune_id: 2,
                     },
                     {
                         id: 3,
-                        secteur: "secteur3",
-                        metier: "metier3",
-                        titreEmploi: "Job 3",
-                        entreprise: "Company 3",
-                        lieu: "Location 3",
-                        descriptionCourte: "Short Desc 3",
-                        contrat: "Contract 3",
-                        typeContrat: "Type 3",
-                        description: "Description 3",
-                        commune: "Commune 3",
+                        secteur_id: 3,
+                        metier_id: 3,
+                        titre_emploi: "Développeur sans stack",
+                        entreprise: "Array",
+                        lieu: "LinkedList",
+                        description_courte: "Pas de description",
+                        contrat: "X",
+                        type_contrat: "X",
+                        description: "Pas de description",
+                        commune_id: 3,
                     },
                 ],
             }),
@@ -70,10 +71,14 @@ describe("Get first offers use case", () => {
         jest.clearAllMocks();
     });
 
-    it("Should get 3 first offers", async () => {
-        const offerRepository: IOfferRepository = new OfferRepository();
-        const offersRaw = await offerRepository.getFirstOffers(3);
-        expect(offersRaw.length).toBe(3);
-        expect(mockClient.release).toHaveBeenCalled();
+    describe("Offer repository SPI", () => {
+        it("Should get the 3 first offers and implement and dispose the pool correctly", async () => {
+            const repository: IOfferRepository = new PostgresRepository(pool);
+            const offersResult = await repository.getFirsts(3);
+
+            expect(pool.connect).toHaveBeenCalled();
+            expect(offersResult.length).toBe(3);
+            expect(mockClient.release).toHaveBeenCalled();
+        });
     });
 });
