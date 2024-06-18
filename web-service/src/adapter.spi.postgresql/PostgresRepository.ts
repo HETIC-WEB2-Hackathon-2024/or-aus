@@ -1,7 +1,7 @@
 import { Pool } from "pg";
-import { IOfferRepository } from "../../application/persistence/IOfferRepository";
-import { Offre } from "../../core/Offre";
-import { pool, query } from "../../database";
+import { IOfferRepository } from "../core/offre/ports/IOfferRepository";
+import { Offre } from "../core/offre/domain/Offre";
+import { pool, query } from "../database";
 import Cursor from "pg-cursor";
 
 export class PostgresRepository implements IOfferRepository {

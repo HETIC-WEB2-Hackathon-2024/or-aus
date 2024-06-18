@@ -1,6 +1,6 @@
-import { IOfferRepository } from "../../src/application/persistence/IOfferRepository";
+import { IOfferRepository } from "../../src/core/offre/ports/IOfferRepository";
 
-import { PostgresRepository } from "../../src/infrastructure/spi/PostgresRepository";
+import { PostgresRepository } from "../../src/adapter.spi.postgresql/PostgresRepository";
 import { pool } from "../../src/database";
 
 jest.mock("../../src/database", () => {
