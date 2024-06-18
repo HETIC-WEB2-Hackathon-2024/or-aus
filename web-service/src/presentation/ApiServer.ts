@@ -8,13 +8,13 @@ export class ApiServer {
     constructor() {
         this.app = express();
         this.app.use(cors());
-        // this.app.use(
-        //     auth({
-        //         audience: "api.aus.floless.fr",
-        //         issuerBaseURL: "https://adopte-un-stagiaire.eu.auth0.com/",
-        //         tokenSigningAlg: "RS256",
-        //     })
-        // );
+        this.app.use(
+            auth({
+                audience: "api.aus.floless.fr",
+                issuerBaseURL: "https://adopte-un-stagiaire.eu.auth0.com/",
+                tokenSigningAlg: "RS256",
+            })
+        );
     }
 
     public addRoute(router: Router) {
