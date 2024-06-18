@@ -12,10 +12,10 @@ export class ApiServer {
         this.app.use(morgan("dev"));
         this.app.use(
             auth({
-                audience: "api.aus.floless.fr",
-                issuerBaseURL: "https://adopte-un-stagiaire.eu.auth0.com/",
-                tokenSigningAlg: "RS256",
-            })
+                audience: 'api.or.aus.floless.fr',
+                issuerBaseURL: 'https://or-aus.eu.auth0.com/',
+                tokenSigningAlg: 'RS256'
+              })
         );
     }
 
