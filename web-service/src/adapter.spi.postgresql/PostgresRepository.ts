@@ -81,7 +81,7 @@ export class PostgresRepository implements IOfferRepository, IUserRepository {
         throw new Error("Method not implemented.");
     }
 
-    async removeFavoriteOffers({ id: user_id }: TUserId, { id: offer_id }: TOffreId): Promise<Offre[]> {
+    async removeFavoriteOffer({ id: user_id }: TUserId, { id: offer_id }: TOffreId): Promise<Offre[]> {
         throw new Error("Method not implemented.");
     }
 
