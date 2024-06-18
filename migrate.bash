@@ -4,7 +4,6 @@ echo "Migrating database"
 
 for file in ./migration/*; do
     echo "Running migration: $file"
-    open "$file"
     
     if [ ! -e "$file" ]; then
         continue
