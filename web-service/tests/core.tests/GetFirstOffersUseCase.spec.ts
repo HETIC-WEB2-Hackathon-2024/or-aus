@@ -1,4 +1,3 @@
-import { PoolClient, QueryResult } from "pg";
 import { IOfferRepository } from "../../src/application/persistence/IOfferRepository";
 
 import { PostgresRepository } from "../../src/infrastructure/spi/PostgresRepository";
