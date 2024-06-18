@@ -5,17 +5,17 @@ import { ICandidatRepository, ICandidatSecteurOffersStatsResponse } from "./ICan
 export class GetCandidatSecteurOffersStatsUseCase
     implements IUseCase<TCandidatId, ICandidatSecteurOffersStatsResponse>
 {
-    public constructor(private readonly _userRepository: ICandidatRepository) {}
+    public constructor(private readonly _candidatRepository: ICandidatRepository) {}
 
     async execute(input: TCandidatId): Promise<ICandidatSecteurOffersStatsResponse> {
-        const secteurOffersStats = await this._userRepository.getCandidatSecteurOffersStats(input);
+        const secteurOffersStats = await this._candidatRepository.getCandidatSecteurOffersStats(input);
         const comparison_percentage =
             ((secteurOffersStats.current_month - secteurOffersStats.previous_month) /
                 secteurOffersStats.previous_month) *
             100;
         return {
             ...secteurOffersStats,
-            comparison_percentage: `${comparison_percentage}%`,
+            comparison_percentage: `${comparison_percentage.toFixed(2)}%`,
         };
     }
 }

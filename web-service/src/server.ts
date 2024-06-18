@@ -8,6 +8,8 @@ import { GetOffersUseCase } from "./core/offre/ports/GetOffersUseCase";
 import { GetOffersController } from "./core/offre/controllers/GetOffersController";
 import { GetCandidatSecteurOffersStatsController } from "./core/candidat/controllers/GetCandidatSecteurOffersStatsController";
 import { GetCandidatSecteurOffersStatsUseCase } from "./core/candidat/ports/GetCandidatSecteurOffersStatsUseCase";
+import { GetCandidatCommuneOffersStatsUseCase } from "./core/candidat/ports/GetCandidatCommuneOffersStatsUseCase";
+import { GetCandidatCommuneOffersStatsController } from "./core/candidat/controllers/GetCandidatCommuneOffersStatsController";
 
 export async function main(): Promise<void> {
     // Inject
@@ -18,6 +20,11 @@ export async function main(): Promise<void> {
     const getCandidatCandidaturesCountUseCase = new GetCandidatCandidaturesCountUseCase(postgreRepository);
     const getCandidatCandidaturesCountController = new GetCandidatCandidaturesCountController(
         getCandidatCandidaturesCountUseCase
+    );
+
+    const getCandidatCommuneOffersStatsUseCase = new GetCandidatCommuneOffersStatsUseCase(postgreRepository);
+    const getCandidatCommuneOffersStatsController = new GetCandidatCommuneOffersStatsController(
+        getCandidatCommuneOffersStatsUseCase
     );
 
     const getCandidatSecteurOffersStatsUseCase = new GetCandidatSecteurOffersStatsUseCase(postgreRepository);
@@ -34,7 +41,8 @@ export async function main(): Promise<void> {
     offersRouter.route("/v1/offres").get(getOffersController.handle);
     const userRouter = Router();
     userRouter.route("/v1/users/getApplicationCount").get(getCandidatCandidaturesCountController.handle);
-    userRouter.route("/v1/users/getSecteurOffersCount").get(getCandidatSecteurOffersStatsController.handle);
+    userRouter.route("/v1/users/getSecteurOffersStats").get(getCandidatSecteurOffersStatsController.handle);
+    userRouter.route("/v1/users/getCommuneOffersStats").get(getCandidatCommuneOffersStatsController.handle);
 
     // Configure and listen
     const app = new ApiServer();

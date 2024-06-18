@@ -4,7 +4,7 @@ import { IGetRegisteredCandidaturesDto } from "../shared/RegisteredCandidatures.
 import { ICandidatRepository } from "./ICandidatRepository";
 
 export class GetRegisteredApplicationsUseCase implements IUseCase<IGetRegisteredCandidaturesDto, Offre[]> {
-    public constructor(private readonly _userRepository: ICandidatRepository) {}
+    public constructor(private readonly _candidatRepository: ICandidatRepository) {}
 
     execute(input: IGetRegisteredCandidaturesDto): Promise<Offre[]> {
         throw new Error("Method not implemented.");
