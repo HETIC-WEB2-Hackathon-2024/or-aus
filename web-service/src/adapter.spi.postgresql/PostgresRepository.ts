@@ -1,16 +1,16 @@
 import { Pool } from "pg";
 
 import { IOfferRepository } from "../core/offre/ports/IOfferRepository";
-import { IUserRepository } from "../core/user/ports/IUserRepository";
+import { IUserRepository } from "../core/candidat/ports/ICandidatRepository";
 import { Offre } from "../core/offre/domain/Offre";
-import { TUserId } from "../core/user/domain/Utilisateur";
+import { TUserId } from "../core/candidat/domain/Candidat";
 import { IOfferFilter } from "../core/offre/filter/IOfferFilter";
 import { FilterHelper } from "../core/offre/shared/Filter-helper";
 
 export class PostgresRepository implements IOfferRepository, IUserRepository {
     public constructor(private readonly _pool: Pool) {}
 
-    async getUserSecteurOffersCount(input: TUserId): Promise<number> {
+    async getCandidatSecteurOffersCount(input: TUserId): Promise<number> {
         const client = await this._pool.connect();
         try {
             const query =
@@ -26,7 +26,7 @@ export class PostgresRepository implements IOfferRepository, IUserRepository {
         throw new Error("Method not implemented.");
     }
 
-    async getUserApplicationsCount(input: TUserId): Promise<number> {
+    async getCandidatCandidaturesCount(input: TUserId): Promise<number> {
         const client = await this._pool.connect();
         try {
             const query =

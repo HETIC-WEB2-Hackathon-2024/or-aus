@@ -22,7 +22,7 @@ export async function main(): Promise<void> {
 
     const getCandidatSecteurOffersCountUseCase = new GetCandidatSecteurOffersCountUseCase(postgreRepository);
     const getCandidatSecteurOffersCountController = new GetCandidatSecteurOffersCountController(
-        getCandidatSecteurOffersCountUseCase
+        GetCandidatSecteurOffersCountUseCase
     );
 
     // Offers
@@ -33,8 +33,8 @@ export async function main(): Promise<void> {
     const offersRouter = Router();
     offersRouter.route("/v1/offres").get(getOffersController.handle);
     const userRouter = Router();
-    userRouter.route("/v1/users/getApplicationCount").get(getCandidatCandidaturesCountController.handle);
-    userRouter.route("/v1/users/getSecteurOffersCount").get(getCandidatSecteurOffersCountController.handle);
+    userRouter.route("/v1/users/getApplicationCount").get(GetCandidatCandidaturesCountController.handle);
+    userRouter.route("/v1/users/getSecteurOffersCount").get(GetCandidatSecteurOffersCountController.handle);
 
     // Configure and listen
     const app = new ApiServer();
@@ -43,5 +43,3 @@ export async function main(): Promise<void> {
 
     app.listen(3000);
 }
-
-main();

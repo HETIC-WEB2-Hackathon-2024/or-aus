@@ -2,11 +2,11 @@ import { Request, Response } from "express";
 import { ParamsDictionary } from "express-serve-static-core";
 import { ParsedQs } from "qs";
 import { IController } from "../../../shared/IController";
-import { GetUserApplicationsCountUseCase } from "../ports/GetUserApplicationsCountUseCase";
+import { GetCandidatCandidaturesCountUseCase } from "../ports/GetCandidatCandidaturesCountUseCase";
 import { InvalidRequestError } from "express-oauth2-jwt-bearer";
 
-export class GetUserApplicationsCountController implements IController {
-    public constructor(private readonly _useCase: GetUserApplicationsCountUseCase) {
+export class GetCandidatCandidaturesCountController implements IController {
+    public constructor(private readonly _useCase: GetCandidatCandidaturesCountUseCase) {
         this.handle = this.handle.bind(this);
     }
     async handle(

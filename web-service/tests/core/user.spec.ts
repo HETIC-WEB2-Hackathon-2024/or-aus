@@ -1,9 +1,9 @@
-import { pool } from "../src/database";
+import { pool } from "../../src/database";
 
-import { PostgresRepository } from "../src/adapter.spi.postgresql/PostgresRepository";
-import { IUserRepository } from "../src/core/user/ports/IUserRepository";
+import { PostgresRepository } from "../../src/adapter.spi.postgresql/PostgresRepository";
+import { IUserRepository } from "../../src/core/candidat/ports/ICandidatRepository";
 
-jest.mock("../src/database", () => {
+jest.mock("../../src/database", () => {
     const pool = {
         connect: jest.fn().mockReturnValue({
             query: jest.fn(),
@@ -25,7 +25,7 @@ describe("Get number of applications", () => {
             query: mockQuery,
             release: jest.fn(),
         });
-        const numberOfApplications = await repository.getUserApplicationsCount({ id: 10 });
+        const numberOfApplications = await repository.getCandidatCandidaturesCount({ id: 10 });
 
         expect(pool.connect).toHaveBeenCalled();
         expect(numberOfApplications).toBe(5);
@@ -38,7 +38,7 @@ describe("Get number of applications", () => {
             query: mockQuery,
             release: jest.fn(),
         });
-        const numberOfOffersInUserSecteur = await repository.getUserApplicationsCount({ id: 10 });
+        const numberOfOffersInUserSecteur = await repository.getCandidatCandidaturesCount({ id: 10 });
         expect(pool.connect).toHaveBeenCalled();
         expect(numberOfOffersInUserSecteur).toBe(210);
         expect((await pool.connect()).release).toHaveBeenCalled();
