@@ -9,3 +9,5 @@ export class Utilisateur {
         public readonly date_naissance: Date
     ) {}
 }
+
+export type TUserId = Pick<Utilisateur, "id">;
