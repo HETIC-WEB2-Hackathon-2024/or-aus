@@ -9,8 +9,17 @@ import { FilterHelper } from "../core/offre/shared/Filter-helper";
 
 export class PostgresRepository implements IOfferRepository, IUserRepository {
     public constructor(private readonly _pool: Pool) {}
-    getUserSecteurOffersCount(user_id: TUserId): Promise<number> {
-        throw new Error("Method not implemented.");
+
+    async getUserSecteurOffersCount(user_id: TUserId): Promise<number> {
+        const client = await this._pool.connect();
+        try {
+            const query =
+                "SELECT COUNT(*) FROM candidat_secteurs AS cs JOIN offre AS o ON cs.secteur_id = o.secteur_id WHERE cs.candidat_id = $1;";
+            const result = await client.query<{ count: number }>(query, [user_id]);
+            return result.rows[0].count;
+        } finally {
+            client.release();
+        }
     }
 
     async getRegisteredOffers(user_id: TUserId): Promise<Offre[]> {
