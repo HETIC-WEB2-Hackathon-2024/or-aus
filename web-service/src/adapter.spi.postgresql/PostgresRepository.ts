@@ -15,8 +15,9 @@ export class PostgresRepository implements IOfferRepository, IUserRepository {
     async getUserApplicationsCount(user_id: TUserId): Promise<number> {
         const client = await this._pool.connect();
         try {
-            const query = "";
-            const result = await client.query<{ count: number }>(query, []);
+            const query =
+                "SELECT COUNT(*) as count FROM candidat AS c JOIN candidat_offres AS co ON co.candidat_id = c.id WHERE c.id = $1;";
+            const result = await client.query<{ count: number }>(query, [user_id]);
             return result.rows[0].count;
         } finally {
             client.release();
