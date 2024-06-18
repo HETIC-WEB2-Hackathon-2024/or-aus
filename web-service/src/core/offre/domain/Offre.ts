@@ -11,5 +11,7 @@ export class Offre {
         public readonly type_contrat: string,
         public readonly description: string,
         public readonly commune_id: string
-    ) {}
+    ) { }
 }
+
+export type TOffreId = Pick<Offre, "id">;

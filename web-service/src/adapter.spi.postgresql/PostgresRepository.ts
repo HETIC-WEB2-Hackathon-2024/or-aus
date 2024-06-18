@@ -1,10 +1,10 @@
 import { Pool } from "pg";
 
-import { IOfferRepository } from "../core/offre/ports/IOfferRepository";
-import { IUserRepository } from "../core/user/ports/IUserRepository";
-import { Offre } from "../core/offre/domain/Offre";
-import { TUserId } from "../core/user/domain/Utilisateur";
+import { Offre, TOffreId } from "../core/offre/domain/Offre";
 import { IOfferFilter } from "../core/offre/filter/IOfferFilter";
+import { IOfferRepository } from "../core/offre/ports/IOfferRepository";
+import { TUserId } from "../core/user/domain/Utilisateur";
+import { IUserRepository } from "../core/user/ports/IUserRepository";
 
 interface IQuery {
     query: string;
@@ -12,7 +12,7 @@ interface IQuery {
 }
 
 export class PostgresRepository implements IOfferRepository, IUserRepository {
-    public constructor(private readonly _pool: Pool) {}
+    public constructor(private readonly _pool: Pool) { }
 
     createOffersQueryWithFilters(limit: number, filters: IOfferFilter): IQuery {
         let optionNumber = 2;
@@ -77,7 +77,11 @@ export class PostgresRepository implements IOfferRepository, IUserRepository {
         return { query, options };
     }
 
-    async getRegisteredOffers(user_id: TUserId): Promise<Offre[]> {
+    async getFavoriteOffers({ id: user_id }: TUserId): Promise<Offre[]> {
+        throw new Error("Method not implemented.");
+    }
+
+    async removeFavoriteOffers({ id: user_id }: TUserId, { id: offer_id }: TOffreId): Promise<Offre[]> {
         throw new Error("Method not implemented.");
     }
 
