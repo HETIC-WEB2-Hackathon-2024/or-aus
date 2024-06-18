@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { GetFirstOffersUseCase } from "../ports/GetFirstOffersUseCase";
 import { InvalidRequestError } from "express-oauth2-jwt-bearer";
-import { IUseCase } from "../../../shared/IUseCase";
+import { IController } from "../../../shared/IController";
 
-export class GetFirstOffersController {
+export class GetFirstOffersController implements IController {
     public constructor(private readonly _useCase: GetFirstOffersUseCase) {
         this.handle = this.handle.bind(this);
     }
