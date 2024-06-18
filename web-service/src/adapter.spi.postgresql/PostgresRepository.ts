@@ -13,6 +13,9 @@ import { TCandidatId } from "../core/candidat/domain/Candidat";
 
 export class PostgresRepository implements IOfferRepository, ICandidatRepository {
     public constructor(private readonly _pool: Pool) {}
+    getCandidatCandidaturesCount(user_id: TCandidatId): Promise<number> {
+        throw new Error("Method not implemented.");
+    }
 
     async getCandidatSecteurOffersStats(
         input: TCandidatId
@@ -50,7 +53,7 @@ export class PostgresRepository implements IOfferRepository, ICandidatRepository
         throw new Error("Method not implemented.");
     }
 
-    async getCandidatCandidaturesCount(
+    async getCandidatCommuneOffersStats(
         input: TCandidatId
     ): Promise<Omit<ICandidatCommuneOffersStatsResponse, "comparison_percentage">> {
         const client = await this._pool.connect();
@@ -65,7 +68,7 @@ export class PostgresRepository implements IOfferRepository, ICandidatRepository
                 JOIN candidat_communes AS cc ON ca.id = cc.candidat_id
                 JOIN commune AS co ON cc.commune_id = co.id
                 JOIN offre AS o ON co.id = o.commune_id
-                WHERE ca.id = 1
+                WHERE ca.id = $1
                 GROUP BY co.nom_commune, co.code_postal;
                 `;
 

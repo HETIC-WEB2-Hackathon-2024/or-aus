@@ -20,7 +20,8 @@ export interface ICandidatRepository {
     getCandidatSecteurOffersStats(
         user_id: TCandidatId
     ): Promise<Omit<ICandidatSecteurOffersStatsResponse, "comparison_percentage">>;
-    getCandidatCandidaturesCount(
+    getCandidatCommuneOffersStats(
         user_id: TCandidatId
     ): Promise<Omit<ICandidatCommuneOffersStatsResponse, "comparison_percentage">>;
+    getCandidatCandidaturesCount(user_id: TCandidatId): Promise<number>;
 }
