@@ -9,7 +9,13 @@ export class GetCandidatSecteurOffersStatsUseCase
 
     async execute(input: TCandidatId): Promise<ICandidatSecteurOffersStatsResponse> {
         const secteurOffersStats = await this._userRepository.getCandidatSecteurOffersStats(input);
-
-        return secteurOffersStats;
+        const comparison_percentage =
+            ((secteurOffersStats.current_month - secteurOffersStats.previous_month) /
+                secteurOffersStats.previous_month) *
+            100;
+        return {
+            ...secteurOffersStats,
+            comparison_percentage: `${comparison_percentage}%`,
+        };
     }
 }

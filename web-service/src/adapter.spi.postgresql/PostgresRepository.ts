@@ -10,7 +10,9 @@ import { TCandidatId } from "../core/candidat/domain/Candidat";
 export class PostgresRepository implements IOfferRepository, ICandidatRepository {
     public constructor(private readonly _pool: Pool) {}
 
-    async getCandidatSecteurOffersStats(input: TCandidatId): Promise<ICandidatSecteurOffersStatsResponse> {
+    async getCandidatSecteurOffersStats(
+        input: TCandidatId
+    ): Promise<Omit<ICandidatSecteurOffersStatsResponse, "comparison_percentage">> {
         const client = await this._pool.connect();
         try {
             const query = `
@@ -23,8 +25,8 @@ export class PostgresRepository implements IOfferRepository, ICandidatRepository
             const result = await client.query<ICandidatSecteurOffersStatsResponse>(query, [input.id]);
 
             return {
-                ...result.rows[0],
-                comparison_percentage: 0,
+                current_month: +result.rows[0].current_month,
+                previous_month: +result.rows[0].previous_month,
             };
         } finally {
             client.release();

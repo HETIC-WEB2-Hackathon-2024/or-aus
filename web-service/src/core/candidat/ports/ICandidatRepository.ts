@@ -4,11 +4,13 @@ import { TCandidatId } from "../domain/Candidat";
 export interface ICandidatSecteurOffersStatsResponse {
     current_month: number;
     previous_month: number;
-    comparison_percentage: number;
+    comparison_percentage: string;
 }
 
 export interface ICandidatRepository {
     getRegisteredOffers(user_id: TCandidatId): Promise<Offre[]>;
-    getCandidatSecteurOffersStats(user_id: TCandidatId): Promise<ICandidatSecteurOffersStatsResponse>;
+    getCandidatSecteurOffersStats(
+        user_id: TCandidatId
+    ): Promise<Omit<ICandidatSecteurOffersStatsResponse, "comparison_percentage">>;
     getCandidatCandidaturesCount(user_id: TCandidatId): Promise<number>;
 }
