@@ -19,10 +19,9 @@ export class GetCandidatCommuneOffersStatsController implements IController {
             if (!user_id) throw new InvalidRequestError("user_id must be set");
 
             const result = await this._useCase.execute({ id: user_id });
-            res.json(result);
+            res.status(200).json(result);
         } catch (error) {
-            if (error instanceof InvalidRequestError)
-                res.status(parseInt(error.code)).send({ error: error.message, reason: error });
+            if (error instanceof InvalidRequestError) res.status(400).send({ error: error.message, reason: error });
             else if (error instanceof Error) {
                 console.error(error);
                 res.status(500).send({ error: error.message, reason: error });
