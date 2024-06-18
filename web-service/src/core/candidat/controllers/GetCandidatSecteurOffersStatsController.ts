@@ -3,10 +3,10 @@ import { ParamsDictionary } from "express-serve-static-core";
 import { ParsedQs } from "qs";
 import { IController } from "../../../shared/IController";
 import { InvalidRequestError } from "express-oauth2-jwt-bearer";
-import { GetCandidatSecteurOffersCountUseCase } from "../ports/GetCandidatSecteurOffersCountUseCase";
+import { GetCandidatSecteurOffersStatsUseCase } from "../ports/GetCandidatSecteurOffersStatsUseCase";
 
-export class GetCandidatSecteurOffersCountController implements IController {
-    public constructor(private readonly _useCase: GetCandidatSecteurOffersCountUseCase) {
+export class GetCandidatSecteurOffersStatsController implements IController {
+    public constructor(private readonly _useCase: GetCandidatSecteurOffersStatsUseCase) {
         this.handle = this.handle.bind(this);
     }
     async handle(

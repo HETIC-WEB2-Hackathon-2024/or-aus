@@ -1,7 +1,9 @@
 import { pool } from "../../src/database";
 
 import { PostgresRepository } from "../../src/adapter.spi.postgresql/PostgresRepository";
-import { IUserRepository } from "../../src/core/candidat/ports/ICandidatRepository";
+import { ICandidatRepository } from "../../src/core/candidat/ports/ICandidatRepository";
+import { GetCandidatSecteurOffersStatsUseCase } from "../../src/core/candidat/ports/GetCandidatSecteurOffersStatsUseCase";
+import { TCandidatId } from "../../src/core/candidat/domain/Candidat";
 
 jest.mock("../../src/database", () => {
     const pool = {
@@ -14,7 +16,7 @@ jest.mock("../../src/database", () => {
 });
 
 describe("Get number of applications", () => {
-    let repository: IUserRepository;
+    let repository: ICandidatRepository;
     beforeEach(() => {
         repository = new PostgresRepository(pool);
     });
@@ -32,15 +34,20 @@ describe("Get number of applications", () => {
         expect((await pool.connect()).release).toHaveBeenCalled();
     });
 
-    it("should return the number of offers in user secteur", async () => {
-        const mockQuery = jest.fn().mockResolvedValue({ rows: [{ count: 210 }] });
+    it("should return the -50% comparison for 5 current month / 10 previous month", async () => {
+        const mockQuery = jest
+            .fn()
+            .mockResolvedValue({ rows: [{ previous_month: 10, current_month: 5, secteur: "Défense" }] });
         (pool.connect as jest.Mock).mockResolvedValue({
             query: mockQuery,
             release: jest.fn(),
         });
-        const numberOfOffersInUserSecteur = await repository.getCandidatCandidaturesCount({ id: 10 });
+        const candidat_id: TCandidatId = { id: 10 };
+        const offersSecteurStats = await repository.getCandidatSecteurOffersStats(candidat_id);
+        const response = await new GetCandidatSecteurOffersStatsUseCase(repository).execute(candidat_id);
+
         expect(pool.connect).toHaveBeenCalled();
-        expect(numberOfOffersInUserSecteur).toBe(210);
+        expect(response.comparison_percentage).toBe("-50%");
         expect((await pool.connect()).release).toHaveBeenCalled();
     });
 });

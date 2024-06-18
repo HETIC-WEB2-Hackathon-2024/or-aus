@@ -6,8 +6,8 @@ import { GetCandidatCandidaturesCountController } from "./core/candidat/controll
 import { GetCandidatCandidaturesCountUseCase } from "./core/candidat/ports/GetCandidatCandidaturesCountUseCase";
 import { GetOffersUseCase } from "./core/offre/ports/GetOffersUseCase";
 import { GetOffersController } from "./core/offre/controllers/GetOffersController";
-import { GetCandidatSecteurOffersCountController } from "./core/candidat/controllers/GetCandidatSecteurOffersCountController";
-import { GetCandidatSecteurOffersCountUseCase } from "./core/candidat/ports/GetCandidatSecteurOffersCountUseCase";
+import { GetCandidatSecteurOffersStatsController } from "./core/candidat/controllers/GetCandidatSecteurOffersStatsController";
+import { GetCandidatSecteurOffersStatsUseCase } from "./core/candidat/ports/GetCandidatSecteurOffersStatsUseCase";
 
 export async function main(): Promise<void> {
     // Inject
@@ -20,9 +20,9 @@ export async function main(): Promise<void> {
         getCandidatCandidaturesCountUseCase
     );
 
-    const getCandidatSecteurOffersCountUseCase = new GetCandidatSecteurOffersCountUseCase(postgreRepository);
-    const getCandidatSecteurOffersCountController = new GetCandidatSecteurOffersCountController(
-        GetCandidatSecteurOffersCountUseCase
+    const getCandidatSecteurOffersStatsUseCase = new GetCandidatSecteurOffersStatsUseCase(postgreRepository);
+    const getCandidatSecteurOffersStatsController = new GetCandidatSecteurOffersStatsController(
+        GetCandidatSecteurOffersStatsUseCase
     );
 
     // Offers
@@ -34,7 +34,7 @@ export async function main(): Promise<void> {
     offersRouter.route("/v1/offres").get(getOffersController.handle);
     const userRouter = Router();
     userRouter.route("/v1/users/getApplicationCount").get(GetCandidatCandidaturesCountController.handle);
-    userRouter.route("/v1/users/getSecteurOffersCount").get(GetCandidatSecteurOffersCountController.handle);
+    userRouter.route("/v1/users/getSecteurOffersCount").get(GetCandidatSecteurOffersStatsController.handle);
 
     // Configure and listen
     const app = new ApiServer();
