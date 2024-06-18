@@ -1,5 +1,5 @@
 import { IUseCase } from "../../../shared/IUseCase";
-import { TUserId } from "../domain/Utilisateur";
+import { TUserId } from "../domain/Candidat";
 import { IUserRepository } from "./ICandidatRepository";
 
 export class GetCandidatSecteurOffersCountUseCase implements IUseCase<TUserId, number> {

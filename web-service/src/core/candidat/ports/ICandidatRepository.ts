@@ -1,5 +1,5 @@
 import { Offre } from "../../offre/domain/Offre";
-import { TUserId } from "../domain/Utilisateur";
+import { TUserId } from "../domain/Candidat";
 
 export interface IUserRepository {
     getRegisteredOffers(user_id: TUserId): Promise<Offre[]>;
