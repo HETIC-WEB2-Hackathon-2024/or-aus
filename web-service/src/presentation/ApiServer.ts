@@ -1,6 +1,7 @@
 import cors from "cors";
-import express, { Express, Request, Response, Router } from "express";
-import { InvalidRequestError, auth } from "express-oauth2-jwt-bearer";
+import express, { Express, Router } from "express";
+import { auth } from "express-oauth2-jwt-bearer";
+import morgan from "morgan";
 
 export class ApiServer {
     private app: Express;
@@ -8,6 +9,7 @@ export class ApiServer {
     constructor() {
         this.app = express();
         this.app.use(cors());
+        this.app.use(morgan("dev"));
         this.app.use(
             auth({
                 audience: "api.aus.floless.fr",
