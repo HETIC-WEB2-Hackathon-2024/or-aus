@@ -1,4 +1,4 @@
-import { OfferCard } from "./../Card/OfferCard"
+import { OfferCard } from "./../OfferCard/OfferCard"
 import InfiniteScroll from '@/components/ui/infinite-scroll';
 import { Loader2 } from 'lucide-react';
 import { IOffer } from "@/pages/offers/Offers"
