@@ -1,6 +1,6 @@
+import { TCandidatId } from "../../candidat/domain/Candidat.js";
 import { Offre } from "../../offre/domain/Offre.js";
-import { TUserId } from "../../user/domain/Utilisateur.js";
 
 export interface IFavoriteRepository {
-    getFavoriteOffers(user_id: TUserId): Promise<Offre[]>;
+    getFavoriteOffers(user_id: TCandidatId): Promise<Offre[]>;
 }

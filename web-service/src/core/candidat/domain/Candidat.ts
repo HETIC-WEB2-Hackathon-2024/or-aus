@@ -1,4 +1,4 @@
-export class Utilisateur {
+export class Candidat {
     public constructor(
         public readonly id: number,
         public readonly nom: string,
@@ -10,4 +10,4 @@ export class Utilisateur {
     ) {}
 }
 
-export type TUserId = Pick<Utilisateur, "id">;
+export type TCandidatId = Pick<Candidat, "id">;

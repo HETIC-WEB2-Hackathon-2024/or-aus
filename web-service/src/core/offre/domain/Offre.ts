@@ -10,7 +10,8 @@ export class Offre {
         public readonly contrat: string,
         public readonly type_contrat: string,
         public readonly description: string,
-        public readonly commune_id: string
+        public readonly commune_id: string,
+        public readonly date: Date
     ) { }
 }
 

@@ -1,5 +1,6 @@
-import { IOfferFilter } from "../src/core/offre/filter/IOfferFilter";
-import { FilterHelper } from "../src/core/offre/shared/Filter-helper";
+import { IOfferRepository } from "../src/core/offre/ports/IOfferRepository";
+
+import { PostgresRepository } from "../src/adapter.spi.postgresql/PostgresRepository";
 import { pool } from "../src/database";
 
 jest.mock("../src/database", () => {
@@ -12,8 +13,10 @@ jest.mock("../src/database", () => {
         },
     };
 });
-describe("Get offers", () => {
+
+describe("PostgresSQL Repository", () => {
     let mockClient: { query: jest.Mock; release: jest.Mock };
+
     beforeAll(() => {
         mockClient = {
             query: jest.fn().mockResolvedValue({
@@ -68,36 +71,14 @@ describe("Get offers", () => {
         jest.clearAllMocks();
     });
 
-    describe("Test createOffersQueryWithFilters", () => {
-        it("Should create query correctly with given filters", async () => {
-            const filters: IOfferFilter = {
-                secteur_id: "1",
-                type_contrat: "CDI",
-                commune_id: "1",
-                metier_id: "1",
-                period_start: new Date().toISOString().split("T")[0],
-                period_end: new Date().toISOString().split("T")[0],
-                entreprise: "SpaceX",
-                search: "Alien",
-            };
-            const queryWithFilters = FilterHelper.createOffersQueryWithFilters(50, filters);
+    describe("Offer repository SPI", () => {
+        it("Should get the 3 first offers and implement and dispose the pool correctly", async () => {
+            const repository: IOfferRepository = new PostgresRepository(pool);
+            const offersResult = await repository.getOffers(3, {});
 
-            expect(queryWithFilters).toHaveProperty("options");
-            expect(queryWithFilters).toHaveProperty("query");
-            expect(queryWithFilters.query).toBe(
-                "SELECT * FROM offre JOIN date_debut_stage ON date_debut_stage.offre_id = offre.id WHERE secteur_id = $2 AND type_contrat = $3 AND commune_id = $4 AND metier_id = $5 AND debut_stage >= $6 AND debut_stage <= $7 AND entreprise = $8 AND titre_emploi LIKE $9 LIMIT $1"
-            );
-            expect(queryWithFilters.options).toEqual([
-                "50",
-                "1",
-                "CDI",
-                "1",
-                "1",
-                filters.period_start,
-                filters.period_end,
-                "SpaceX",
-                "%Alien%",
-            ]);
+            expect(pool.connect).toHaveBeenCalled();
+            expect(offersResult.length).toBe(3);
+            expect(mockClient.release).toHaveBeenCalled();
         });
     });
 });
