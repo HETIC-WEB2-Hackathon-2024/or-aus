@@ -24,6 +24,7 @@ export interface ICandidatRepository {
     ): Promise<Omit<ICandidatCommuneOffersStatsResponse, "comparison_percentage">>;
     getCandidatCandidaturesCount(user_id: TCandidatId): Promise<number>;
     getCandidatInfo(input: TCandidatEmail): Promise<Candidat>;
+    addCandidat(input: Pick<TUserPayload, "email">): Promise<void>;
 }
 
 export interface IAuth0Repository {

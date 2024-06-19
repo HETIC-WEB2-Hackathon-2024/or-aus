@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { GetCandidatInfoUseCase } from "../ports/GetCandidatInfoUseCase";
-import { Candidat } from "../domain/Candidat";
+import { Candidat, TCandidatEmail } from "../domain/Candidat";
 
 export interface RequestWithUserInfo extends Request {
     user?: Candidat;
@@ -14,14 +14,17 @@ export class GetCandidatInfoMiddleware {
     async handle(req: RequestWithUserInfo, res: Response<any, Record<string, any>>, next: NextFunction): Promise<void> {
         try {
             const token = req.auth?.token as string;
-            const userInfo = await this._useCase.execute({ token_id: token });
+            const { payload, table } = await this._useCase.execute({ token_id: token });
 
-            req.user = userInfo;
+            req.user = {
+                ...table,
+                ...payload,
+            };
 
             next();
         } catch (error) {
             if (error instanceof Error) {
-                res.status(400).json({ error: error.message });
+                res.status(400).json({ error: error.message, reason: error });
             }
         }
     }

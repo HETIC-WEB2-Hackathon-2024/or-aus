@@ -21,10 +21,6 @@ export class GetCandidatCandidaturesCountController implements IController {
             res.json(result);
         } catch (error) {
             if (error instanceof Error) res.status(400).send({ error: error.message, reason: error });
-            else if (error instanceof Error) {
-                console.error(error);
-                res.status(500).send({ error: error.message, reason: error });
-            }
         }
     }
 }

@@ -7,15 +7,42 @@ import {
     ICandidatSecteurOffersStatsResponse,
 } from "../core/candidat/ports/ICandidatRepository";
 import { Favorite, TFavoriteId } from "../core/favorite/domains/Favorite";
-import { IFavoriteRepository } from "../core/favorite/ports/IFavoriteRepository";
 import { Offre } from "../core/offre/domain/Offre";
 import { IOfferFilter } from "../core/offre/filter/IOfferFilter";
 import { IOfferRepository } from "../core/offre/ports/IOfferRepository";
 import { FilterHelper } from "../core/offre/shared/Filter-helper";
 import { TContract } from "../core/offre/shared/TContract";
+import { TUserPayload } from "../core/candidat/ports/GetCandidatInfoUseCase";
 
 export class PostgresRepository implements IOfferRepository, ICandidatRepository {
     public constructor(private readonly _pool: Pool) {}
+
+    async addCandidat(input: Pick<TUserPayload, "email">): Promise<void> {
+        const client = await this._pool.connect();
+        try {
+            const userExists = await this.getCandidatInfo(input.email);
+            if (userExists) throw new Error(`Candidat exists already`);
+
+            const query = `
+                INSERT INTO candidat (id, nom, prenom, telephone, email, pays, date_naissance) VALUES (123439, $1, $2, $3, $4, $5, $6)
+            `;
+            const values = [
+                null, // nom
+                null, // prenom
+                null, // Telephone
+                input.email,
+                "France", // (pays)
+                "2004-06-04", // (date_naissance)
+            ];
+
+            await client.query(query, values);
+
+            return;
+        } finally {
+            client.release();
+        }
+    }
+
     async getCandidatInfo(input: TCandidatEmail): Promise<Candidat> {
         const client = await this._pool.connect();
         try {
@@ -23,8 +50,6 @@ export class PostgresRepository implements IOfferRepository, ICandidatRepository
             const {
                 rows: [result],
             } = await client.query<Candidat>(query, [input.email]);
-
-            if (!result) throw new Error(`Candidat ${input.email} not found`);
 
             return result;
         } finally {

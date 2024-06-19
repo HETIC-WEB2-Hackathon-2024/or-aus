@@ -21,6 +21,8 @@ import { pool } from "./database";
 import { GetContractTypesUseCase } from "./core/offre/ports/GetContractTypesUseCase";
 import { GetContractTypesController } from "./core/offre/controllers/GetContractTypesController";
 import { GetCandidatInfoMiddleware, RequestWithUserInfo } from "./core/candidat/controllers/GetCandidatInfoMiddleware";
+import { AddCandidatUseCase } from "./core/candidat/ports/AddCandidatUseCase";
+import { AddCandidatController } from "./core/candidat/controllers/AddCandidatController";
 
 export async function main(): Promise<void> {
     const poolClient = pool;
@@ -37,10 +39,13 @@ export async function main(): Promise<void> {
     const getCandidatCommuneOffersStatsController = new GetCandidatCommuneOffersStatsController(
         getCandidatCommuneOffersStatsUseCase
     );
-
+    // Candidat
     const getCandidatInfoUseCase = new GetCandidatInfoUseCase(auth0Repository, postgreRepository);
     const getCandidatInfoMiddleware = new GetCandidatInfoMiddleware(getCandidatInfoUseCase);
+    const addCandidatUseCase = new AddCandidatUseCase(postgreRepository);
+    const addCandidatController = new AddCandidatController(addCandidatUseCase);
 
+    // Candidat dashboard
     const getCandidatSecteurOffersStatsUseCase = new GetCandidatSecteurOffersStatsUseCase(postgreRepository);
     const getCandidatSecteurOffersStatsController = new GetCandidatSecteurOffersStatsController(
         getCandidatSecteurOffersStatsUseCase
@@ -67,15 +72,20 @@ export async function main(): Promise<void> {
     //Offers routes
     const offersRouter = Router();
     offersRouter.route("/v1/offres").get(getOffersController.handle);
-    offersRouter.route("/v1/offres/favorite").delete(removeFavoriteController.handle);
-    offersRouter.route("/v1/offres/favorite").get(getFavoriteController.handle);
-    offersRouter.route("/v1/offres/favorite").post(addFavoriteController.handle);
+    offersRouter.route("/v1/offres/favorite").delete(getCandidatInfoMiddleware.handle, removeFavoriteController.handle);
+    offersRouter.route("/v1/offres/favorite").get(getCandidatInfoMiddleware.handle, getFavoriteController.handle);
+    offersRouter.route("/v1/offres/favorite").post(getCandidatInfoMiddleware.handle, addFavoriteController.handle);
     offersRouter.route("/v1/offres/contractTypes").get(getContractTypesController.handle);
 
     // User routes
     const userRouter = Router();
-    userRouter.route("/v1/users/getApplicationCount").get(getCandidatCandidaturesCountController.handle);
-    userRouter.route("/v1/users/getSecteurOffersStats").get(getCandidatSecteurOffersStatsController.handle);
+    userRouter.route("/v1/users").post(getCandidatInfoMiddleware.handle, addCandidatController.handle);
+    userRouter
+        .route("/v1/users/getApplicationCount")
+        .get(getCandidatInfoMiddleware.handle, getCandidatCandidaturesCountController.handle);
+    userRouter
+        .route("/v1/users/getSecteurOffersStats")
+        .get(getCandidatInfoMiddleware.handle, getCandidatSecteurOffersStatsController.handle);
     userRouter
         .route("/v1/users/getCommuneOffersStats")
         .get(getCandidatInfoMiddleware.handle, getCandidatCommuneOffersStatsController.handle);
