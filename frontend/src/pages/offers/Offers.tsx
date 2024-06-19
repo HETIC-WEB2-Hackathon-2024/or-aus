@@ -89,7 +89,6 @@ export default function Offers() {
         try {
             const token = await getAccessTokenSilently();
             setSelectedOffer(intialSelectedOffer)
-            console.log(filters)
             const path = createQueryString("/v1/offres", filters)
             const newOffers = await authenticatedGet(token, path);
             setPage((prev) => prev + 1);

@@ -19,17 +19,15 @@ export default function OffersList({offers, selectedOfferId, next, onClick, hasM
         <div className="flex flex-col items-center justify-between p-4 space-y-3 h-full overflow-scroll">
             {offers.map((offer) => {
                 return (
-                    <div onClick={() => onClick(offer.offre_id)}>
+                    <div key={offer.offre_id} onClick={() => onClick(offer.offre_id)}>
                         {selectedOfferId === offer.offre_id ? 
                         (<OfferCard 
-                            key={offer.offre_id} 
                             title={offer.titre_emploi} 
                             subtitle={offer.entreprise} 
                             shortDescription={offer.description_courte} 
                             tags={[offer.contrat, `${offer.nom_commune} (${offer.code_region})`]}
                             className="bg-primary/30"/>):
                             (<OfferCard 
-                                key={offer.offre_id} 
                                 title={offer.titre_emploi} 
                                 subtitle={offer.entreprise} 
                                 shortDescription={offer.description_courte} 
