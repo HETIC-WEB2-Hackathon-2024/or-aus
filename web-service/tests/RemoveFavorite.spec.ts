@@ -3,7 +3,6 @@
 // import { IFavoriteRepository } from "../src/core/favorite/ports/iFavorteRepository";
 // import { pool } from "../src/database";
 
-
 // jest.mock("../src/database", () => {
 //     const originalModule = jest.requireActual("../src/database");
 //     return {
