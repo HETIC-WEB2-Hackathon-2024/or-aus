@@ -16,8 +16,6 @@ import { RemoveFavoriteController } from "./core/favorite/controllers/RemoveFavo
 import { RemoveFavoriteUseCase } from "./core/favorite/ports/RemoveFavoriteUseCase";
 
 export async function main(): Promise<void> {
-
-
     const poolClient = pool;
     const postgreRepository = new PostgresRepository(poolClient);
 
@@ -45,7 +43,6 @@ export async function main(): Promise<void> {
     const addFavoriteUseCase = new AddFavoriteUseCase(postgreRepository);
     const addFavoriteController = new AddFavoriteController(addFavoriteUseCase);
 
-
     const removeFavoriteUseCase = new RemoveFavoriteUseCase(postgreRepository);
     const removeFavoriteController = new RemoveFavoriteController(removeFavoriteUseCase);
     // Routing
@@ -68,3 +65,4 @@ export async function main(): Promise<void> {
 }
 
 main();
+    
