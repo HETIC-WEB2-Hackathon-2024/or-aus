@@ -1,19 +1,11 @@
 import { useState, useCallback, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Checkbox } from "@/components/ui/checkbox"
-import { AutoComplete } from "../../components/Autocomplete/Autocomplete"
-import { OfferCard } from "../../components/Card/OfferCard"
+import { AutoComplete } from "../../components/Autocompelte/Autocomplete"
 import { useAuth0 } from "@auth0/auth0-react";
 import { authenticatedGet } from "./../../auth/helper";
-import InfiniteScroll from '@/components/ui/infinite-scroll';
-import { Loader2 } from 'lucide-react';
 import { DatePickerWithRange } from "@/components/ui/date-range-picker"
 import {OfferDetail} from "../../components/OfferDetail/OfferDetail"
 import OffersList from "@/components/OffersList/OffersList"
-
-interface OffersProps {
-}
 
 export interface IOffer {
     commune_id: string;
@@ -66,10 +58,9 @@ const intialSelectedOffer = {
     secteur: ""
 }
 
-export default function Offers({}: OffersProps) {
+export default function Offers() {
     const [offers, setOffers] = useState<IOffer[]>([])
     const [selectedOffer, setSelectedOffer] = useState<IOffer>(intialSelectedOffer)
-    const [error, setError] = useState<string | null>(null);
     const [filters, setFilters] = useState<IFilters>({
         limit: 20,
         offset: 0
@@ -82,6 +73,18 @@ export default function Offers({}: OffersProps) {
     const [contractTypeOpen, setContractTypeOpen] = useState(false)
     const [sectorOpen, setSectorOpen] = useState(false)
 
+    
+    const changeSelectedOffer = useCallback((id: number) => {
+        const index = offers.findIndex((offer) => offer.offre_id === id)
+        setSelectedOffer(offers[index])
+    }, [offers])
+    
+    const createQueryString = useCallback((path:string, filters: IFilters) => {
+        let queryString = `${path}?`;
+        Object.entries(filters).forEach((filter) => queryString += `${filter[0]}=${filter[1]}&`)
+        return queryString;
+    }, [])
+    
     const getOffers = useCallback(async () => {
         try {
             const token = await getAccessTokenSilently();
@@ -97,22 +100,10 @@ export default function Offers({}: OffersProps) {
             setOffers([...offers, ...newOffers]);
         } catch (err) {
             setHasMore(false);
-            setError(`Error from web service: ${err}`);
         } finally {
             setLoading(false);
         }
-    }, [filters])
-
-    const changeSelectedOffer = useCallback((id: number) => {
-        const index = offers.findIndex((offer) => offer.offre_id === id)
-        setSelectedOffer(offers[index])
-    }, [offers])
-
-    const createQueryString = useCallback((path:string, filters: IFilters) => {
-        let queryString = `${path}?`;
-        Object.entries(filters).forEach((filter) => queryString += `${filter[0]}=${filter[1]}&`)
-        return queryString;
-    }, [])
+    }, [filters, getAccessTokenSilently, createQueryString, authenticatedGet, offers, page])
 
     useEffect(() => {
         getOffers()

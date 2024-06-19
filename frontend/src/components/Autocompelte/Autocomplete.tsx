@@ -15,6 +15,7 @@ interface AutoCompleteProps {
 }
 
 export function AutoComplete({placeholder, options, variant, className, onChange}: AutoCompleteProps) {
+  
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onChange(event.target.value)
   }
