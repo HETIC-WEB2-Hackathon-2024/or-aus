@@ -13,15 +13,15 @@ export type TUserPayload = {
     email: TCandidatEmail;
     email_verified: boolean;
 };
-export class GetCandidatInfoUseCase implements IUseCase<{ token_id: string }, { payload: any; table: Candidat }> {
+export class GetCandidatInfoUseCase implements IUseCase<{ token_id: string }, Candidat> {
     public constructor(
         private readonly _candidatInfoRepository: IAuth0Repository,
         private readonly _candidatRepository: ICandidatRepository
     ) {}
-    async execute(input: { token_id: string }): Promise<{ payload: any; table: Candidat }> {
+    async execute(input: { token_id: string }): Promise<Candidat> {
         const user_payload = await this._candidatInfoRepository.getUserInfo(input.token_id);
         const user_table = await this._candidatRepository.getCandidatInfo(user_payload.email);
 
-        return { payload: user_payload, table: user_table };
+        return user_table;
     }
 }

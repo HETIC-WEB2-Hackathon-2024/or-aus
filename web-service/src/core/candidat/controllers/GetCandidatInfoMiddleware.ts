@@ -14,12 +14,9 @@ export class GetCandidatInfoMiddleware {
     async handle(req: RequestWithUserInfo, res: Response<any, Record<string, any>>, next: NextFunction): Promise<void> {
         try {
             const token = req.auth?.token as string;
-            const { payload, table } = await this._useCase.execute({ token_id: token });
+            const user = await this._useCase.execute({ token_id: token });
 
-            req.user = {
-                ...table,
-                ...payload,
-            };
+            req.user = user;
 
             next();
         } catch (error) {

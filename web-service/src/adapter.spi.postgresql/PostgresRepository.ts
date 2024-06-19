@@ -13,8 +13,9 @@ import { IOfferRepository } from "../core/offre/ports/IOfferRepository";
 import { FilterHelper } from "../core/offre/shared/Filter-helper";
 import { TContract } from "../core/offre/shared/TContract";
 import { TUserPayload } from "../core/candidat/ports/GetCandidatInfoUseCase";
+import { IFavoriteRepository } from "../core/favorite/ports/IFavoriteRepository";
 
-export class PostgresRepository implements IOfferRepository, ICandidatRepository {
+export class PostgresRepository implements IOfferRepository, ICandidatRepository, IFavoriteRepository {
     public constructor(private readonly _pool: Pool) {}
 
     async addCandidat(input: Pick<TUserPayload, "email">): Promise<void> {
@@ -46,10 +47,10 @@ export class PostgresRepository implements IOfferRepository, ICandidatRepository
     async getCandidatInfo(input: TCandidatEmail): Promise<Candidat> {
         const client = await this._pool.connect();
         try {
-            const query = `SELECT * FROM candidat WHERE candidat.email = $1`;
+            const query = `SELECT * FROM candidat WHERE email = $1`;
             const {
                 rows: [result],
-            } = await client.query<Candidat>(query, [input.email]);
+            } = await client.query<Candidat>(query, [input]);
 
             return result;
         } finally {
@@ -109,12 +110,14 @@ export class PostgresRepository implements IOfferRepository, ICandidatRepository
         }
     }
 
-    async getFavorites(input: TCandidatId): Promise<Offre[]> {
+    async getFavorites(input: TCandidatEmail): Promise<Offre[]> {
         const client = await this._pool.connect();
 
         try {
-            const query = "SELECT * FROM favorite WHERE candidat_id = $1;";
-            const result = await client.query<Favorite>(query, [input.id]);
+            const query = `SELECT * FROM favorite 
+                JOIN candidat AS c ON c.id = favorite.candidat_id
+                WHERE c.email = $1;`;
+            const result = await client.query<Favorite>(query, [input]);
             const offers: Offre[] = [];
 
             for (const favorite of result.rows) {

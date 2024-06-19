@@ -1,22 +1,20 @@
 import { Request, Response } from "express";
-import { InvalidRequestError } from "express-oauth2-jwt-bearer";
 import { GetFavoritesUseCase } from "../ports/GetFavoritesUseCase";
+import { RequestWithUserInfo } from "../../candidat/controllers/GetCandidatInfoMiddleware";
 
 export class GetFavoriteController {
-    public constructor(private readonly _useCase: GetFavoritesUseCase) { }
+    public constructor(private readonly _useCase: GetFavoritesUseCase) {}
 
-    public handle = async (req: Request, res: Response) => {
+    public handle = async (req: RequestWithUserInfo, res: Response) => {
         try {
-            const candidat_id = parseInt(req.query.candidat_id as string);
-            if (!candidat_id) {
-                throw new InvalidRequestError("Missing required parameters");
+            const candidat_email = req.user?.email;
+            if (!candidat_email) {
+                throw new Error("Missing required parameters");
             }
-            const favorites = await this._useCase.execute({ user_id: candidat_id });
+            const favorites = await this._useCase.execute({ user_email: candidat_email });
             res.json(favorites);
         } catch (error) {
-            if (error instanceof InvalidRequestError)
-                res.status(400).send({ error: error.message, reason: error });
-            else res.status(500).send({ error: "Internal Server Error", reason: error });
+            if (error instanceof Error) res.status(400).send({ error: error.message, reason: error });
         }
-    }
+    };
 }

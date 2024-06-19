@@ -1,25 +1,24 @@
-import { Request, Response } from "express";
-import { InvalidRequestError } from "express-oauth2-jwt-bearer";
+import { Response } from "express";
 import { RemoveFavoriteUseCase } from "../ports/RemoveFavoriteUseCase";
+import { RequestWithUserInfo } from "../../candidat/controllers/GetCandidatInfoMiddleware";
+import { IController } from "../../../shared/IController";
 
-export class RemoveFavoriteController {
+export class RemoveFavoriteController implements IController {
     public constructor(private readonly _useCase: RemoveFavoriteUseCase) {
         this.handle = this.handle.bind(this);
     }
 
-    public async handle(req: Request, res: Response) {
+    public async handle(req: RequestWithUserInfo, res: Response) {
         try {
             const offre_id = parseInt(req.query.offre_id as string);
-            const candidat_id = parseInt(req.query.candidat_id as string);
+            const candidat_id = req.user?.id;
             if (!offre_id || !candidat_id) {
-                throw new InvalidRequestError("Missing required parameters");
+                throw new Error("Missing required parameters");
             }
             await this._useCase.execute({ offre_id, candidat_id });
             res.json({ message: "Favorite removed successfully" });
         } catch (error) {
-            if (error instanceof InvalidRequestError)
-                res.status(400).send({ error: error.message, reason: error });
-            else res.status(500).send({ error: "Internal Server Error", reason: error });
+            if (error instanceof Error) res.status(400).send({ error: error.message, reason: error });
         }
     }
 }
