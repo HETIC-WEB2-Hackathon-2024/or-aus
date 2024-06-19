@@ -11,15 +11,20 @@ export class GetOffersController {
     public async handle(req: Request, res: Response) {
         try {
             let limit = parseInt(req.query.limit as string);
+            let offset = parseInt(req.query.offset as string);
             if (!limit) {
                 limit = 50
             }
+            if (!offset) {
+                offset = 0
+            }
             const queryString = req.query
             delete queryString.limit
+            delete queryString.offset
             const filters: IOfferFilter = {
                 ...queryString
             }
-            const result = await this._useCase.execute({ filters, limit });
+            const result = await this._useCase.execute({ filters, limit, offset });
             res.json(result);
         } catch (error) {
             if (error instanceof InvalidRequestError)
