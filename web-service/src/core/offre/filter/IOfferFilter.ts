@@ -7,4 +7,5 @@ export interface IOfferFilter {
     period_end?: string;
     entreprise?: string;
     search?: string;
+    city_or_department?: string;
 }

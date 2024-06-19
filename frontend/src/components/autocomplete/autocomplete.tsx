@@ -8,26 +8,29 @@ import {
 
 interface AutoCompleteProps {
   placeholder?: string;
-  options: string[];
+  options?: string[];
   variant: "search" | "pin";
   className?: string;
+  onChange: (value: string) => void;
 }
 
-export function AutoComplete({placeholder, options, variant, className}: AutoCompleteProps) {
-
+export function AutoComplete({placeholder, options, variant, className, onChange}: AutoCompleteProps) {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    onChange(event.target.value)
+  }
+ 
   return (
     <div className={className}>
-      <Command className="rounded-lg border truncate">
+      <Command className="rounded-lg border truncate" onChange={handleChange}>
         {variant == "search" && <CommandInput placeholder={placeholder} className="truncate"/>}
         {variant == "pin" && <CommandInputPin placeholder={placeholder} className="truncate"/>} 
-        <CommandList>
-            {/* <CommandItem>Calendar</CommandItem>
-            <CommandItem>Search Emoji</CommandItem>
-            <CommandItem>Calculator</CommandItem>
-            <CommandItem>Profile</CommandItem>
-            <CommandItem>Billing</CommandItem>
-            <CommandItem>Settings</CommandItem> */}
-        </CommandList>
+        {options && <CommandList>
+          {
+            options.map((option, index) => {
+              return <CommandItem key={`${option}-${index}`}>{option}</CommandItem>
+            })
+          }
+        </CommandList>}
       </Command>
 
     </div>
