@@ -54,6 +54,7 @@ export async function main(): Promise<void> {
 
     const removeFavoriteUseCase = new RemoveFavoriteUseCase(postgreRepository);
     const removeFavoriteController = new RemoveFavoriteController(removeFavoriteUseCase);
+
     const getFavoriteUseCase = new GetFavoritesUseCase(postgreRepository);
     const getFavoriteController = new GetFavoriteController(getFavoriteUseCase);
 
