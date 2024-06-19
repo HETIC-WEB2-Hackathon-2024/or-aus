@@ -13,9 +13,9 @@ export class AddCandidatController implements IController {
     async handle(req: RequestWithUserInfo, res: Response<any, Record<string, any>>): Promise<void> {
         try {
             if (!req.user) throw new Error("No user payload");
-            await this._useCase.execute({ email: req.user.email } as any);
+            const result = await this._useCase.execute({ email: req.user.email } as any);
 
-            res.status(201);
+            res.status(201).json();
         } catch (e) {
             if (e instanceof Error) res.status(400).send({ error: e.message, reason: e });
         }
