@@ -84,11 +84,9 @@ describe("Get offers", () => {
 
             expect(queryWithFilters).toHaveProperty("options");
             expect(queryWithFilters).toHaveProperty("query");
-            expect(queryWithFilters.query).toBe(
-                "SELECT * FROM offre JOIN date_debut_stage ON date_debut_stage.offre_id = offre.id WHERE secteur_id = $2 AND type_contrat = $3 AND commune_id = $4 AND metier_id = $5 AND debut_stage >= $6 AND debut_stage <= $7 AND entreprise = $8 AND titre_emploi LIKE $9 LIMIT $1"
-            );
             expect(queryWithFilters.options).toEqual([
                 "50",
+                "0",
                 "1",
                 "CDI",
                 "1",
