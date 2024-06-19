@@ -1,6 +1,6 @@
 import favorite_fixtures from "../fixtures/fixtures_favorite";
 import { PostgresRepository } from "../src/adapter.spi.postgresql/PostgresRepository";
-import { IFavoriteRepository } from "../src/core/favorite/ports/IFavoriteRepository.js";
+import { IFavoriteRepository } from "../src/core/favorite/ports/IFavoriteRepository";
 import { pool } from "../src/database";
 
 
