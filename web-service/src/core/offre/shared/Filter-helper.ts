@@ -14,6 +14,12 @@ export class FilterHelper {
             query += ` WHERE`;
             Object.keys(filters).forEach((filter) => {
                 switch (filter) {
+                    case "id":
+                        if (optionNumber > 2) query += ` AND`;
+                        query += ` id = $${optionNumber}`;
+                        optionNumber++;
+                        if (filters.id) options.push(filters.id);
+                        break;
                     case "metier_id":
                         if (optionNumber > 2) query += ` AND`;
                         query += ` metier_id = $${optionNumber}`;
@@ -65,7 +71,7 @@ export class FilterHelper {
                 }
             });
         }
-        query += ` LIMIT $1`;
+        query += ` LIMIT $1;`;
         return { query, options };
     }
 }
