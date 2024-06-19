@@ -133,7 +133,6 @@ export class PostgresRepository implements IOfferRepository, ICandidatRepository
             client.release();
         }
     }
-
     async removeFavorite(input: TFavoriteId): Promise<void> {
         const client = await this._pool.connect();
         try {
@@ -141,6 +140,17 @@ export class PostgresRepository implements IOfferRepository, ICandidatRepository
                 input.offre_id,
                 input.candidat_id,
             ]);
+        } finally {
+            client.release();
+        }
+    }
+    async addFavorite(candidatId: number, offreId: number): Promise<void> {
+        const client = await this._pool.connect();
+        try {
+            const query = `
+                    INSERT INTO favorite (candidat_id, offre_id, add_date)
+                    VALUES ($1, $2, current_timestamp);`;
+            await client.query(query, [candidatId, offreId]);
         } finally {
             client.release();
         }

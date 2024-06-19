@@ -9,8 +9,8 @@ export class ApiServer {
 
     constructor() {
         this.corsOptions = {
-            origin: '*',
-        }
+            origin: "*",
+        };
         this.app = express();
         this.app.use(cors(this.corsOptions));
         this.app.use(morgan("dev"));

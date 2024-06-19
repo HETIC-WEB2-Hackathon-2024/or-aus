@@ -52,10 +52,10 @@ export class FilterHelper {
                         query += ` nom_commune = $${optionNumber} OR nom_departement = $${optionNumber}`;
                         optionNumber++;
                         if (filters.city_or_department) {
-                            const search = filters.city_or_department
-                            const capitalized = search.charAt(0).toUpperCase() + search.slice(1)
-                            options.push(capitalized)
-                        };
+                            const search = filters.city_or_department;
+                            const capitalized = search.charAt(0).toUpperCase() + search.slice(1);
+                            options.push(capitalized);
+                        }
                         break;
                     case "entreprise":
                         if (optionNumber > 3) query += ` AND`;

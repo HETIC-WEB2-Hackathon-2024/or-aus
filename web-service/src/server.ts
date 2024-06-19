@@ -4,6 +4,8 @@ import { Auth0Repository } from "./adapter.spi.postgresql/Auth0Repository";
 import { PostgresRepository } from "./adapter.spi.postgresql/PostgresRepository";
 import { GetCandidatCandidaturesCountController } from "./core/candidat/controllers/GetCandidatCandidaturesCountController";
 import { GetCandidatCommuneOffersStatsController } from "./core/candidat/controllers/GetCandidatCommuneOffersStatsController";
+import { AddFavoriteUseCase } from "./core/favorite/ports/AddFavoriteUseCase";
+import { AddFavoriteController } from "./core/favorite/controllers/AddFavoriteController";
 import { GetCandidatInfoController } from "./core/candidat/controllers/GetCandidatInfoController";
 import { GetCandidatSecteurOffersStatsController } from "./core/candidat/controllers/GetCandidatSecteurOffersStatsController";
 import { GetCandidatCandidaturesCountUseCase } from "./core/candidat/ports/GetCandidatCandidaturesCountUseCase";
@@ -19,7 +21,6 @@ import { GetOffersUseCase } from "./core/offre/ports/GetOffersUseCase";
 import { pool } from "./database";
 
 export async function main(): Promise<void> {
-    // Inject
     const poolClient = pool;
     const postgreRepository = new PostgresRepository(poolClient);
     const auth0Repository = new Auth0Repository();
@@ -48,6 +49,9 @@ export async function main(): Promise<void> {
     const getOffersController = new GetOffersController(getOffersUseCase);
 
     // Favorite
+    const addFavoriteUseCase = new AddFavoriteUseCase(postgreRepository);
+    const addFavoriteController = new AddFavoriteController(addFavoriteUseCase);
+
     const removeFavoriteUseCase = new RemoveFavoriteUseCase(postgreRepository);
     const removeFavoriteController = new RemoveFavoriteController(removeFavoriteUseCase);
 
@@ -59,6 +63,7 @@ export async function main(): Promise<void> {
     offersRouter.route("/v1/offres").get(getOffersController.handle);
     offersRouter.route("/v1/offres/favorite").delete(removeFavoriteController.handle);
     offersRouter.route("/v1/offres/favorite").get(getFavoriteController.handle);
+    offersRouter.route("/v1/offres/favorite").post(addFavoriteController.handle);
 
     const userRouter = Router();
     userRouter.route("/v1/users/getApplicationCount").get(getCandidatCandidaturesCountController.handle);
