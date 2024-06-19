@@ -1,4 +1,4 @@
-import { Pool } from "pg";
+import { Client, Pool } from "pg";
 
 import { IOfferRepository } from "../core/offre/ports/IOfferRepository";
 import {
@@ -12,9 +12,26 @@ import { FilterHelper } from "../core/offre/shared/Filter-helper";
 import { TCandidatId } from "../core/candidat/domain/Candidat";
 
 export class PostgresRepository implements IOfferRepository, ICandidatRepository {
-    public constructor(private readonly _pool: Pool) { }
-    getCandidatCandidaturesCount(user_id: TCandidatId): Promise<number> {
-        throw new Error("Method not implemented.");
+    public constructor(private readonly _pool: Pool) {}
+
+    async getCandidatCandidaturesCount(input: TCandidatId): Promise<number> {
+        const client = await this._pool.connect();
+        try {
+            const query = `SELECT 
+                        COUNT(*) AS nombre
+                        FROM 
+                        public.offre AS o
+                        JOIN 
+                        public.candidat_communes AS c ON c.commune_id = o.commune_id
+                        WHERE c.candidat_id = $1`;
+            const {
+                rows: [result],
+            } = await client.query<{ nombre: number }>(query, [input.id]);
+
+            return result.nombre;
+        } finally {
+            client.release();
+        }
     }
 
     async getCandidatSecteurOffersStats(
@@ -103,7 +120,10 @@ export class PostgresRepository implements IOfferRepository, ICandidatRepository
     async removeFavorite(offre_id: number, candidat_id: number): Promise<void> {
         const client = await this._pool.connect();
         try {
-            await client.query("DELETE FROM favorite WHERE offre_id = $1 AND candidat_id = $2", [offre_id, candidat_id]);
+            await client.query("DELETE FROM favorite WHERE offre_id = $1 AND candidat_id = $2", [
+                offre_id,
+                candidat_id,
+            ]);
         } finally {
             client.release();
         }
