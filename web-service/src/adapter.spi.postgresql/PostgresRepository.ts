@@ -12,7 +12,7 @@ import { FilterHelper } from "../core/offre/shared/Filter-helper";
 import { TCandidatId } from "../core/candidat/domain/Candidat";
 
 export class PostgresRepository implements IOfferRepository, ICandidatRepository {
-    public constructor(private readonly _pool: Pool) {}
+    public constructor(private readonly _pool: Pool) { }
     getCandidatCandidaturesCount(user_id: TCandidatId): Promise<number> {
         throw new Error("Method not implemented.");
     }
@@ -95,6 +95,15 @@ export class PostgresRepository implements IOfferRepository, ICandidatRepository
             const queryWithFilters = FilterHelper.createOffersQueryWithFilters(limit, filters);
             const results = await client.query<Offre>(queryWithFilters.query, queryWithFilters.options);
             return results.rows;
+        } finally {
+            client.release();
+        }
+    }
+
+    async removeFavorite(offre_id: number, candidat_id: number): Promise<void> {
+        const client = await this._pool.connect();
+        try {
+            await client.query("DELETE FROM favorite WHERE offre_id = $1 AND candidat_id = $2", [offre_id, candidat_id]);
         } finally {
             client.release();
         }
