@@ -51,13 +51,14 @@ export async function main(): Promise<void> {
     // Routing
     const offersRouter = Router();
     offersRouter.route("/v1/offres").get(getOffersController.handle);
-    offersRouter.route("/v1/offres/favorites").post(addFavoriteController.handle);
 
     const userRouter = Router();
     userRouter.route("/v1/users/getApplicationCount").get(getCandidatCandidaturesCountController.handle);
     userRouter.route("/v1/users/getSecteurOffersStats").get(getCandidatSecteurOffersStatsController.handle);
     userRouter.route("/v1/users/getCommuneOffersStats").get(getCandidatCommuneOffersStatsController.handle);
     userRouter.route('/v1/users/RemoveFavorite').delete(removeFavoriteController.handle)
+    userRouter.route("/v1/users/AddFavorite").post(addFavoriteController.handle);
+
     // Configure and listen
     const app = new ApiServer();
     app.addRoute(offersRouter);
