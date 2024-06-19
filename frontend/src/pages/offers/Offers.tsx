@@ -9,11 +9,13 @@ import { authenticatedGet } from "./../../auth/helper";
 import InfiniteScroll from '@/components/ui/infinite-scroll';
 import { Loader2 } from 'lucide-react';
 import { DatePickerWithRange } from "@/components/ui/date-range-picker"
+import {OfferDetail} from "../../components/OfferDetail/OfferDetail"
+import OffersList from "@/components/OffersList/OffersList"
 
 interface OffersProps {
 }
 
-interface IOffer {
+export interface IOffer {
     commune_id: string;
     contrat: string;
     debut_stage: string;
@@ -173,52 +175,16 @@ export default function Offers({}: OffersProps) {
                                     onChange={(value: string) => setFilters({...filters, city_or_department: value})}/>
                                 <Button className="m-2" onClick={getOffers}>Rechercher</Button>
                         </div>
-                        <div className="flex flex-col items-center justify-between p-4 space-y-3 h-full overflow-scroll">
-                            {offers.map((offer) => {
-                                return (
-                                    <div onClick={() => changeSelectedOffer(offer.offre_id)}>
-                                        {selectedOffer.offre_id === offer.offre_id ? 
-                                        (<OfferCard 
-                                            key={offer.offre_id} 
-                                            title={offer.titre_emploi} 
-                                            subtitle={offer.entreprise} 
-                                            shortDescription={offer.description_courte} 
-                                            tags={[offer.contrat, `${offer.nom_commune} (${offer.code_region})`]}
-                                            className="bg-primary/30"/>):
-                                            (<OfferCard 
-                                                key={offer.offre_id} 
-                                                title={offer.titre_emploi} 
-                                                subtitle={offer.entreprise} 
-                                                shortDescription={offer.description_courte} 
-                                                tags={[offer.contrat, `${offer.nom_commune} (${offer.code_region})`]} />)
-                                            }
-                                    </div>
-                                )
-                            })}
-                            <InfiniteScroll hasMore={hasMore} isLoading={loading} next={next} threshold={1}>
-                                {hasMore && <Loader2 className="my-4 h-8 w-8 animate-spin" />}
-                            </InfiniteScroll>
-                        </div>
+                        <OffersList 
+                            offers={offers} 
+                            selectedOfferId={selectedOffer.offre_id} 
+                            next={next} 
+                            onClick={changeSelectedOffer} 
+                            hasMore={hasMore} 
+                            loading={loading}/>
                     </div>
                     <div className="basis-1/2">
-                        <div className="border-b py-3 pl-3">
-                            <h2 className="text-2xl font-bold">{selectedOffer.titre_emploi}</h2>
-                            <p className="text-md">Chez <span className="font-bold">{selectedOffer.entreprise}</span></p>
-                        </div>
-                        <div className="pt-4 pl-4 pr-4">
-                            <h3 className="text-xl font-bold pt-4 pb-2">Détails de l'emploi</h3>
-                            <h4 className="text-l font-bold pt-4 pb-2">Type de poste</h4>
-                            <div className="space-x-1 ">
-                                <Badge>{selectedOffer.contrat}</Badge>
-                                <Badge>{selectedOffer.type_contrat}</Badge>
-                            </div>
-                            <h4 className="text-l font-bold pt-4 pb-2">Secteur</h4>
-                            <Badge>{selectedOffer.secteur}</Badge>
-                            <h4 className="text-l font-bold pt-4 pb-2">Localisation</h4>
-                            <Badge>{selectedOffer.nom_commune} ({selectedOffer.code_region})</Badge>
-                            <h3 className="text-xl font-bold pt-4 pb-2">Description du poste</h3>
-                            <p>{selectedOffer.description}</p>
-                        </div>
+                        <OfferDetail selectedOffer={selectedOffer} />
                     </div>
                 </div>
             </div>
