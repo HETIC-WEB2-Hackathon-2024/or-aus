@@ -5,10 +5,15 @@ import morgan from "morgan";
 
 export class ApiServer {
     private app: Express;
+    private corsOptions:cors.CorsOptions;
 
     constructor() {
+        this.corsOptions ={
+            origin:'*', 
+            credentials:true
+         }
         this.app = express();
-        this.app.use(cors());
+        this.app.use(cors(this.corsOptions));
         this.app.use(morgan("dev"));
         this.app.use(
             auth({
