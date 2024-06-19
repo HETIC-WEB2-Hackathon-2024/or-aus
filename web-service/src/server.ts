@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Request, Response, Router } from "express";
 import { ApiServer } from "./adapter.api.express/ApiServer";
 import { Auth0Repository } from "./adapter.spi.postgresql/Auth0Repository";
 import { PostgresRepository } from "./adapter.spi.postgresql/PostgresRepository";
@@ -50,12 +50,15 @@ export async function main(): Promise<void> {
     // Favorite
     const removeFavoriteUseCase = new RemoveFavoriteUseCase(postgreRepository);
     const removeFavoriteController = new RemoveFavoriteController(removeFavoriteUseCase);
+
     const getFavoriteUseCase = new GetFavoritesUseCase(postgreRepository);
     const getFavoriteController = new GetFavoriteController(getFavoriteUseCase);
 
     // Routing
     const offersRouter = Router();
     offersRouter.route("/v1/offres").get(getOffersController.handle);
+
+    //
     const userRouter = Router();
     userRouter.route("/v1/users/getApplicationCount").get(getCandidatCandidaturesCountController.handle);
     userRouter.route("/v1/users/getSecteurOffersStats").get(getCandidatSecteurOffersStatsController.handle);
@@ -64,12 +67,15 @@ export async function main(): Promise<void> {
     userRouter.route('/v1/users/GetFavorite').get(getFavoriteController.handle);
     userRouter.route("/v1/users/me").get(getCandidatInfoController.handle);
 
+
     // Configure and listen
     const app = new ApiServer();
     app.addRoute(offersRouter);
     app.addRoute(userRouter);
-
     app.listen(3000);
+    app.get("/v1/status", (req: Request, res: Response) => {
+        res.status(200).send("OK");
+    })
 }
 
 main();
