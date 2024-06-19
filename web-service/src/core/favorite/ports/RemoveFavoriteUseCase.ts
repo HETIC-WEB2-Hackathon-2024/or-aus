@@ -1,5 +1,5 @@
 import { IUseCase } from "../../../shared/IUseCase";
-import { TFavoriteId } from "../domains/Favorite.js";
+import { TFavoriteId } from "../domains/Favorite";
 import { IFavoriteRepository } from "./IFavoriteRepository";
 
 export class RemoveFavoriteUseCase implements IUseCase<TFavoriteId, void> {

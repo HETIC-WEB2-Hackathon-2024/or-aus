@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { InvalidRequestError } from "express-oauth2-jwt-bearer";
-import { GetFavoritesUseCase } from "../ports/GetFavoritesUseCase.js";
+import { GetFavoritesUseCase } from "../ports/GetFavoritesUseCase";
 
 export class GetFavoriteController {
     public constructor(private readonly _useCase: GetFavoritesUseCase) { }

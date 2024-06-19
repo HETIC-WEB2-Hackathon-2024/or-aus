@@ -1,7 +1,7 @@
-import { IUseCase } from "../../../shared/IUseCase.js";
-import { Offre } from "../../offre/domain/Offre.js";
-import { IGetFavoritesDto } from "../shared/Favorites.dto.js";
-import { IFavoriteRepository } from "./IFavoriteRepository.js";
+import { IUseCase } from "../../../shared/IUseCase";
+import { Offre } from "../../offre/domain/Offre";
+import { IGetFavoritesDto } from "../shared/Favorites.dto";
+import { IFavoriteRepository } from "./IFavoriteRepository";
 
 export class GetFavoritesUseCase implements IUseCase<IGetFavoritesDto, Offre[]> {
     public constructor(private readonly _favoriteRepository: IFavoriteRepository) { }
