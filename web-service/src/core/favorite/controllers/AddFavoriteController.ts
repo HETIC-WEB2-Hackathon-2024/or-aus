@@ -9,7 +9,8 @@ export class AddFavoriteController {
 
   public async handle(req: Request, res: Response): Promise<void> {
     try {
-      const { candidatId, offreId } = req.body;
+      const offreId = parseInt(req.query.offre_id as string);
+      const candidatId = parseInt(req.query.candidat_id as string);
       if (!candidatId || !offreId)
         throw new InvalidRequestError("candidatId and offreId must be set");
 
@@ -20,12 +21,10 @@ export class AddFavoriteController {
       if (error instanceof InvalidRequestError) {
         res.status(400).send({ error: error.message, reason: error });
       } else {
-        res
-          .status(500)
-          .send({
-            error: "Internal Server Error",
-            reason: error.message || error,
-          });
+        res.status(500).send({
+          error: "Internal Server Error",
+          reason: error.message || error,
+        });
       }
     }
   }
