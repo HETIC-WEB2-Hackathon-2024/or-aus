@@ -50,6 +50,7 @@ export async function main(): Promise<void> {
     // Favorite
     const removeFavoriteUseCase = new RemoveFavoriteUseCase(postgreRepository);
     const removeFavoriteController = new RemoveFavoriteController(removeFavoriteUseCase);
+
     const getFavoriteUseCase = new GetFavoritesUseCase(postgreRepository);
     const getFavoriteController = new GetFavoriteController(getFavoriteUseCase);
 
@@ -58,6 +59,7 @@ export async function main(): Promise<void> {
     offersRouter.route("/v1/offres").get(getOffersController.handle);
     offersRouter.route("/v1/offres/favorite").delete(removeFavoriteController.handle);
     offersRouter.route("/v1/offres/favorite").get(getFavoriteController.handle);
+
     const userRouter = Router();
     userRouter.route("/v1/users/getApplicationCount").get(getCandidatCandidaturesCountController.handle);
     userRouter.route("/v1/users/getSecteurOffersStats").get(getCandidatSecteurOffersStatsController.handle);
