@@ -1,22 +1,24 @@
 import { Pool } from "pg";
 
-import { TCandidatId } from "../core/candidat/domain/Candidat";
+import { IOfferRepository } from "../core/offre/ports/IOfferRepository";
 import {
   ICandidatCommuneOffersStatsResponse,
   ICandidatRepository,
   ICandidatSecteurOffersStatsResponse,
 } from "../core/candidat/ports/ICandidatRepository";
-import { Favorite } from "../core/favorite/domains/Favorite.js";
-import { IFavoriteRepository } from "../core/favorite/ports/IFavoriteRepository.js";
 import { Offre } from "../core/offre/domain/Offre";
 import { IOfferFilter } from "../core/offre/filter/IOfferFilter";
-import { IOfferRepository } from "../core/offre/ports/IOfferRepository";
 import { FilterHelper } from "../core/offre/shared/Filter-helper";
-export class PostgresRepository implements IOfferRepository, ICandidatRepository {
-    public constructor(private readonly _pool: Pool) { }
-    getCandidatCandidaturesCount(user_id: TCandidatId): Promise<number> {
-        throw new Error("Method not implemented.");
-    }
+import { TCandidatId } from "../core/candidat/domain/Candidat";
+
+export class PostgresRepository
+  implements IOfferRepository, ICandidatRepository
+{
+  public constructor(private readonly _pool: Pool) {}
+  getCandidatCandidaturesCount(user_id: TCandidatId): Promise<number> {
+    throw new Error("Method not implemented.");
+  }
+
   async getCandidatSecteurOffersStats(
     input: TCandidatId
   ): Promise<
@@ -51,24 +53,8 @@ export class PostgresRepository implements IOfferRepository, ICandidatRepository
     }
   }
 
-  async getFavoriteOffers({ id: user_id }: TCandidatId): Promise<Offre[]> {
-    const client = await this._pool.connect();
-    try {
-      const query = "SELECT * FROM favorite WHERE candidat_id = $1;";
-      const result = await client.query<Favorite>(query, [user_id]);
-      const offers: Offre[] = [];
-
-      for (const favorite of result.rows) {
-        const offre = await this.getOffers(1, {
-          id: favorite.offre_id.toString(),
-        });
-        offers.push(offre[0]);
-      }
-
-      return offers;
-    } finally {
-      client.release();
-    }
+  async getRegisteredOffers(input: TCandidatId): Promise<Offre[]> {
+    throw new Error("Method not implemented.");
   }
 
   async getCandidatCommuneOffersStats(
@@ -109,11 +95,12 @@ export class PostgresRepository implements IOfferRepository, ICandidatRepository
     }
   }
 
-  async getOffers(limit: number, filters: IOfferFilter): Promise<Offre[]> {
+  async getOffers(limit: number, offset: number, filters: IOfferFilter) {
     const client = await this._pool.connect();
     try {
       const queryWithFilters = FilterHelper.createOffersQueryWithFilters(
         limit,
+        offset,
         filters
       );
       const results = await client.query<Offre>(
@@ -121,6 +108,18 @@ export class PostgresRepository implements IOfferRepository, ICandidatRepository
         queryWithFilters.options
       );
       return results.rows;
+    } finally {
+      client.release();
+    }
+  }
+
+  async removeFavorite(offre_id: number, candidat_id: number): Promise<void> {
+    const client = await this._pool.connect();
+    try {
+      await client.query(
+        "DELETE FROM favorite WHERE offre_id = $1 AND candidat_id = $2",
+        [offre_id, candidat_id]
+      );
     } finally {
       client.release();
     }
@@ -137,13 +136,4 @@ export class PostgresRepository implements IOfferRepository, ICandidatRepository
       client.release();
     }
   }
-
-   async removeFavorite(offre_id: number, candidat_id: number): Promise<void> {
-       const client = await this._pool.connect();
-       try {
-           await client.query("DELETE FROM favorite WHERE offre_id = $1 AND candidat_id = $2", [offre_id, candidat_id]);
-        } finally {
-            client.release();
-        }
-    }
 }

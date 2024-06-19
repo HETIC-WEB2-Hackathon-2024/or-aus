@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import { Dashboard } from "./pages/dashboard/Dashboard";
 import Settings from "./pages/settings/Settings";
+import Offers from "./pages/offers/Offers";
 
 import Header, { TCurrentView } from "./common/Header";
 import ErrorPage from "./pages/error/Error";
@@ -21,7 +22,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "offres",
-                element: <div>Offres</div>,
+                element: <Offers />,
             },
             {
                 path: "parametres",

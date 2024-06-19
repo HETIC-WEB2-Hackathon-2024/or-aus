@@ -6,13 +6,14 @@ import { IOfferFilter } from "./../filter/IOfferFilter";
 interface IGetOffersUseCaseDto {
     filters: IOfferFilter;
     limit: number;
+    offset: number;
 }
 
 export class GetOffersUseCase implements IUseCase<IGetOffersUseCaseDto, Offre[]> {
     public constructor(private readonly _offerRepository: IOfferRepository) {}
 
     public async execute(input: IGetOffersUseCaseDto): Promise<Offre[]> {
-        const offersRaw = await this._offerRepository.getOffers(input.limit, input.filters);
+        const offersRaw = await this._offerRepository.getOffers(input.limit, input.offset, input.filters);
 
         return offersRaw;
     }
