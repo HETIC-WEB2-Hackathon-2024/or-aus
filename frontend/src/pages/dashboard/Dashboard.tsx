@@ -18,7 +18,7 @@ export function Dashboard() {
                 </h1>
                 <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
                     <Card x-chunk="dashboard-01-chunk-0">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
                             <CardTitle className="text-xl font-b mb-2">
                                 Nouvelles offres dans votre commune
                             </CardTitle>
@@ -34,7 +34,7 @@ export function Dashboard() {
                         </CardContent>
                     </Card>
                     <Card x-chunk="dashboard-01-chunk-1">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
                             <CardTitle className="text-xl font-semibold mb-2">
                                 Nouvelles offres dans votre secteur
                             </CardTitle>
@@ -50,7 +50,7 @@ export function Dashboard() {
                         </CardContent>
                     </Card>
                     <Card x-chunk="dashboard-01-chunk-2">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
                             <CardTitle className="text-xl font-semibold mb-2">
                                 Nouvelles offres enregistrées
                             </CardTitle>
@@ -66,7 +66,7 @@ export function Dashboard() {
                         </CardContent>
                     </Card>
                     <Card x-chunk="dashboard-01-chunk-3">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
                             <CardTitle className="text-xl font-semibold mb-2">
                                 Candidatures envoyées
                             </CardTitle>
