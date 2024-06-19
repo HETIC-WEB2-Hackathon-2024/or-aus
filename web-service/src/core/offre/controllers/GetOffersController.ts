@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { InvalidRequestError } from "express-oauth2-jwt-bearer";
 import { GetOffersUseCase } from "../ports/GetOffersUseCase";
 import { IOfferFilter } from "../filter/IOfferFilter";
 

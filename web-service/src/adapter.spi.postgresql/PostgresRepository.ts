@@ -12,6 +12,7 @@ import { Offre } from "../core/offre/domain/Offre";
 import { IOfferFilter } from "../core/offre/filter/IOfferFilter";
 import { IOfferRepository } from "../core/offre/ports/IOfferRepository";
 import { FilterHelper } from "../core/offre/shared/Filter-helper";
+import { TContract } from "../core/offre/shared/TContract";
 
 export class PostgresRepository implements IOfferRepository, ICandidatRepository {
     public constructor(private readonly _pool: Pool) {}
@@ -151,6 +152,16 @@ export class PostgresRepository implements IOfferRepository, ICandidatRepository
                     INSERT INTO favorite (candidat_id, offre_id, add_date)
                     VALUES ($1, $2, current_timestamp);`;
             await client.query(query, [candidatId, offreId]);
+        } finally {
+            client.release();
+        }
+    }
+
+    async getContractTypes(): Promise<TContract[]> {
+        const client = await this._pool.connect();
+        try {
+            const results = await client.query("SELECT DISTINCT contrat FROM offre", []);
+            return results.rows;
         } finally {
             client.release();
         }
