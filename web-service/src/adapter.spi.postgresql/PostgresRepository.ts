@@ -13,15 +13,11 @@ import { IOfferFilter } from "../core/offre/filter/IOfferFilter";
 import { IOfferRepository } from "../core/offre/ports/IOfferRepository";
 import { FilterHelper } from "../core/offre/shared/Filter-helper";
 
-export class PostgresRepository
-  implements IOfferRepository, ICandidatRepository, IFavoriteRepository
-{
-  public constructor(private readonly _pool: Pool) {}
-
-  getCandidatCandidaturesCount(user_id: TCandidatId): Promise<number> {
-    throw new Error("Method not implemented.");
-  }
-
+export class PostgresRepository implements IOfferRepository, ICandidatRepository {
+    public constructor(private readonly _pool: Pool) { }
+    getCandidatCandidaturesCount(user_id: TCandidatId): Promise<number> {
+        throw new Error("Method not implemented.");
+    }
   async getCandidatSecteurOffersStats(
     input: TCandidatId
   ): Promise<
@@ -142,4 +138,13 @@ export class PostgresRepository
       client.release();
     }
   }
+
+    async removeFavorite(offre_id: number, candidat_id: number): Promise<void> {
+        const client = await this._pool.connect();
+        try {
+            await client.query("DELETE FROM favorite WHERE offre_id = $1 AND candidat_id = $2", [offre_id, candidat_id]);
+        } finally {
+            client.release();
+        }
+    }
 }
