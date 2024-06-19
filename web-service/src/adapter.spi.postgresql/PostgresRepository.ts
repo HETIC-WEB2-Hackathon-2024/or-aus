@@ -51,7 +51,7 @@ export class PostgresRepository implements IOfferRepository, ICandidatRepository
         }
     }
 
-    async getFavoriteOffers({ id: user_id }: TCandidatId): Promise<Offre[]> {
+    async getFavorites({ id: user_id }: TCandidatId): Promise<Offre[]> {
         const client = await this._pool.connect();
         try {
             const query = "SELECT * FROM favorite WHERE candidat_id = $1;";
