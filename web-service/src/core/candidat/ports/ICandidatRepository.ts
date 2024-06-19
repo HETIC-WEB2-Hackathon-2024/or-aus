@@ -25,3 +25,7 @@ export interface ICandidatRepository {
     ): Promise<Omit<ICandidatCommuneOffersStatsResponse, "comparison_percentage">>;
     getCandidatCandidaturesCount(user_id: TCandidatId): Promise<number>;
 }
+
+export interface IAuth0Repository {
+    getUserInfo(token_id: string, domain_url: string): Promise<any>;
+}
