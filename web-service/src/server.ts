@@ -12,11 +12,15 @@ import { GetCandidatCommuneOffersStatsUseCase } from "./core/candidat/ports/GetC
 import { GetCandidatCommuneOffersStatsController } from "./core/candidat/controllers/GetCandidatCommuneOffersStatsController";
 import { RemoveFavoriteController } from "./core/favorite/controllers/RemoveFavoriteControllers";
 import { RemoveFavoriteUseCase } from "./core/favorite/ports/RemoveFavoriteUseCase";
+import { GetCandidatInfoUseCase } from "./core/candidat/ports/GetCandidatInfoUseCase";
+import { GetCandidatInfoController } from "./core/candidat/controllers/GetCandidatInfoController";
+import { Auth0Repository } from "./adapter.spi.postgresql/Auth0Repository";
 
 export async function main(): Promise<void> {
     // Inject
     const poolClient = pool;
     const postgreRepository = new PostgresRepository(poolClient);
+    const auth0Repository = new Auth0Repository();
 
     // Get application stats
     const getCandidatCandidaturesCountUseCase = new GetCandidatCandidaturesCountUseCase(postgreRepository);
@@ -28,6 +32,9 @@ export async function main(): Promise<void> {
     const getCandidatCommuneOffersStatsController = new GetCandidatCommuneOffersStatsController(
         getCandidatCommuneOffersStatsUseCase
     );
+
+    const getCandidatInfoUseCase = new GetCandidatInfoUseCase(auth0Repository);
+    const getCandidatInfoController = new GetCandidatInfoController(getCandidatInfoUseCase);
 
     const getCandidatSecteurOffersStatsUseCase = new GetCandidatSecteurOffersStatsUseCase(postgreRepository);
     const getCandidatSecteurOffersStatsController = new GetCandidatSecteurOffersStatsController(
@@ -48,7 +55,9 @@ export async function main(): Promise<void> {
     userRouter.route("/v1/users/getApplicationCount").get(getCandidatCandidaturesCountController.handle);
     userRouter.route("/v1/users/getSecteurOffersStats").get(getCandidatSecteurOffersStatsController.handle);
     userRouter.route("/v1/users/getCommuneOffersStats").get(getCandidatCommuneOffersStatsController.handle);
-    userRouter.route('/v1/users/RemoveFavorite').delete(removeFavoriteController.handle)
+    userRouter.route("/v1/users/RemoveFavorite").delete(removeFavoriteController.handle);
+    userRouter.route("/v1/users/me").get(getCandidatInfoController.handle);
+
     // Configure and listen
     const app = new ApiServer();
     app.addRoute(offersRouter);

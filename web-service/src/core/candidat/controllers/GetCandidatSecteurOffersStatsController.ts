@@ -15,15 +15,14 @@ export class GetCandidatSecteurOffersStatsController implements IController {
     ): Promise<void> {
         try {
             const user_id = parseInt(req.query.user_id as string);
-            if (!user_id) throw new InvalidRequestError("user_id must be set");
+            if (!user_id) throw new Error("user_id must be set");
 
             const result = await this._useCase.execute({ id: user_id });
             res.json(result);
         } catch (error) {
-            if (error instanceof InvalidRequestError) res.status(400).send({ error: error.message, reason: error });
-            else if (error instanceof Error) {
+            if (error instanceof Error) {
                 console.error(error);
-                res.status(500).send({ error: error.message, reason: error });
+                res.status(400).send({ error: error.message, reason: error });
             }
         }
     }
