@@ -43,7 +43,7 @@ export function Dashboard() {
                             <div className="text-4xl font-bold text-primary">
                                 349
                             </div>
-                            <p className="text-lg text-[#71717A] mt-2">
+                            <p className="text-md text-[#71717A] mt-2">
                                 -11.5% par rapport au mois dernier
                             </p>
                         </CardContent>
@@ -58,7 +58,7 @@ export function Dashboard() {
                             <div className="text-4xl font-bold text-primary">
                                 4
                             </div>
-                            <p className="text-lg text-[#71717A] mt-2">
+                            <p className="text-md text-[#71717A] mt-2">
                                 -15% par rapport au mois dernier
                             </p>
                         </CardContent>
@@ -73,7 +73,7 @@ export function Dashboard() {
                             <div className="text-4xl font-bold text-primary">
                                 2
                             </div>
-                            <p className="text-lg text-[#71717A] mt-2">
+                            <p className="text-md text-[#71717A] mt-2">
                                 -10% par rapport au mois dernier
                             </p>
                         </CardContent>
@@ -98,17 +98,53 @@ export function Dashboard() {
                     </Card>
                     <Card x-chunk="dashboard-01-chunk-5">
                         <CardHeader>
-                            <CardTitle>Vos offres sauvegardées </CardTitle>
-                            <CardDescription>
+                            <CardTitle className="mb-1">
+                                Vos offres sauvegardées{" "}
+                            </CardTitle>
+                            <CardDescription className="text-md">
                                 Retrouvez les offres que vous avez sauvegardées
                                 en un clic !
                             </CardDescription>
                         </CardHeader>
-                        <CardContent className="grid gap-8">
-                            <Card>
-                                <CardTitle>Développeur web (H/F)</CardTitle>
-                                <CardDescription>
+                        <CardContent className="grid gap-3">
+                            <Card className="px-5 py-3 shadow-none">
+                                <CardTitle className="text-md mb-1">
+                                    Développeur web (H/F)
+                                </CardTitle>
+                                <CardDescription className="text-sm">
                                     Apple - CHATEAUROUX (36)
+                                </CardDescription>
+                            </Card>
+                            <Card className="px-5 py-3 shadow-none">
+                                <CardTitle className="text-md mb-1">
+                                    Eleveur de légumes
+                                </CardTitle>
+                                <CardDescription className="text-sm">
+                                    Google - SANNOIS (95)
+                                </CardDescription>
+                            </Card>
+                            <Card className="px-5 py-3 shadow-none">
+                                <CardTitle className="text-md mb-1">
+                                    Assistant marketing H/F
+                                </CardTitle>
+                                <CardDescription className="text-sm">
+                                    SNCF - BARD (42)
+                                </CardDescription>
+                            </Card>
+                            <Card className="px-5 py-3 shadow-none">
+                                <CardTitle className="text-md mb-1">
+                                    Testeur d’eau H/F
+                                </CardTitle>
+                                <CardDescription className="text-sm">
+                                    Evian - EVIAN-LES-BAINS (74)
+                                </CardDescription>
+                            </Card>
+                            <Card className="px-5 py-3 shadow-none">
+                                <CardTitle className="text-md mb-1">
+                                    Employé polyvalent
+                                </CardTitle>
+                                <CardDescription className="text-sm">
+                                    McDonald’s - SERRIS (77)
                                 </CardDescription>
                             </Card>
                         </CardContent>
