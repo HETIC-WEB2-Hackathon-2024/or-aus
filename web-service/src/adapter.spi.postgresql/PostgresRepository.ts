@@ -95,6 +95,7 @@ export class PostgresRepository
     }
   }
 
+ 
   async getOffers(limit: number, offset: number, filters: IOfferFilter) {
     const client = await this._pool.connect();
     try {
