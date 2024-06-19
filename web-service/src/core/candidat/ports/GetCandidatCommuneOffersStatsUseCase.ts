@@ -1,6 +1,5 @@
 import { IUseCase } from "../../../shared/IUseCase";
 import { TCandidatId } from "../domain/Candidat";
-import { IGetRegisteredCandidaturesDto } from "../shared/RegisteredCandidatures.dto";
 import { ICandidatCommuneOffersStatsResponse, ICandidatRepository } from "./ICandidatRepository";
 
 export class GetCandidatCommuneOffersStatsUseCase
