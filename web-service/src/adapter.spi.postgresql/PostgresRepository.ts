@@ -89,10 +89,10 @@ export class PostgresRepository implements IOfferRepository, ICandidatRepository
         }
     }
 
-    async getOffers(limit: number, filters: IOfferFilter) {
+    async getOffers(limit: number, offset: number, filters: IOfferFilter) {
         const client = await this._pool.connect();
         try {
-            const queryWithFilters = FilterHelper.createOffersQueryWithFilters(limit, filters);
+            const queryWithFilters = FilterHelper.createOffersQueryWithFilters(limit, offset, filters);
             const results = await client.query<Offre>(queryWithFilters.query, queryWithFilters.options);
             return results.rows;
         } finally {

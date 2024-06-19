@@ -6,10 +6,13 @@ interface IQuery {
 }
 
 export class FilterHelper {
-    static createOffersQueryWithFilters(limit: number, filters: IOfferFilter): IQuery {
-        let optionNumber = 2;
-        const options: string[] = [limit.toString()];
-        let query = `SELECT * FROM offre JOIN date_debut_stage ON date_debut_stage.offre_id = offre.id`;
+    static createOffersQueryWithFilters(limit: number, offset: number, filters: IOfferFilter): IQuery {
+        let optionNumber = 3;
+        const options: string[] = [limit.toString(), offset.toString()];
+        let query = `SELECT * FROM offre 
+        JOIN date_debut_stage ON date_debut_stage.offre_id = offre.id 
+        JOIN commune ON commune.id = offre.commune_id
+        JOIN secteur ON secteur.id = offre.secteur_id`;
         if (Object.keys(filters).length > 0) {
             query += ` WHERE`;
             Object.keys(filters).forEach((filter) => {
@@ -38,6 +41,16 @@ export class FilterHelper {
                         optionNumber++;
                         if (filters.commune_id) options.push(filters.commune_id);
                         break;
+                    case "city_or_department":
+                        if (optionNumber > 2) query += ` AND`;
+                        query += ` nom_commune = $${optionNumber} OR nom_departement = $${optionNumber}`;
+                        optionNumber++;
+                        if (filters.city_or_department) {
+                            const search = filters.city_or_department
+                            const capitalized = search.charAt(0).toUpperCase() + search.slice(1)
+                            options.push(capitalized)
+                        };
+                        break;
                     case "entreprise":
                         if (optionNumber > 2) query += ` AND`;
                         query += ` entreprise = $${optionNumber}`;
@@ -65,7 +78,7 @@ export class FilterHelper {
                 }
             });
         }
-        query += ` LIMIT $1`;
+        query += ` LIMIT $1 OFFSET $2;`;
         return { query, options };
     }
 }

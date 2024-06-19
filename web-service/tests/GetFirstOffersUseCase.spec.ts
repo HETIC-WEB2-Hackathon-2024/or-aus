@@ -74,7 +74,7 @@ describe("PostgresSQL Repository", () => {
     describe("Offer repository SPI", () => {
         it("Should get the 3 first offers and implement and dispose the pool correctly", async () => {
             const repository: IOfferRepository = new PostgresRepository(pool);
-            const offersResult = await repository.getOffers(3, {});
+            const offersResult = await repository.getOffers(3, 0, {});
 
             expect(pool.connect).toHaveBeenCalled();
             expect(offersResult.length).toBe(3);
