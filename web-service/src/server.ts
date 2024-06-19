@@ -49,11 +49,11 @@ export async function main(): Promise<void> {
     const removeFavoriteUseCase = new RemoveFavoriteUseCase(postgreRepository);
     const removeFavoriteController = new RemoveFavoriteController(removeFavoriteUseCase);
     
-    // Routing
+    // Offer routes
     const offersRouter = Router();
     offersRouter.route("/v1/offres").get(getOffersController.handle);
 
-    //
+    // User routes 
     const userRouter = Router();
     userRouter.route("/v1/users/getApplicationCount").get(getCandidatCandidaturesCountController.handle);
     userRouter.route("/v1/users/getSecteurOffersStats").get(getCandidatSecteurOffersStatsController.handle);

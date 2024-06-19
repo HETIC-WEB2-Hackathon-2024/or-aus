@@ -1,5 +1,4 @@
 function makeHeaders(token: string) {
-    console.log(token);
     return {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
