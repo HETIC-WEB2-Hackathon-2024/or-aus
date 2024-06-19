@@ -25,5 +25,5 @@ export interface ICandidatRepository {
 }
 
 export interface IAuth0Repository {
-    getUserInfo(token_id: string, domain_url: string): Promise<any>;
+    getUserInfo(token_id: string): Promise<any>;
 }

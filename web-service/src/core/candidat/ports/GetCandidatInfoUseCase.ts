@@ -6,7 +6,7 @@ export class GetCandidatInfoUseCase implements IUseCase<{ token_id: string }, an
 
     async execute(input: { token_id: string }): Promise<any> {
         try {
-            const res = await this._candidatRepository.getUserInfo(input.token_id, "https://or-aus.eu.auth0.com/");
+            const res = await this._candidatRepository.getUserInfo(input.token_id);
             return res;
         } catch (e) {
             if (e instanceof Error) {
