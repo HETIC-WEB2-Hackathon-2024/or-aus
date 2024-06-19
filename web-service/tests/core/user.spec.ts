@@ -47,7 +47,7 @@ describe("Get number of applications", () => {
         const response = await new GetCandidatSecteurOffersStatsUseCase(repository).execute(candidat_id);
 
         expect(pool.connect).toHaveBeenCalled();
-        expect(response.comparison_percentage).toBe("-50.00%");
+        expect(response.comparison_percentage).toBe("-50%");
         expect((await pool.connect()).release).toHaveBeenCalled();
     });
 
@@ -64,7 +64,7 @@ describe("Get number of applications", () => {
         const response = await new GetCandidatCommuneOffersStatsUseCase(repository).execute(candidat_id);
 
         expect(pool.connect).toHaveBeenCalled();
-        expect(response.comparison_percentage).toBe("-30.00%");
+        expect(response.comparison_percentage).toBe("-30%");
         expect((await pool.connect()).release).toHaveBeenCalled();
     });
 });
