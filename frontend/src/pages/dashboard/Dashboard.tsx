@@ -9,6 +9,8 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 
+import { Pin, Target, Bookmark, Send } from "lucide-react";
+
 export function Dashboard() {
     return (
         <div className="flex min-h-screen w-full flex-col">
@@ -23,6 +25,7 @@ export function Dashboard() {
                             <CardTitle className="text-xl font-b mb-2">
                                 Nouvelles offres dans votre commune
                             </CardTitle>
+                            <Pin className="h-6 w-6 text-muted-foreground stroke-primary" />
                         </CardHeader>
                         <CardContent className="ml-4">
                             <div className="text-4xl font-bold text-primary">
@@ -38,6 +41,7 @@ export function Dashboard() {
                             <CardTitle className="text-xl font-semibold mb-2">
                                 Nouvelles offres dans votre secteur
                             </CardTitle>
+                            <Target className="h-6 w-6 text-muted-foreground stroke-primary" />
                         </CardHeader>
                         <CardContent className="ml-4">
                             <div className="text-4xl font-bold text-primary">
@@ -53,6 +57,7 @@ export function Dashboard() {
                             <CardTitle className="text-xl font-semibold mb-2">
                                 Nouvelles offres enregistrées
                             </CardTitle>
+                            <Bookmark className="h-6 w-6 text-muted-foreground stroke-primary" />
                         </CardHeader>
                         <CardContent className="ml-4">
                             <div className="text-4xl font-bold text-primary">
@@ -68,6 +73,7 @@ export function Dashboard() {
                             <CardTitle className="text-xl font-semibold mb-2">
                                 Candidatures envoyées
                             </CardTitle>
+                            <Send className="h-6 w-6 text-muted-foreground stroke-primary" />
                         </CardHeader>
                         <CardContent className="ml-4">
                             <div className="text-4xl font-bold text-primary">
