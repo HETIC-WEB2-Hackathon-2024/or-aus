@@ -14,6 +14,7 @@ import { FilterHelper } from "../core/offre/shared/Filter-helper";
 import { TContract } from "../core/offre/shared/TContract";
 import { TUserPayload } from "../core/candidat/ports/GetCandidatInfoUseCase";
 import { IFavoriteRepository } from "../core/favorite/ports/IFavoriteRepository";
+import { RemoveFavoriteDto } from "../core/favorite/ports/RemoveFavoriteUseCase";
 
 export class PostgresRepository implements IOfferRepository, ICandidatRepository, IFavoriteRepository {
     public constructor(private readonly _pool: Pool) {}
@@ -110,22 +111,14 @@ export class PostgresRepository implements IOfferRepository, ICandidatRepository
         }
     }
 
-    async getFavorites(input: TCandidatEmail): Promise<Offre[]> {
+    async getFavorites(input: TCandidatId): Promise<Offre[]> {
         const client = await this._pool.connect();
 
         try {
-            const query = `SELECT * FROM favorite 
-                JOIN candidat AS c ON c.id = favorite.candidat_id
-                WHERE c.email = $1;`;
-            const result = await client.query<Favorite>(query, [input]);
-            const offers: Offre[] = [];
+            const query = `SELECT o.* FROM favorite AS f JOIN offre AS o ON o.id = f.offre_id WHERE f.candidat_id = $1;`;
+            const { rows: result } = await client.query<Offre>(query, [input.id]);
 
-            for (const favorite of result.rows) {
-                const offre = await this.getOffers(1, 0, { id: favorite.offre_id.toString() });
-                offers.push(offre[0]);
-            }
-
-            return offers;
+            return result;
         } finally {
             client.release();
         }
@@ -177,12 +170,16 @@ export class PostgresRepository implements IOfferRepository, ICandidatRepository
             client.release();
         }
     }
-    async removeFavorite(input: TFavoriteId): Promise<void> {
+    async removeFavorite(input: RemoveFavoriteDto): Promise<void> {
         const client = await this._pool.connect();
         try {
-            await client.query("DELETE FROM favorite WHERE offre_id = $1 AND candidat_id = $2", [
+            const userFavorites = await this.getFavorites({ id: input.user_id });
+            const userHasThisOffer = userFavorites.some((offer) => offer.id === input.offre_id);
+            if (!userHasThisOffer) throw new Error("Favorite doesn't exist");
+
+            await client.query("DELETE FROM favorite AS f WHERE f.offre_id = $1 AND f.candidat_id = $2", [
                 input.offre_id,
-                input.candidat_id,
+                input.user_id,
             ]);
         } finally {
             client.release();
@@ -191,6 +188,10 @@ export class PostgresRepository implements IOfferRepository, ICandidatRepository
     async addFavorite(candidatId: number, offreId: number): Promise<void> {
         const client = await this._pool.connect();
         try {
+            const userFavorites = await this.getFavorites({ id: candidatId });
+            const userHasThisOffer = userFavorites.some((offer) => offer.id === offreId);
+            if (userHasThisOffer) throw new Error("Offer already favorite");
+
             const query = `
                     INSERT INTO favorite (candidat_id, offre_id, add_date)
                     VALUES ($1, $2, current_timestamp);`;

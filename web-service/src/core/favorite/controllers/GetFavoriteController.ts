@@ -7,11 +7,11 @@ export class GetFavoriteController {
 
     public handle = async (req: RequestWithUserInfo, res: Response) => {
         try {
-            const candidat_email = req.user?.email;
-            if (!candidat_email) {
+            const candidat_id = req.user?.id;
+            if (!candidat_id) {
                 throw new Error("Missing required parameters");
             }
-            const favorites = await this._useCase.execute({ user_email: candidat_email });
+            const favorites = await this._useCase.execute({ id: candidat_id });
             res.json(favorites);
         } catch (error) {
             if (error instanceof Error) res.status(400).send({ error: error.message, reason: error });

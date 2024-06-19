@@ -2,6 +2,7 @@ import { Response } from "express";
 import { RemoveFavoriteUseCase } from "../ports/RemoveFavoriteUseCase";
 import { RequestWithUserInfo } from "../../candidat/controllers/GetCandidatInfoMiddleware";
 import { IController } from "../../../shared/IController";
+import { TOffreId } from "../../offre/domain/Offre";
 
 export class RemoveFavoriteController implements IController {
     public constructor(private readonly _useCase: RemoveFavoriteUseCase) {
@@ -15,7 +16,10 @@ export class RemoveFavoriteController implements IController {
             if (!offre_id || !candidat_id) {
                 throw new Error("Missing required parameters");
             }
-            await this._useCase.execute({ offre_id, candidat_id });
+            await this._useCase.execute({
+                offre_id: offre_id,
+                user_id: candidat_id,
+            });
             res.json({ message: "Favorite removed successfully" });
         } catch (error) {
             if (error instanceof Error) res.status(400).send({ error: error.message, reason: error });

@@ -1,11 +1,16 @@
 import { IUseCase } from "../../../shared/IUseCase";
-import { TFavoriteId } from "../domains/Favorite";
+import { TCandidatEmail } from "../../candidat/domain/Candidat";
+import { TOffreId } from "../../offre/domain/Offre";
 import { IFavoriteRepository } from "./IFavoriteRepository";
 
-export class RemoveFavoriteUseCase implements IUseCase<TFavoriteId, void> {
-    public constructor(private readonly _favoriteRepository: IFavoriteRepository) { }
+export type RemoveFavoriteDto = {
+    offre_id: number;
+    user_id: number;
+};
+export class RemoveFavoriteUseCase implements IUseCase<RemoveFavoriteDto, void> {
+    public constructor(private readonly _favoriteRepository: IFavoriteRepository) {}
 
-    public async execute(input: TFavoriteId): Promise<void> {
+    public async execute(input: RemoveFavoriteDto): Promise<void> {
         await this._favoriteRepository.removeFavorite(input);
     }
 }

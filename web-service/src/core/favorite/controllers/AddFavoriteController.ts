@@ -11,10 +11,9 @@ export class AddFavoriteController {
         try {
             const offreId = parseInt(req.query.offre_id as string);
             const candidatId = req.user?.id;
-            const candidatEmail = req.user?.email;
-            if (!candidatId || !offreId || !candidatEmail) throw new Error("candidatId and offreId must be set");
+            if (!candidatId || !offreId) throw new Error("candidatId and offreId must be set");
 
-            await this._useCase.execute(candidatId, offreId, candidatEmail);
+            await this._useCase.execute(candidatId, offreId);
             res.status(201).send({ message: "Favorite added successfully" });
         } catch (error: any) {
             console.error("Error in AddFavoriteController:", error);
