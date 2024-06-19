@@ -12,7 +12,6 @@ import { Offre } from "../core/offre/domain/Offre";
 import { IOfferFilter } from "../core/offre/filter/IOfferFilter";
 import { IOfferRepository } from "../core/offre/ports/IOfferRepository";
 import { FilterHelper } from "../core/offre/shared/Filter-helper";
-import { TCandidatId } from "../core/candidat/domain/Candidat";
 import { TContract } from "../core/offre/shared/TContract";
 
 export class PostgresRepository implements IOfferRepository, ICandidatRepository {
