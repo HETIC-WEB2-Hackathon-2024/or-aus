@@ -9,7 +9,7 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 
-import { Pin, Target, Bookmark, Send } from "lucide-react";
+import { Pin, Target, Bookmark, Send, Heart } from "lucide-react";
 
 export function Dashboard() {
     return (
@@ -92,20 +92,21 @@ export function Dashboard() {
                     >
                         <CardHeader className="flex flex-row items-center">
                             <div className="grid gap-2">
-                                <CardTitle>Transactions</CardTitle>
-                                <CardDescription>
-                                    Recent transactions from your store.
-                                </CardDescription>
+                                <CardTitle>
+                                    Vos candidatures envoyées sur la dernière
+                                    semaine
+                                </CardTitle>
                             </div>
-                            <Button asChild size="sm" className="ml-auto gap-1">
-                                <Link href="#">View All</Link>
-                            </Button>
                         </CardHeader>
                     </Card>
                     <Card x-chunk="dashboard-01-chunk-5">
                         <CardHeader>
-                            <CardTitle className="mb-1">
-                                Vos offres sauvegardées{" "}
+                            <CardTitle className="mb-1 flex justify-between items-center">
+                                Vos offres sauvegardées
+                                <Heart
+                                    fill="#D8AA75"
+                                    className="h-7 w-7 text-muted-foreground stroke-none"
+                                />
                             </CardTitle>
                             <CardDescription className="text-md">
                                 Retrouvez les offres que vous avez sauvegardées
