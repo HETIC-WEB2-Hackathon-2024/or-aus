@@ -1,4 +1,4 @@
-import { Pool } from "pg";
+import { Client, Pool } from "pg";
 
 import { TCandidatId } from "../core/candidat/domain/Candidat";
 import {
@@ -13,10 +13,27 @@ import { IOfferFilter } from "../core/offre/filter/IOfferFilter";
 import { IOfferRepository } from "../core/offre/ports/IOfferRepository";
 import { FilterHelper } from "../core/offre/shared/Filter-helper";
 
-export class PostgresRepository implements IOfferRepository, ICandidatRepository, IFavoriteRepository {
+export class PostgresRepository implements IOfferRepository, ICandidatRepository {
     public constructor(private readonly _pool: Pool) {}
-    getCandidatCandidaturesCount(user_id: TCandidatId): Promise<number> {
-        throw new Error("Method not implemented.");
+
+    async getCandidatCandidaturesCount(input: TCandidatId): Promise<number> {
+        const client = await this._pool.connect();
+        try {
+            const query = `SELECT 
+                        COUNT(*) AS nombre
+                        FROM 
+                        public.offre AS o
+                        JOIN 
+                        public.candidat_communes AS c ON c.commune_id = o.commune_id
+                        WHERE c.candidat_id = $1`;
+            const {
+                rows: [result],
+            } = await client.query<{ nombre: number }>(query, [input.id]);
+
+            return result.nombre;
+        } finally {
+            client.release();
+        }
     }
 
     async getCandidatSecteurOffersStats(

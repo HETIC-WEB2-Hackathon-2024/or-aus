@@ -76,9 +76,6 @@ export async function main(): Promise<void> {
     app.addRoute(offersRouter);
     app.addRoute(userRouter);
     app.listen(3000);
-    app.get("/v1/status", (req: Request, res: Response) => {
-        res.status(200).send("OK");
-    });
 }
 
 main();

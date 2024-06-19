@@ -4,9 +4,9 @@ import { GetOffersUseCase } from "../ports/GetOffersUseCase";
 import { IOfferFilter } from "../filter/IOfferFilter";
 
 export class GetOffersController {
-    public constructor(private readonly _useCase: GetOffersUseCase) {
-        this.handle = this.handle.bind(this);
-    }
+  public constructor(private readonly _useCase: GetOffersUseCase) {
+    this.handle = this.handle.bind(this);
+  }
 
     public async handle(req: Request, res: Response) {
         try {
@@ -30,4 +30,5 @@ export class GetOffersController {
             if (error instanceof Error) res.status(400).send({ error: error.message, reason: error });
         }
     }
+  }
 }

@@ -10,7 +10,6 @@ export class ApiServer {
     constructor() {
         this.corsOptions = {
             origin: "*",
-            // credentials: true
         };
         this.app = express();
         this.app.use(cors(this.corsOptions));
@@ -30,9 +29,5 @@ export class ApiServer {
 
     public listen(port: number, fn?: () => void) {
         this.app.listen(port, fn);
-    }
-
-    public get(path: string, callback: any) {
-        this.app.get(path, callback);
     }
 }
