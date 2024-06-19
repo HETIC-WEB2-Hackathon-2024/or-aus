@@ -6,7 +6,6 @@ import { GetCandidatCandidaturesCountController } from "./core/candidat/controll
 import { GetCandidatCommuneOffersStatsController } from "./core/candidat/controllers/GetCandidatCommuneOffersStatsController";
 import { AddFavoriteUseCase } from "./core/favorite/ports/AddFavoriteUseCase";
 import { AddFavoriteController } from "./core/favorite/controllers/AddFavoriteController";
-import { GetCandidatInfoController } from "./core/candidat/controllers/GetCandidatInfoController";
 import { GetCandidatSecteurOffersStatsController } from "./core/candidat/controllers/GetCandidatSecteurOffersStatsController";
 import { GetCandidatCandidaturesCountUseCase } from "./core/candidat/ports/GetCandidatCandidaturesCountUseCase";
 import { GetCandidatCommuneOffersStatsUseCase } from "./core/candidat/ports/GetCandidatCommuneOffersStatsUseCase";
@@ -21,6 +20,7 @@ import { GetOffersUseCase } from "./core/offre/ports/GetOffersUseCase";
 import { pool } from "./database";
 import { GetContractTypesUseCase } from "./core/offre/ports/GetContractTypesUseCase";
 import { GetContractTypesController } from "./core/offre/controllers/GetContractTypesController";
+import { GetCandidatInfoMiddleware, RequestWithUserInfo } from "./core/candidat/controllers/GetCandidatInfoMiddleware";
 
 export async function main(): Promise<void> {
     const poolClient = pool;
@@ -38,8 +38,8 @@ export async function main(): Promise<void> {
         getCandidatCommuneOffersStatsUseCase
     );
 
-    const getCandidatInfoUseCase = new GetCandidatInfoUseCase(auth0Repository);
-    const getCandidatInfoController = new GetCandidatInfoController(getCandidatInfoUseCase);
+    const getCandidatInfoUseCase = new GetCandidatInfoUseCase(auth0Repository, postgreRepository);
+    const getCandidatInfoMiddleware = new GetCandidatInfoMiddleware(getCandidatInfoUseCase);
 
     const getCandidatSecteurOffersStatsUseCase = new GetCandidatSecteurOffersStatsUseCase(postgreRepository);
     const getCandidatSecteurOffersStatsController = new GetCandidatSecteurOffersStatsController(
@@ -49,7 +49,7 @@ export async function main(): Promise<void> {
     // Offers
     const getOffersUseCase = new GetOffersUseCase(postgreRepository);
     const getOffersController = new GetOffersController(getOffersUseCase);
-    const getContractTypesUseCase = new GetContractTypesUseCase(postgreRepository)
+    const getContractTypesUseCase = new GetContractTypesUseCase(postgreRepository);
     const getContractTypesController = new GetContractTypesController(getContractTypesUseCase);
 
     // Favorite
@@ -71,13 +71,17 @@ export async function main(): Promise<void> {
     offersRouter.route("/v1/offres/favorite").get(getFavoriteController.handle);
     offersRouter.route("/v1/offres/favorite").post(addFavoriteController.handle);
     offersRouter.route("/v1/offres/contractTypes").get(getContractTypesController.handle);
-    
+
     // User routes
     const userRouter = Router();
     userRouter.route("/v1/users/getApplicationCount").get(getCandidatCandidaturesCountController.handle);
     userRouter.route("/v1/users/getSecteurOffersStats").get(getCandidatSecteurOffersStatsController.handle);
-    userRouter.route("/v1/users/getCommuneOffersStats").get(getCandidatCommuneOffersStatsController.handle);
-    userRouter.route("/v1/users/me").get(getCandidatInfoController.handle);
+    userRouter
+        .route("/v1/users/getCommuneOffersStats")
+        .get(getCandidatInfoMiddleware.handle, getCandidatCommuneOffersStatsController.handle);
+    userRouter.route("/v1/users/me").get(getCandidatInfoMiddleware.handle, (req: RequestWithUserInfo, res) => {
+        res.json(req.user);
+    });
 
     // Configure and listen
     const app = new ApiServer();

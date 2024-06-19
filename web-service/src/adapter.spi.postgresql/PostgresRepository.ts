@@ -1,6 +1,6 @@
 import { Client, Pool } from "pg";
 
-import { TCandidatId } from "../core/candidat/domain/Candidat";
+import { Candidat, TCandidatEmail, TCandidatId } from "../core/candidat/domain/Candidat";
 import {
     ICandidatCommuneOffersStatsResponse,
     ICandidatRepository,
@@ -16,6 +16,21 @@ import { TContract } from "../core/offre/shared/TContract";
 
 export class PostgresRepository implements IOfferRepository, ICandidatRepository {
     public constructor(private readonly _pool: Pool) {}
+    async getCandidatInfo(input: TCandidatEmail): Promise<Candidat> {
+        const client = await this._pool.connect();
+        try {
+            const query = `SELECT * FROM candidat WHERE candidat.email = $1`;
+            const {
+                rows: [result],
+            } = await client.query<Candidat>(query, [input.email]);
+
+            if (!result) throw new Error(`Candidat ${input.email} not found`);
+
+            return result;
+        } finally {
+            client.release();
+        }
+    }
 
     async getCandidatCandidaturesCount(input: TCandidatId): Promise<number> {
         const client = await this._pool.connect();

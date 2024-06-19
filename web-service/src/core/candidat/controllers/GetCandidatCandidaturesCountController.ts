@@ -17,7 +17,7 @@ export class GetCandidatCandidaturesCountController implements IController {
             const user_id = parseInt(req.query.user_id as string);
             if (!user_id) throw new Error("user_id must be set");
 
-            const result = await this._useCase.execute({ user_id });
+            const result = await this._useCase.execute({ id: user_id });
             res.json(result);
         } catch (error) {
             if (error instanceof Error) res.status(400).send({ error: error.message, reason: error });

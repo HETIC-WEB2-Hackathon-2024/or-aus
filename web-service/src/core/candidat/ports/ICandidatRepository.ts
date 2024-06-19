@@ -1,4 +1,5 @@
-import { TCandidatId } from "../domain/Candidat";
+import { Candidat, TCandidatEmail, TCandidatId } from "../domain/Candidat";
+import { TUserPayload } from "./GetCandidatInfoUseCase";
 
 export interface OfferStats {
     current_month: number;
@@ -22,8 +23,9 @@ export interface ICandidatRepository {
         user_id: TCandidatId
     ): Promise<Omit<ICandidatCommuneOffersStatsResponse, "comparison_percentage">>;
     getCandidatCandidaturesCount(user_id: TCandidatId): Promise<number>;
+    getCandidatInfo(input: TCandidatEmail): Promise<Candidat>;
 }
 
 export interface IAuth0Repository {
-    getUserInfo(token_id: string): Promise<any>;
+    getUserInfo(token_id: string): Promise<TUserPayload>;
 }

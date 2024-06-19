@@ -4,21 +4,18 @@ import { ParsedQs } from "qs";
 import { IController } from "../../../shared/IController";
 import { GetCandidatCommuneOffersStatsUseCase } from "../ports/GetCandidatCommuneOffersStatsUseCase";
 import { InvalidRequestError } from "express-oauth2-jwt-bearer";
+import { RequestWithUserInfo } from "./GetCandidatInfoMiddleware";
 
 export class GetCandidatCommuneOffersStatsController implements IController {
     public constructor(private readonly _useCase: GetCandidatCommuneOffersStatsUseCase) {
         this.handle = this.handle.bind(this);
     }
 
-    async handle(
-        req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>,
-        res: Response<any, Record<string, any>>
-    ): Promise<void> {
+    async handle(req: RequestWithUserInfo, res: Response<any, Record<string, any>>): Promise<void> {
         try {
-            const user_id = parseInt(req.query.user_id as string);
-            if (!user_id) throw new Error("user_id must be set");
+            if (!req.user?.id) throw new Error("Auth token must be set");
 
-            const result = await this._useCase.execute({ id: user_id });
+            const result = await this._useCase.execute({ id: req.user?.id });
             res.status(200).json(result);
         } catch (error) {
             if (error instanceof Error) res.status(400).send({ error: error.message, reason: error });
