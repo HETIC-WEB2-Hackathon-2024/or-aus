@@ -1,6 +1,6 @@
 import favorite_fixtures from "../fixtures/fixtures_favorite";
 import { PostgresRepository } from "../src/adapter.spi.postgresql/PostgresRepository";
-import { IFavoriteRepository } from "../src/core/favorite/ports/iFavorteRepository";
+import { IFavoriteRepository } from "../src/core/favorite/ports/IFavoriteRepository.js";
 import { pool } from "../src/database";
 
 
@@ -33,7 +33,7 @@ describe("PostgresSQL Repository", () => {
             const repository: IFavoriteRepository = new PostgresRepository(pool);
             const { offre_id, candidat_id } = favorite_fixtures[0];
 
-            await repository.removeFavorite(offre_id, candidat_id);
+            await repository.removeFavorite(favorite_fixtures[0]);
 
             expect(mockClient.query).toHaveBeenCalledWith(
                 "DELETE FROM favorites WHERE user_id = $1 AND favorite_id = $2",
