@@ -19,6 +19,8 @@ import { RemoveFavoriteUseCase } from "./core/favorite/ports/RemoveFavoriteUseCa
 import { GetOffersController } from "./core/offre/controllers/GetOffersController";
 import { GetOffersUseCase } from "./core/offre/ports/GetOffersUseCase";
 import { pool } from "./database";
+import { GetContractTypesUseCase } from "./core/offre/ports/GetContractTypesUseCase";
+import { GetContractTypesController } from "./core/offre/controllers/GetContractTypesController";
 
 export async function main(): Promise<void> {
     const poolClient = pool;
@@ -47,6 +49,8 @@ export async function main(): Promise<void> {
     // Offers
     const getOffersUseCase = new GetOffersUseCase(postgreRepository);
     const getOffersController = new GetOffersController(getOffersUseCase);
+    const getContractTypesUseCase = new GetContractTypesUseCase(postgreRepository)
+    const getContractTypesController = new GetContractTypesController(getContractTypesUseCase);
 
     // Favorite
     const addFavoriteUseCase = new AddFavoriteUseCase(postgreRepository);
@@ -59,12 +63,16 @@ export async function main(): Promise<void> {
     const getFavoriteController = new GetFavoriteController(getFavoriteUseCase);
 
     // Routing
+
+    //Offers routes
     const offersRouter = Router();
     offersRouter.route("/v1/offres").get(getOffersController.handle);
     offersRouter.route("/v1/offres/favorite").delete(removeFavoriteController.handle);
     offersRouter.route("/v1/offres/favorite").get(getFavoriteController.handle);
     offersRouter.route("/v1/offres/favorite").post(addFavoriteController.handle);
-
+    offersRouter.route("/v1/offres/contractTypes").get(getContractTypesController.handle);
+    
+    // User routes
     const userRouter = Router();
     userRouter.route("/v1/users/getApplicationCount").get(getCandidatCandidaturesCountController.handle);
     userRouter.route("/v1/users/getSecteurOffersStats").get(getCandidatSecteurOffersStatsController.handle);
