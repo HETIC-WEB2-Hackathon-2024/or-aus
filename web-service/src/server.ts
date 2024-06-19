@@ -56,12 +56,12 @@ export async function main(): Promise<void> {
     // Routing
     const offersRouter = Router();
     offersRouter.route("/v1/offres").get(getOffersController.handle);
+    offersRouter.route("/v1/offres/favorite").delete(removeFavoriteController.handle);
+    offersRouter.route("/v1/offres/favorite").get(getFavoriteController.handle);
     const userRouter = Router();
     userRouter.route("/v1/users/getApplicationCount").get(getCandidatCandidaturesCountController.handle);
     userRouter.route("/v1/users/getSecteurOffersStats").get(getCandidatSecteurOffersStatsController.handle);
     userRouter.route("/v1/users/getCommuneOffersStats").get(getCandidatCommuneOffersStatsController.handle);
-    userRouter.route("/v1/users/RemoveFavorite").delete(removeFavoriteController.handle);
-    userRouter.route('/v1/users/GetFavorite').get(getFavoriteController.handle);
     userRouter.route("/v1/users/me").get(getCandidatInfoController.handle);
 
     // Configure and listen
