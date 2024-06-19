@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router, Response, Request } from "express";
 import { pool } from "./database";
 import { PostgresRepository } from "./adapter.spi.postgresql/PostgresRepository";
 import { ApiServer } from "./adapter.api.express/ApiServer";
@@ -48,9 +48,12 @@ export async function main(): Promise<void> {
     // Favorite
     const removeFavoriteUseCase = new RemoveFavoriteUseCase(postgreRepository);
     const removeFavoriteController = new RemoveFavoriteController(removeFavoriteUseCase);
+    
     // Routing
     const offersRouter = Router();
     offersRouter.route("/v1/offres").get(getOffersController.handle);
+
+    //
     const userRouter = Router();
     userRouter.route("/v1/users/getApplicationCount").get(getCandidatCandidaturesCountController.handle);
     userRouter.route("/v1/users/getSecteurOffersStats").get(getCandidatSecteurOffersStatsController.handle);
@@ -58,12 +61,15 @@ export async function main(): Promise<void> {
     userRouter.route("/v1/users/RemoveFavorite").delete(removeFavoriteController.handle);
     userRouter.route("/v1/users/me").get(getCandidatInfoController.handle);
 
+
     // Configure and listen
     const app = new ApiServer();
     app.addRoute(offersRouter);
     app.addRoute(userRouter);
-
     app.listen(3000);
+    app.get("/v1/status", (req: Request, res: Response) => {
+        res.status(200).send("OK");
+    } )
 }
 
 main();
