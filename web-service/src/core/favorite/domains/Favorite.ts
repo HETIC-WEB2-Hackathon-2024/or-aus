@@ -7,3 +7,4 @@ export class Favorite {
 }
 
 export type TFavoriteOffreId = Pick<Favorite, "offre_id">;
+    

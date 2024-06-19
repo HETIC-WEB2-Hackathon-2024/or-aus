@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router } from "express"
 import { pool } from "./database";
 import { PostgresRepository } from "./adapter.spi.postgresql/PostgresRepository";
 import { ApiServer } from "./adapter.api.express/ApiServer";
@@ -10,9 +10,12 @@ import { GetCandidatSecteurOffersStatsController } from "./core/candidat/control
 import { GetCandidatSecteurOffersStatsUseCase } from "./core/candidat/ports/GetCandidatSecteurOffersStatsUseCase";
 import { GetCandidatCommuneOffersStatsUseCase } from "./core/candidat/ports/GetCandidatCommuneOffersStatsUseCase";
 import { GetCandidatCommuneOffersStatsController } from "./core/candidat/controllers/GetCandidatCommuneOffersStatsController";
+import { AddFavoriteUseCase } from "./core/favorite/ports/AddFavoriteUseCase";
+import { AddFavoriteController } from "./core/favorite/controllers/AddFavoriteController";
 
 export async function main(): Promise<void> {
-    // Inject
+
+
     const poolClient = pool;
     const postgreRepository = new PostgresRepository(poolClient);
 
@@ -36,9 +39,16 @@ export async function main(): Promise<void> {
     const getOffersUseCase = new GetOffersUseCase(postgreRepository);
     const getOffersController = new GetOffersController(getOffersUseCase);
 
+    // Favorite
+    const addFavoriteUseCase = new AddFavoriteUseCase(postgreRepository);
+    const addFavoriteController = new AddFavoriteController(addFavoriteUseCase);
+
+
     // Routing
     const offersRouter = Router();
     offersRouter.route("/v1/offres").get(getOffersController.handle);
+    offersRouter.route("/v1/offres/favorites").post(addFavoriteController.handle);
+
     const userRouter = Router();
     userRouter.route("/v1/users/getApplicationCount").get(getCandidatCandidaturesCountController.handle);
     userRouter.route("/v1/users/getSecteurOffersStats").get(getCandidatSecteurOffersStatsController.handle);
