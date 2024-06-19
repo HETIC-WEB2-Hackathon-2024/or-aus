@@ -1,3 +1,6 @@
+import { TCandidatId } from "../../candidat/domain/Candidat.js";
+import { TOffreId } from "../../offre/domain/Offre.js";
+
 export class Favorite {
     public constructor(
         public readonly candidat_id: number,
@@ -6,4 +9,7 @@ export class Favorite {
     ) { }
 }
 
-export type TFavoriteOffreId = Pick<Favorite, "offre_id">;
+export type TFavoriteId = {
+    offre_id: TOffreId['id'],
+    candidat_id: TCandidatId['id'],
+};

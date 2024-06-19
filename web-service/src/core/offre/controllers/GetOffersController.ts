@@ -23,7 +23,7 @@ export class GetOffersController {
             res.json(result);
         } catch (error) {
             if (error instanceof InvalidRequestError)
-                res.status(400)).send({ error: error.message, reason: error });
+                res.status(400).send({ error: error.message, reason: error });
             else res.status(500).send({ error: "Internal Server Error", reason: error });
         }
     }
