@@ -80,7 +80,7 @@ describe("Get offers", () => {
                 entreprise: "SpaceX",
                 search: "Alien",
             };
-            const queryWithFilters = FilterHelper.createOffersQueryWithFilters(50, filters);
+            const queryWithFilters = FilterHelper.createOffersQueryWithFilters(50, 0, filters);
 
             expect(queryWithFilters).toHaveProperty("options");
             expect(queryWithFilters).toHaveProperty("query");
