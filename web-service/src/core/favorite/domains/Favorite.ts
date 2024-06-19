@@ -1,5 +1,5 @@
-import { TCandidatId } from "../../candidat/domain/Candidat.js";
-import { TOffreId } from "../../offre/domain/Offre.js";
+import { TCandidatId } from "../../candidat/domain/Candidat";
+import { TOffreId } from "../../offre/domain/Offre";
 
 export class Favorite {
     public constructor(

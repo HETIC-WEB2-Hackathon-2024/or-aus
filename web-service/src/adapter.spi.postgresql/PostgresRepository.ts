@@ -6,8 +6,8 @@ import {
     ICandidatRepository,
     ICandidatSecteurOffersStatsResponse,
 } from "../core/candidat/ports/ICandidatRepository";
-import { Favorite, TFavoriteId } from "../core/favorite/domains/Favorite.js";
-import { IFavoriteRepository } from "../core/favorite/ports/IFavoriteRepository.js";
+import { Favorite, TFavoriteId } from "../core/favorite/domains/Favorite";
+import { IFavoriteRepository } from "../core/favorite/ports/IFavoriteRepository";
 import { Offre } from "../core/offre/domain/Offre";
 import { IOfferFilter } from "../core/offre/filter/IOfferFilter";
 import { IOfferRepository } from "../core/offre/ports/IOfferRepository";

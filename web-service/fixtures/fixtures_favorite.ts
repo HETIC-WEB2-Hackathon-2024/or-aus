@@ -1,4 +1,4 @@
-import { TFavoriteId } from "../src/core/favorite/domains/Favorite.js";
+import { TFavoriteId } from "../src/core/favorite/domains/Favorite";
 
 const favorite_fixtures: TFavoriteId[] = [
     {
