@@ -5,12 +5,13 @@ import morgan from "morgan";
 
 export class ApiServer {
     private app: Express;
-    private corsOptions:cors.CorsOptions;
+    private corsOptions: cors.CorsOptions;
 
     constructor() {
-        this.corsOptions ={
-            origin:['*']
-         }
+        this.corsOptions = {
+            origin: '*',
+            // credentials: true
+        }
         this.app = express();
         this.app.use(cors(this.corsOptions));
         this.app.use(morgan("dev"));
@@ -29,5 +30,9 @@ export class ApiServer {
 
     public listen(port: number, fn?: () => void) {
         this.app.listen(port, fn);
+    }
+
+    public get(path: string, callback: any) {
+        this.app.get(path, callback);
     }
 }

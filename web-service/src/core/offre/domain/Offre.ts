@@ -12,5 +12,7 @@ export class Offre {
         public readonly description: string,
         public readonly commune_id: string,
         public readonly date: Date
-    ) {}
+    ) { }
 }
+
+export type TOffreId = Pick<Offre, "id">;
