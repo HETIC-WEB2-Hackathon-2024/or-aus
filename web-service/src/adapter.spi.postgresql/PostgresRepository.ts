@@ -24,8 +24,8 @@ export class PostgresRepository implements IOfferRepository, ICandidatRepository
             if (userExists) throw new Error(`Candidat exists already`);
 
             const query = `
-                INSERT INTO candidat (id, nom, prenom, telephone, email, pays, date_naissance) VALUES (123439, $1, $2, $3, $4, $5, $6)
-            `;
+                INSERT INTO candidat (nom, prenom, telephone, email, pays, date_naissance) 
+                VALUES ($1, $2, $3, $4, $5, $6);`;
             const values = [
                 null, // nom
                 null, // prenom
