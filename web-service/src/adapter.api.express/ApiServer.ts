@@ -1,16 +1,16 @@
 import cors from "cors";
 import express, { Express, Router } from "express";
-import { auth } from "express-oauth2-jwt-bearer";
 import morgan from "morgan";
 
 export class ApiServer {
     private app: Express;
-    private corsOptions:cors.CorsOptions;
+    private corsOptions: cors.CorsOptions;
 
     constructor() {
-        this.corsOptions ={
-            origin: '*'
-         }
+        this.corsOptions = {
+            origin: '*',
+            // credentials: true
+        }
         this.app = express();
         this.app.use(cors(this.corsOptions));
         this.app.use(morgan("dev"));
