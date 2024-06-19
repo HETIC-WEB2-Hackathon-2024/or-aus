@@ -5,6 +5,16 @@ export class GetCandidatInfoUseCase implements IUseCase<{ token_id: string }, an
     public constructor(private readonly _candidatRepository: IAuth0Repository) {}
 
     async execute(input: { token_id: string }): Promise<any> {
-        return await this._candidatRepository.getUserInfo(input.token_id, "https://or-aus.eu.auth0.com/");
+        try {
+            const res = await this._candidatRepository.getUserInfo(input.token_id, "https://or-aus.eu.auth0.com/");
+            return res;
+        } catch (e) {
+            if (e instanceof Error) {
+                return {
+                    error: e.message,
+                    reason: e,
+                };
+            }
+        }
     }
 }

@@ -14,16 +14,10 @@ export class GetCandidatInfoController implements IController {
         res: Response<any, Record<string, any>>
     ): Promise<void> {
         try {
-            const authHeader = req.headers.authorization;
+            const token = req.auth?.token as string;
+            const userInfo = await this._useCase.execute({ token_id: token });
 
-            if (!authHeader || !authHeader.startsWith("Bearer ")) {
-                throw new Error("No token provided or invalid format");
-            }
-
-            const token_id = authHeader.split(" ")[1];
-            const userInfo = await this._useCase.execute({ token_id });
-
-            res.status(200).json(userInfo);
+            res.json(userInfo);
         } catch (error) {
             if (error instanceof Error) res.status(400).json({ error: error.message });
         }

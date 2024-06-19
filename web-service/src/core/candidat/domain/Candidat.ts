@@ -11,3 +11,4 @@ export class Candidat {
 }
 
 export type TCandidatId = Pick<Candidat, "id">;
+export type TCandidatEmail = Pick<Candidat, "email">;
