@@ -62,6 +62,8 @@ export async function main(): Promise<void> {
     offersRouter.route("/v1/offres").get(getOffersController.handle);
     offersRouter.route("/v1/offres/favorite").delete(removeFavoriteController.handle);
     offersRouter.route("/v1/offres/favorite").get(getFavoriteController.handle);
+    offersRouter.route("/v1/offres/favorite").post(addFavoriteController.handle);
+
     const userRouter = Router();
     userRouter.route("/v1/users/getApplicationCount").get(getCandidatCandidaturesCountController.handle);
     userRouter.route("/v1/users/getSecteurOffersStats").get(getCandidatSecteurOffersStatsController.handle);
