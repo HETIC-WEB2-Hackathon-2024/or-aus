@@ -8,6 +8,7 @@ import { Dashboard } from "./pages/dashboard/Dashboard";
 import Settings from "./pages/settings/Settings";
 
 import Header, { TCurrentView } from "./common/Header";
+import ErrorPage from "./pages/error/Error";
 
 const router = createBrowserRouter([
     {
@@ -34,7 +35,7 @@ const router = createBrowserRouter([
     },
     {
         path: "*",
-        element: <Error />,
+        element: <ErrorPage />,
     },
 ]);
 
