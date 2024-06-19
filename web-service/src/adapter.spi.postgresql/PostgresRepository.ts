@@ -136,9 +136,7 @@ export class PostgresRepository
     try {
       const query = `
             INSERT INTO favorite (candidat_id, offre_id, add_date)
-            VALUES ($1, $2, current_timestamp)
-            ON CONFLICT DO NOTHING;
-        `;
+            VALUES ($1, $2, current_timestamp);`;
       await client.query(query, [candidatId, offreId]);
     } finally {
       client.release();
