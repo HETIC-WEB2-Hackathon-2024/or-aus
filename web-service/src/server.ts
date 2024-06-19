@@ -10,6 +10,8 @@ import { GetCandidatSecteurOffersStatsController } from "./core/candidat/control
 import { GetCandidatSecteurOffersStatsUseCase } from "./core/candidat/ports/GetCandidatSecteurOffersStatsUseCase";
 import { GetCandidatCommuneOffersStatsUseCase } from "./core/candidat/ports/GetCandidatCommuneOffersStatsUseCase";
 import { GetCandidatCommuneOffersStatsController } from "./core/candidat/controllers/GetCandidatCommuneOffersStatsController";
+import { RemoveFavoriteController } from "./core/favorite/controllers/RemoveFavoriteControllers";
+import { RemoveFavoriteUseCase } from "./core/favorite/ports/RemoveFavoriteUseCase";
 
 export async function main(): Promise<void> {
     // Inject
@@ -36,6 +38,9 @@ export async function main(): Promise<void> {
     const getOffersUseCase = new GetOffersUseCase(postgreRepository);
     const getOffersController = new GetOffersController(getOffersUseCase);
 
+    // Favorite
+    const removeFavoriteUseCase = new RemoveFavoriteUseCase(postgreRepository);
+    const removeFavoriteController = new RemoveFavoriteController(removeFavoriteUseCase);
     // Routing
     const offersRouter = Router();
     offersRouter.route("/v1/offres").get(getOffersController.handle);
@@ -43,7 +48,7 @@ export async function main(): Promise<void> {
     userRouter.route("/v1/users/getApplicationCount").get(getCandidatCandidaturesCountController.handle);
     userRouter.route("/v1/users/getSecteurOffersStats").get(getCandidatSecteurOffersStatsController.handle);
     userRouter.route("/v1/users/getCommuneOffersStats").get(getCandidatCommuneOffersStatsController.handle);
-
+    userRouter.route('/v1/users/RemoveFavorite').delete(removeFavoriteController.handle)
     // Configure and listen
     const app = new ApiServer();
     app.addRoute(offersRouter);
