@@ -134,7 +134,11 @@ export class PostgresRepository
   async addFavorite(candidatId: number, offreId: number): Promise<void> {
     const client = await this._pool.connect();
     try {
-      const query = `INSERT INTO favorite (candidat_id, offre_id) VALUES ($1, $2)`;
+      const query = `
+            INSERT INTO favorite (candidat_id, offre_id, add_date)
+            VALUES ($1, $2, current_timestamp)
+            ON CONFLICT DO NOTHING;
+        `;
       await client.query(query, [candidatId, offreId]);
     } finally {
       client.release();
