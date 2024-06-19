@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Request, Response, Router } from "express";
 import { ApiServer } from "./adapter.api.express/ApiServer";
 import { Auth0Repository } from "./adapter.spi.postgresql/Auth0Repository";
 import { PostgresRepository } from "./adapter.spi.postgresql/PostgresRepository";
@@ -68,8 +68,10 @@ export async function main(): Promise<void> {
     const app = new ApiServer();
     app.addRoute(offersRouter);
     app.addRoute(userRouter);
-
     app.listen(3000);
+    app.get("/v1/status", (req: Request, res: Response) => {
+        res.status(200).send("OK");
+    });
 }
 
 main();
