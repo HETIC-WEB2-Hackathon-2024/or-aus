@@ -1,5 +1,6 @@
 import { IUseCase } from "../../../shared/IUseCase";
 import { TCandidatId } from "../domain/Candidat";
+import { StatsHelper } from "../shared/stats-helper";
 import { ICandidatRepository, ICandidatSecteurOffersStatsResponse } from "./ICandidatRepository";
 
 export class GetCandidatSecteurOffersStatsUseCase
@@ -15,7 +16,7 @@ export class GetCandidatSecteurOffersStatsUseCase
             100;
         return {
             ...secteurOffersStats,
-            comparison_percentage: `${comparison_percentage.toFixed(2)}%`,
+            comparison_percentage: `${StatsHelper.formatPercentage(comparison_percentage)}%`,
         };
     }
 }

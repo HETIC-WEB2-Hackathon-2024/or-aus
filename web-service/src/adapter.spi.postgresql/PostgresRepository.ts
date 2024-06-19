@@ -93,7 +93,7 @@ export class PostgresRepository implements IOfferRepository, ICandidatRepository
                 JOIN offre AS o ON cs.secteur_id = o.secteur_id
                 JOIN secteur AS s ON cs.secteur_id = s.id
                 WHERE cs.candidat_id = $1
-                GROUP BY s.secteur`;
+                GROUP BY s.secteur;`;
 
             const {
                 rows: [result],

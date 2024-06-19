@@ -13,7 +13,7 @@ export class GetCandidatCommuneOffersStatsController implements IController {
 
     async handle(req: RequestWithUserInfo, res: Response<any, Record<string, any>>): Promise<void> {
         try {
-            if (!req.user?.id) throw new Error("Auth token must be set");
+            if (!req.user?.id) throw new Error("Token must be set");
 
             const result = await this._useCase.execute({ id: req.user?.id });
             res.status(200).json(result);
