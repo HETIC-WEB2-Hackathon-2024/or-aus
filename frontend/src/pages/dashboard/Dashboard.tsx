@@ -98,74 +98,19 @@ export function Dashboard() {
                     </Card>
                     <Card x-chunk="dashboard-01-chunk-5">
                         <CardHeader>
-                            <CardTitle>Recent Sales</CardTitle>
+                            <CardTitle>Vos offres sauvegardées </CardTitle>
+                            <CardDescription>
+                                Retrouvez les offres que vous avez sauvegardées
+                                en un clic !
+                            </CardDescription>
                         </CardHeader>
                         <CardContent className="grid gap-8">
-                            <div className="flex items-center gap-4">
-                                <div className="grid gap-1">
-                                    <p className="text-sm font-medium leading-none">
-                                        Olivia Martin
-                                    </p>
-                                    <p className="text-lg text-[#71717A] mt-2">
-                                        olivia.martin@email.com
-                                    </p>
-                                </div>
-                                <div className="ml-auto font-medium">
-                                    +$1,999.00
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-4">
-                                <div className="grid gap-1">
-                                    <p className="text-sm font-medium leading-none">
-                                        Jackson Lee
-                                    </p>
-                                    <p className="text-lg text-[#71717A] mt-2">
-                                        jackson.lee@email.com
-                                    </p>
-                                </div>
-                                <div className="ml-auto font-medium">
-                                    +$39.00
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-4">
-                                <div className="grid gap-1">
-                                    <p className="text-sm font-medium leading-none">
-                                        Isabella Nguyen
-                                    </p>
-                                    <p className="text-lg text-[#71717A] mt-2">
-                                        isabella.nguyen@email.com
-                                    </p>
-                                </div>
-                                <div className="ml-auto font-medium">
-                                    +$299.00
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-4">
-                                <div className="grid gap-1">
-                                    <p className="text-sm font-medium leading-none">
-                                        William Kim
-                                    </p>
-                                    <p className="text-lg text-[#71717A] mt-2">
-                                        will@email.com
-                                    </p>
-                                </div>
-                                <div className="ml-auto font-medium">
-                                    +$99.00
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-4">
-                                <div className="grid gap-1">
-                                    <p className="text-sm font-medium leading-none">
-                                        Sofia Davis
-                                    </p>
-                                    <p className="text-lg text-[#71717A] mt-2">
-                                        sofia.davis@email.com
-                                    </p>
-                                </div>
-                                <div className="ml-auto font-medium">
-                                    +$39.00
-                                </div>
-                            </div>
+                            <Card>
+                                <CardTitle>Développeur web (H/F)</CardTitle>
+                                <CardDescription>
+                                    Apple - CHATEAUROUX (36)
+                                </CardDescription>
+                            </Card>
                         </CardContent>
                     </Card>
                 </div>
