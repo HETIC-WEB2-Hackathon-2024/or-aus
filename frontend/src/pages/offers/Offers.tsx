@@ -103,7 +103,7 @@ export default function Offers() {
         } finally {
             setLoading(false);
         }
-    }, [filters, getAccessTokenSilently, createQueryString, authenticatedGet, offers, page])
+    }, [filters, getAccessTokenSilently, createQueryString, offers, page])
 
     useEffect(() => {
         getOffers()
