@@ -1,8 +1,8 @@
 import {
-  Outlet,
-  RouterProvider,
-  createBrowserRouter,
-  useLocation,
+    Outlet,
+    RouterProvider,
+    createBrowserRouter,
+    useLocation,
 } from "react-router-dom";
 import { Dashboard } from "./pages/dashboard/Dashboard";
 import Settings from "./pages/settings/Settings";
@@ -10,47 +10,47 @@ import Settings from "./pages/settings/Settings";
 import Header, { TCurrentView } from "./common/Header";
 
 const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Layout />,
-    children: [
-      {
-        path: "dashboard",
-        element: <Dashboard />,
-      },
-      {
-        path: "offres",
-        element: <div>Offres</div>,
-      },
-      {
-        path: "parametres",
-        element: <Settings />,
-      },
-      {
-        path: "selection",
-        element: <div>Ma sélection</div>,
-      },
-    ],
-  },
-  {
-    path: "*",
-    element: <div>404 <a href="/">retour /</a></div>
-  }
+    {
+        path: "/",
+        element: <Layout />,
+        children: [
+            {
+                path: "dashboard",
+                element: <Dashboard />,
+            },
+            {
+                path: "offres",
+                element: <div>Offres</div>,
+            },
+            {
+                path: "parametres",
+                element: <Settings />,
+            },
+            {
+                path: "selection",
+                element: <div>Ma sélection</div>,
+            },
+        ],
+    },
+    {
+        path: "*",
+        element: <Error />,
+    },
 ]);
 
 function Layout() {
-  const location = useLocation();
-  const currentPath = location.pathname.split("/")[1];
-  const currentView = currentPath as TCurrentView; // Default to 'home' if no path segment
+    const location = useLocation();
+    const currentPath = location.pathname.split("/")[1];
+    const currentView = currentPath as TCurrentView; // Default to 'home' if no path segment
 
-  return (
-    <>
-      <Header currentView={currentView} />
-      <Outlet />
-    </>
-  );
+    return (
+        <>
+            <Header currentView={currentView} />
+            <Outlet />
+        </>
+    );
 }
 
 export function App() {
-  return <RouterProvider router={router} />;
+    return <RouterProvider router={router} />;
 }
