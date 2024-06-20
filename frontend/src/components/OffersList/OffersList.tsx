@@ -49,6 +49,9 @@ export default function OffersList({ filters, uri, selectedOffer, setSelectedOff
             setSelectedOffer(initialSelectedOffer)
             const path = createQueryString(uri, filters, pagination)
             const newOffers = await authenticatedGet(token, path);
+            if (!Array.isArray(newOffers)) {
+                throw new Error("newOffers is not an array");
+            }
             setPage((prev) => prev + 1);
             setPagination({ ...pagination, offset: page * pagination.limit })
             if (newOffers.length === 0 || newOffers.length < 20) {
