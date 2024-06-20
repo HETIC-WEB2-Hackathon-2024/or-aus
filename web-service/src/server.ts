@@ -21,6 +21,8 @@ import { GetCandidatInfoMiddleware, RequestWithUserInfo } from "./core/candidat/
 import { AddCandidatUseCase } from "./core/candidat/ports/AddCandidatUseCase";
 import { AddCandidatController } from "./core/candidat/controllers/AddCandidatController";
 import { GetDashboardStatisticsController } from "./core/dashboard/controllers/GetDashboardStatisticsController";
+import { GetSecteursUseCase } from "./core/secteur/ports/GetSecteursUseCase"
+import { GetSecteursController } from "./core/secteur/controllers/GetSecteursControllers";
 
 export async function main(): Promise<void> {
     const poolClient = pool;
@@ -60,6 +62,10 @@ export async function main(): Promise<void> {
     const getFavoriteUseCase = new GetFavoritesUseCase(postgreRepository);
     const getFavoriteController = new GetFavoriteController(getFavoriteUseCase);
 
+    // Secteur 
+    const getSecteursUseCase = new GetSecteursUseCase(postgreRepository);
+    const getSecteursController = new GetSecteursController(getSecteursUseCase);
+
     // Routing
 
     //Offers routes
@@ -77,10 +83,15 @@ export async function main(): Promise<void> {
         .route("/v1/users/dashboard")
         .get(getCandidatInfoMiddleware.handle, getDashboardStatisticsController.handle);
 
+    // Secteur routes
+    const secteurRouter = Router();
+    secteurRouter.route("/v1/secteurs").get(getSecteursController.handle);
+
     // Configure and listen
     const app = new ApiServer();
     app.addRoute(offersRouter);
     app.addRoute(userRouter);
+    app.addRoute(secteurRouter);
     app.listen(3000);
 }
 

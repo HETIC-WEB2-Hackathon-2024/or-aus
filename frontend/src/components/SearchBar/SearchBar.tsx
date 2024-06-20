@@ -4,10 +4,11 @@ import { AutoComplete } from "../../components/Autocompelte/Autocomplete"
 import { IFilters } from "@/pages/offers/Offers"
 
 interface SearchBarProps {
-    setQueryFilters: React.Dispatch<React.SetStateAction<IFilters>>
+    setQueryFilters: React.Dispatch<React.SetStateAction<IFilters>>;
+    queryFilters: IFilters;
 }
 
-export default function SearchBar({setQueryFilters}: SearchBarProps) {
+export default function SearchBar({queryFilters, setQueryFilters}: SearchBarProps) {
     const [filters, setFilters] = useState<IFilters>({})
     return(
         <div className="flex justify-between p-3 items-center">
@@ -23,7 +24,7 @@ export default function SearchBar({setQueryFilters}: SearchBarProps) {
                     options={[]} 
                     className="m-2"
                     onChange={(value: string) => setFilters({...filters, city_or_department: value})}/>
-                <Button className="m-2" onClick={() => setQueryFilters(filters)}>Rechercher</Button>
+                <Button className="m-2" onClick={() => setQueryFilters({...queryFilters, ...filters})}>Rechercher</Button>
         </div>
                        
     )

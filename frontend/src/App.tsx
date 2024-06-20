@@ -5,6 +5,7 @@ import Offers from "./pages/offers/Offers";
 
 import Header, { TCurrentView } from "./common/Header";
 import ErrorPage from "./pages/error/Error";
+import Favorite from "./pages/favorite/Favorite";
 
 const router = createBrowserRouter([
     {
@@ -25,7 +26,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "selection",
-                element: <div>Ma sélection</div>,
+                element: <Favorite />,
             },
         ],
     },

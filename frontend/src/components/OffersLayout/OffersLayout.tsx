@@ -1,5 +1,5 @@
 import { useState } from "react"
-import {OfferDetail} from "../OfferDetail/OfferDetail"
+import { OfferDetail } from "../OfferDetail/OfferDetail"
 import OffersList from "@/components/OffersList/OffersList"
 import { IFilters, IOffer } from "@/pages/offers/Offers";
 
@@ -29,20 +29,20 @@ const intialSelectedOffer = {
     secteur: ""
 }
 
-export default function OffersLayout({children, filters, uri}: OffersLayoutProps) {
-    
+export default function OffersLayout({ children, filters, uri }: OffersLayoutProps) {
+
     const [selectedOffer, setSelectedOffer] = useState<IOffer>(intialSelectedOffer)
 
-    return(
+    return (
         <div className="flex h-full">
             <div className="flex flex-col basis-1/2 border-r">
                 {children && children}
-                <OffersList 
-                    filters={filters} 
+                <OffersList
+                    filters={filters}
                     uri={uri}
                     selectedOffer={selectedOffer}
                     setSelectedOffer={setSelectedOffer}
-                    initialSelectedOffer={intialSelectedOffer}/>
+                    initialSelectedOffer={intialSelectedOffer} />
             </div>
             <div className="basis-1/2">
                 <OfferDetail selectedOffer={selectedOffer} />

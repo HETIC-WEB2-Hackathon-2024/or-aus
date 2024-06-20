@@ -1,9 +1,7 @@
 "use client"
 
-import * as React from "react"
-import { addDays, format } from "date-fns"
 import { Calendar as CalendarIcon } from "lucide-react"
-import { DateRange } from "react-day-picker"
+import { format } from "date-fns"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -14,13 +12,47 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
+type DateRange = {
+  from: Date | undefined;
+  to?: Date | undefined;
+};
+interface DatePickerWithRangeProps {
+  className: string;
+  date: DateRange | undefined;
+  setDate: SelectRangeEventHandler
+}
+
+type SelectRangeEventHandler = (
+  /** The current range of the selected days. */
+  range: DateRange | undefined, 
+  /** The day that was selected (or clicked) triggering the event. */
+  selectedDay: Date, 
+  /** The modifiers of the selected day. */
+  activeModifiers: ActiveModifiers, e: React.MouseEvent) => void;
+
+type ActiveModifiers = Record<string, true> & Partial<Record<InternalModifier, true>>;
+
+declare enum InternalModifier {
+  Outside = "outside",
+  /** Name of the modifier applied to the disabled days, using the `disabled` prop. */
+  Disabled = "disabled",
+  /** Name of the modifier applied to the selected days using the `selected` prop). */
+  Selected = "selected",
+  /** Name of the modifier applied to the hidden days using the `hidden` prop). */
+  Hidden = "hidden",
+  /** Name of the modifier applied to the day specified using the `today` prop). */
+  Today = "today",
+  /** The modifier applied to the day starting a selected range, when in range selection mode.  */
+  RangeStart = "range_start",
+  /** The modifier applied to the day ending a selected range, when in range selection mode.  */
+  RangeEnd = "range_end",
+  /** The modifier applied to the days between the start and the end of a selected range, when in range selection mode.  */
+  RangeMiddle = "range_middle"
+}
+
 export function DatePickerWithRange({
-  className,
-}: React.HTMLAttributes<HTMLDivElement>) {
-  const [date, setDate] = React.useState<DateRange | undefined>({
-    from: new Date(),
-    to: addDays(new Date(), 20),
-  })
+  className, date, setDate
+}: DatePickerWithRangeProps) {
 
   return (
     <div className={cn("grid gap-2", className)}>

@@ -1,7 +1,5 @@
-import { Offre } from "../domain/Offre";
 import { IUseCase } from "../../../shared/IUseCase";
 import { IOfferRepository } from "./IOfferRepository";
-import { IOfferFilter } from "./../filter/IOfferFilter";
 import { TContract } from "./../shared/TContract"
 
 export class GetContractTypesUseCase implements IUseCase<{}, TContract[]> {
