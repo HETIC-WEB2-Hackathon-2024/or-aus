@@ -114,14 +114,27 @@ export class PostgresRepository
         }
     }
 
-    async getFavorites(input: TCandidatId): Promise<Offre[]> {
+    async getFavorites(input: TCandidatId, withDependancies: boolean = true): Promise<Offre[]> {
         const client = await this._pool.connect();
 
         try {
-            const query = `SELECT o.* FROM favorite AS f JOIN offre AS o ON o.id = f.offre_id WHERE f.candidat_id = $1;`;
-            const { rows: result } = await client.query<Offre>(query, [input.id]);
+            if (withDependancies) {
+                const query = "SELECT * FROM favorite WHERE candidat_id = $1;";
+                const result = await client.query<Favorite>(query, [input.id]);
+                const offers: Offre[] = [];
 
-            return result;
+                for (const favorite of result.rows) {
+                    const offre = await this.getOffers(1, 0, { id: favorite.offre_id.toString() });
+                    offers.push(offre[0]);
+                }
+
+                return offers;
+            } else {
+                const query = `SELECT o.* FROM favorite AS f JOIN offre AS o ON o.id = f.offre_id WHERE f.candidat_id = $1;`;
+                const { rows: result } = await client.query<Offre>(query, [input.id]);
+
+                return result;
+            }
         } finally {
             client.release();
         }
@@ -176,7 +189,7 @@ export class PostgresRepository
     async removeFavorite(input: RemoveFavoriteDto): Promise<void> {
         const client = await this._pool.connect();
         try {
-            const userFavorites = await this.getFavorites({ id: input.user_id });
+            const userFavorites = await this.getFavorites({ id: input.user_id }, false);
             const userHasThisOffer = userFavorites.some((offer) => offer.id === input.offre_id);
             if (!userHasThisOffer) throw new Error("Favorite doesn't exist");
 
@@ -191,7 +204,7 @@ export class PostgresRepository
     async addFavorite(candidatId: number, offreId: number): Promise<void> {
         const client = await this._pool.connect();
         try {
-            const userFavorites = await this.getFavorites({ id: candidatId });
+            const userFavorites = await this.getFavorites({ id: candidatId }, false);
             const userHasThisOffer = userFavorites.some((offer) => offer.id === offreId);
             if (userHasThisOffer) throw new Error("Offer already favorite");
 
