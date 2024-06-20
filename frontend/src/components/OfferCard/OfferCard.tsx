@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
     Card,
     CardContent,
@@ -17,13 +17,12 @@ interface OfferCardProps {
   shortDescription: string;
   tags: string[];
   offerId: number;
-  candidateId: number;
   className?: string;
   isFavoriteBase?: boolean;
   onFavoriteToggle: (offerId: number, isFavorite: boolean) => void;
 }
 
-export function OfferCard({ title, subtitle, shortDescription, tags, offerId, candidateId, className, onFavoriteToggle, isFavoriteBase}: OfferCardProps) {
+export function OfferCard({ title, subtitle, shortDescription, tags, offerId, className, onFavoriteToggle, isFavoriteBase=false}: OfferCardProps) {
   const [isFavorite, setIsFavorite] = useState(isFavoriteBase);
 
   const handleFavoriteClick = () => {
