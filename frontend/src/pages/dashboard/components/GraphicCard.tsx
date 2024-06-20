@@ -12,7 +12,6 @@ import {
 import { Line } from "react-chartjs-2";
 import { TGraphValue } from "../interfaces/dashboard.types";
 import moment from "moment";
-import frLocale from "moment";
 
 interface GraphicCardProps {
     data: TGraphValue[];
