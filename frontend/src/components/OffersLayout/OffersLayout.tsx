@@ -28,10 +28,11 @@ const intialSelectedOffer = {
     type_contrat: "",
     nom_commune: "",
     code_region: 0,
-    secteur: ""
+    secteur: "",
+    is_favorite: false,
 }
 
-export default function OffersLayout({ children, filters, uri, isSelection }: OffersLayoutProps) {
+export default function OffersLayout({ children, filters, uri }: OffersLayoutProps) {
 
     const [selectedOffer, setSelectedOffer] = useState<IOffer>(intialSelectedOffer)
     const [offerListClass, setOfferListClass] = useState("")
@@ -63,7 +64,6 @@ export default function OffersLayout({ children, filters, uri, isSelection }: Of
                         uri={uri}
                         selectedOffer={selectedOffer}
                         setSelectedOffer={setSelectedOffer}
-                        isSelection={isSelection}
                         initialSelectedOffer={intialSelectedOffer} />
                 </div>
             </div>

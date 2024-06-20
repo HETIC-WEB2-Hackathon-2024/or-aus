@@ -27,6 +27,7 @@ export interface IOffer {
     nom_commune: string;
     code_region: number;
     secteur: string;
+    is_favorite: boolean;
 }
 
 export interface IFilters {
