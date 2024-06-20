@@ -73,7 +73,7 @@ export function Dashboard({ uri }: DashboardProps) {
                     />
                 </div>
                 <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
-                    <GraphicCard data={dashboardData?.[StatsEnum.Graphique] || []} isLoading={isLoading} />
+                    <GraphicCard data={dashboardData?.[StatsEnum.Graphique] || []} />
                     <Card x-chunk="dashboard-01-chunk-5">
                         <CardHeader>
                             <CardTitle className="mb-1 flex justify-between items-center">

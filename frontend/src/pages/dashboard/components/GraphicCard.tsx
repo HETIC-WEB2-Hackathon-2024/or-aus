@@ -15,7 +15,6 @@ import moment from "moment";
 
 interface GraphicCardProps {
     data: TGraphValue[];
-    isLoading: boolean;
 }
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
@@ -42,7 +41,7 @@ export const graphOptions = {
     },
 };
 
-export default function GraphicCard({ data, isLoading }: GraphicCardProps) {
+export default function GraphicCard({ data }: GraphicCardProps) {
 
     const initData = {
         labels: data.map((x) => moment(x.date).format("MMM DD")),
