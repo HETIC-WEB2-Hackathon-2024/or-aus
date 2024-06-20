@@ -3,41 +3,29 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useAuth0 } from "@auth0/auth0-react";
 import { useQuery } from "@tanstack/react-query";
 
-import { Pin, Target, Bookmark, Send, Heart } from "lucide-react";
+import { Heart } from "lucide-react";
+import StatisticsCard from "./components/StatisticsCard";
+import { DashboardData, StatsEnum, StatsTitleEnum } from "./interfaces/dashboard.types";
 
 interface DashboardProps {
     uri: string;
 }
 
-enum StatsEnum {
-    Commune = "commune_stats",
-    Secteur = "secteur_stats",
-    Candidature = "candidatures_stats",
-    Graphique = "graphique_stats",
-}
-
-const dashboardConfig = {
-    availableStats: {
-        [StatsEnum.Commune]: true,
-        [StatsEnum.Secteur]: true,
-        [StatsEnum.Candidature]: true,
-        [StatsEnum.Graphique]: false,
-    },
-};
-
 export function Dashboard({ uri }: DashboardProps) {
     const { getAccessTokenSilently } = useAuth0();
 
     // TODO: COMBINE
-    const dashboardData = useQuery({
-        queryKey: ['dashboard'],
+    const {
+        data: dashboardData,
+        isError,
+        isLoading,
+    } = useQuery<DashboardData>({
+        queryKey: ["dashboard"],
         queryFn: async () => {
             return authenticatedGet(await getAccessTokenSilently(), `${uri}/dashboard`);
-
         },
-        retryDelay: 2000
-    })
-
+        retryDelay: 2000,
+    });
 
     return (
         <div className="flex min-h-screen w-full flex-col">
@@ -47,48 +35,34 @@ export function Dashboard({ uri }: DashboardProps) {
                     <span className="text-primary"> Florent !</span> 👋
                 </h1>
                 <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
-                    <Card x-chunk="dashboard-01-chunk-0">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-xl font-b mb-2">Nouvelles offres dans votre commune</CardTitle>
-                            <Pin className="h-6 w-6 text-muted-foreground stroke-primary" />
-                        </CardHeader>
-                        <CardContent className="ml-4">
-                            <div className="text-4xl font-bold text-primary">24</div>
-                            <p className="text-md text-[#71717A] mt-2">+20% par rapport au mois dernier</p>
-                        </CardContent>
-                    </Card>
-                    <Card x-chunk="dashboard-01-chunk-1">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-xl font-semibold mb-2">
-                                Nouvelles offres dans votre secteur
-                            </CardTitle>
-                            <Target className="h-6 w-6 text-muted-foreground stroke-primary" />
-                        </CardHeader>
-                        <CardContent className="ml-4">
-                            <div className="text-4xl font-bold text-primary">349</div>
-                            <p className="text-md text-[#71717A] mt-2">-11.5% par rapport au mois dernier</p>
-                        </CardContent>
-                    </Card>
-                    <Card x-chunk="dashboard-01-chunk-2">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-xl font-semibold mb-2">Nouvelles offres enregistrées</CardTitle>
-                            <Bookmark className="h-6 w-6 text-muted-foreground stroke-primary" />
-                        </CardHeader>
-                        <CardContent className="ml-4">
-                            <div className="text-4xl font-bold text-primary">4</div>
-                            <p className="text-md text-[#71717A] mt-2">-15% par rapport au mois dernier</p>
-                        </CardContent>
-                    </Card>
-                    <Card x-chunk="dashboard-01-chunk-3">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-xl font-semibold mb-2">Candidatures envoyées</CardTitle>
-                            <Send className="h-6 w-6 text-muted-foreground stroke-primary" />
-                        </CardHeader>
-                        <CardContent className="ml-4">
-                            <div className="text-4xl font-bold text-primary">2</div>
-                            <p className="text-md text-[#71717A] mt-2">-10% par rapport au mois dernier</p>
-                        </CardContent>
-                    </Card>
+                    <StatisticsCard
+                        title={StatsTitleEnum.Commune}
+                        main_data={dashboardData?.[StatsEnum.Commune].current_month || 0}
+                        comparison_data={dashboardData?.[StatsEnum.Commune].comparison_percentage}
+                        isLoading={isLoading}
+                        isError={isError}
+                    />
+                    <StatisticsCard
+                        title={StatsTitleEnum.Secteur}
+                        main_data={dashboardData?.[StatsEnum.Secteur].current_month || 0}
+                        comparison_data={dashboardData?.[StatsEnum.Secteur].comparison_percentage}
+                        isLoading={isLoading}
+                        isError={isError}
+                    />
+                    <StatisticsCard
+                        title={StatsTitleEnum.Favoris}
+                        main_data={dashboardData?.[StatsEnum.Favoris] || 0}
+                        comparison_data={dashboardData?.[StatsEnum.Favoris]}
+                        isLoading={true}
+                        isError={true}
+                    />
+                    <StatisticsCard
+                        title={StatsTitleEnum.Candidature}
+                        main_data={dashboardData?.[StatsEnum.Candidature] || 0}
+                        comparison_data={undefined}
+                        isLoading={isLoading}
+                        isError={isError}
+                    />
                 </div>
                 <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
                     <Card className="xl:col-span-2" x-chunk="dashboard-01-chunk-4">
