@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 
 export default function Settings() {
-    const [activeLink, setActiveLink] = useState("#localisation-anchor");
+    const [activeLink, setActiveLink] = useState("#perso-anchor");
     const [highlightedCard, setHighlightedCard] = useState("");
 
     const handleLinkClick = (link: SetStateAction<string>) => {
@@ -34,6 +34,17 @@ export default function Settings() {
                         className="sticky top-4 grid gap-4 text-sm text-muted-foreground"
                         x-chunk="dashboard-04-chunk-0"
                     >
+                        <a
+                            href="#perso-anchor"
+                            onClick={() => handleLinkClick("#perso-anchor")}
+                            className={` ${
+                                activeLink === "#perso-anchor"
+                                    ? "text-primary font-semibold"
+                                    : ""
+                            }`}
+                        >
+                            Informations personnelles
+                        </a>
                         <a
                             href="#localisation-anchor"
                             onClick={() =>
@@ -82,6 +93,31 @@ export default function Settings() {
                         </a>
                     </nav>
                     <div className="grid gap-6">
+                        <Card
+                            x-chunk="dashboard-04-chunk-1"
+                            id="perso-anchor"
+                            className={`transition-colors duration-500 ${
+                                highlightedCard === "#perso-anchor"
+                                    ? "bg-gray-100"
+                                    : ""
+                            }`}
+                        >
+                            <CardHeader>
+                                <CardTitle>Informations personnelles</CardTitle>
+                                <CardDescription>
+                                    Changez vos informations personnelles
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <form className="flex gap-5">
+                                    <Input placeholder="Nom" />
+                                    <Input placeholder="Prénom" />
+                                </form>
+                            </CardContent>
+                            <CardFooter className="border-t px-6 py-4">
+                                <Button>Enregistrer</Button>
+                            </CardFooter>
+                        </Card>
                         <Card
                             x-chunk="dashboard-04-chunk-1"
                             id="localisation-anchor"
