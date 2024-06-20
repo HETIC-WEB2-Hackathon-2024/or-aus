@@ -164,6 +164,7 @@ export default function OffersList({
                     <div
                         key={offer.id}
                         onClick={() => changeSelectedOffer(offer.id)}
+                        className="w-full"
                     >
                         <OfferCard
                             title={offer.titre_emploi}
