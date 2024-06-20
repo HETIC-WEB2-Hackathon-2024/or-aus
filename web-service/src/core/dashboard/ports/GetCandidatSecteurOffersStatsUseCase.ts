@@ -1,11 +1,13 @@
 import { IUseCase } from "../../../shared/IUseCase";
-import { TCandidatId } from "../domain/Candidat";
-import { ICandidatRepository, ICandidatSecteurOffersStatsResponse } from "./ICandidatRepository";
+import { TCandidatId } from "../../candidat/domain/Candidat";
+import { StatsHelper } from "../../candidat/shared/stats-helper";
+import { ICandidatRepository, ICandidatSecteurOffersStatsResponse } from "../../candidat/ports/ICandidatRepository";
+import { IDashboardRepository } from "./IDashboardRepository";
 
 export class GetCandidatSecteurOffersStatsUseCase
     implements IUseCase<TCandidatId, ICandidatSecteurOffersStatsResponse>
 {
-    public constructor(private readonly _candidatRepository: ICandidatRepository) {}
+    public constructor(private readonly _candidatRepository: IDashboardRepository) {}
 
     async execute(input: TCandidatId): Promise<ICandidatSecteurOffersStatsResponse> {
         const secteurOffersStats = await this._candidatRepository.getCandidatSecteurOffersStats(input);
@@ -15,7 +17,7 @@ export class GetCandidatSecteurOffersStatsUseCase
             100;
         return {
             ...secteurOffersStats,
-            comparison_percentage: `${comparison_percentage.toFixed(2)}%`,
+            comparison_percentage: `${StatsHelper.formatPercentage(comparison_percentage)}%`,
         };
     }
 }

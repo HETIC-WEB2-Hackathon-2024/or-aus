@@ -1,10 +1,10 @@
 import { pool } from "../../src/database";
 
 import { PostgresRepository } from "../../src/adapter.spi.postgresql/PostgresRepository";
-import { ICandidatRepository } from "../../src/core/candidat/ports/ICandidatRepository";
-import { GetCandidatSecteurOffersStatsUseCase } from "../../src/core/candidat/ports/GetCandidatSecteurOffersStatsUseCase";
+import { GetCandidatSecteurOffersStatsUseCase } from "../../src/core/dashboard/ports/GetCandidatSecteurOffersStatsUseCase";
 import { TCandidatId } from "../../src/core/candidat/domain/Candidat";
-import { GetCandidatCommuneOffersStatsUseCase } from "../../src/core/candidat/ports/GetCandidatCommuneOffersStatsUseCase";
+import { GetCandidatCommuneOffersStatsUseCase } from "../../src/core/dashboard/ports/GetCandidatCommuneOffersStatsUseCase";
+import { IDashboardRepository } from "../../src/core/dashboard/ports/IDashboardRepository";
 
 jest.mock("../../src/database", () => {
     const pool = {
@@ -17,7 +17,7 @@ jest.mock("../../src/database", () => {
 });
 
 describe("Get number of applications", () => {
-    let repository: ICandidatRepository;
+    let repository: IDashboardRepository;
     beforeEach(() => {
         repository = new PostgresRepository(pool);
     });
@@ -47,7 +47,7 @@ describe("Get number of applications", () => {
         const response = await new GetCandidatSecteurOffersStatsUseCase(repository).execute(candidat_id);
 
         expect(pool.connect).toHaveBeenCalled();
-        expect(response.comparison_percentage).toBe("-50.00%");
+        expect(response.comparison_percentage).toBe("-50%");
         expect((await pool.connect()).release).toHaveBeenCalled();
     });
 
@@ -64,7 +64,7 @@ describe("Get number of applications", () => {
         const response = await new GetCandidatCommuneOffersStatsUseCase(repository).execute(candidat_id);
 
         expect(pool.connect).toHaveBeenCalled();
-        expect(response.comparison_percentage).toBe("-30.00%");
+        expect(response.comparison_percentage).toBe("-30%");
         expect((await pool.connect()).release).toHaveBeenCalled();
     });
 });
