@@ -32,7 +32,7 @@ export async function authenticatedPost<T>(token: string, path: string, body: T)
     const data = await response.json();
     return data;
 }
-export async function authenticatedDelete<T>(token: string, path: string) {
+export async function authenticatedDelete(token: string, path: string) {
     const url = await makeUrl(path);
     const headers = makeHeaders(token);
     const response = await fetch(url, {
