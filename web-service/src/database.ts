@@ -1,15 +1,15 @@
 import pg from "pg";
 
 export const pool = new pg.Pool({
-    user: process.env.RDB_USER || "aus-user",
-    database: process.env.RDB_DATABASE || "aus",
-    password: process.env.RDB_PASSWORD || "aus2025",
-    port: +(process.env.RDB_PORT || 5433),
-    host: process.env.RDB_HOST || "localhost",
+  user: process.env.RDB_USER || "aus-user",
+  database: process.env.RDB_DATABASE || "aus",
+  password: process.env.RDB_PASSWORD || "aus2025",
+  port: +(process.env.RDB_PORT || 5433),
+  host: process.env.RDB_HOST || "localhost",
 });
 
 process.on("exit", function () {
-    pool.end();
+  pool.end();
 });
 
 /**
@@ -18,14 +18,14 @@ process.on("exit", function () {
  * @returns an array of rows
  */
 export async function query(sqlStatement: string): Promise<any[]> {
-    let rows = [];
-    const client = await pool.connect();
-    const response = await client.query(sqlStatement);
-    rows = response.rows;
-    client.release();
-    return rows;
+  let rows = [];
+  const client = await pool.connect();
+  const response = await client.query(sqlStatement);
+  rows = response.rows;
+  client.release();
+  return rows;
 }
 
 export function getFirstOffres(count: number = 3): Promise<any[]> {
-    return query(`SELECT * FROM offre LIMIT ${count}`);
+  return query(`SELECT * FROM offre LIMIT ${count}`);
 }

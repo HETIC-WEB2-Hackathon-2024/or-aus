@@ -2,24 +2,26 @@ import { Candidat, TCandidatEmail, TCandidatId } from "../domain/Candidat";
 import { TUserPayload } from "./GetCandidatInfoUseCase";
 
 export interface OfferStats {
-    current_month: number;
-    previous_month: number;
-    comparison_percentage: string;
+  current_month: number;
+  previous_month: number;
+  comparison_percentage: string;
 }
+
 export interface ICandidatSecteurOffersStatsResponse extends OfferStats {
-    secteur: string;
+  secteur: string;
 }
 
 export interface ICandidatCommuneOffersStatsResponse extends OfferStats {
-    commune: string;
-    code_postal: string;
+  commune: string;
+  code_postal: string;
 }
 
 export interface ICandidatRepository {
-    getCandidatInfo(input: TCandidatEmail): Promise<Candidat>;
-    addCandidat(input: Pick<TUserPayload, "email">): Promise<void>;
+  getCandidatInfo(input: TCandidatEmail): Promise<Candidat>;
+  addCandidat(input: Pick<TUserPayload, "email">): Promise<void>;
+  updateCandidat(id: TCandidatId["id"], data: Partial<Candidat>): Promise<void>;
 }
 
 export interface IAuth0Repository {
-    getUserInfo(token_id: string): Promise<TUserPayload>;
+  getUserInfo(token_id: string): Promise<TUserPayload>;
 }

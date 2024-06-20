@@ -58,6 +58,33 @@ export class PostgresRepository
       client.release();
     }
   }
+  
+  async updateCandidat(
+    id: TCandidatId["id"],
+    data: Partial<Candidat>
+  ): Promise<void> {
+    const client = await this._pool.connect();
+    try {
+      const query = `
+        UPDATE candidat
+        SET nom = COALESCE($1, nom), prenom = COALESCE($2, prenom), telephone = COALESCE($3, telephone), 
+            email = COALESCE($4, email), pays = COALESCE($5, pays), date_naissance = COALESCE($6, date_naissance)
+        WHERE id = $7;
+      `;
+      const values = [
+        data.nom,
+        data.prenom,
+        data.telephone,
+        data.email,
+        data.pays,
+        data.date_naissance,
+        id,
+      ];
+      await client.query(query, values);
+    } finally {
+      client.release();
+    }
+  }
 
   async getCandidatInfo(input: TCandidatEmail): Promise<Candidat> {
     const client = await this._pool.connect();

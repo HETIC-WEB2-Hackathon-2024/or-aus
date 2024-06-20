@@ -27,6 +27,8 @@ import { GetDashboardStatisticsController } from "./core/dashboard/controllers/G
 import { GetSecteursUseCase } from "./core/secteur/ports/GetSecteursUseCase";
 import { GetSecteursController } from "./core/secteur/controllers/GetSecteursControllers";
 import { GetCandidatFavoriteCountUseCase } from "./core/dashboard/ports/GetCandidatFavoriteCountUseCase";
+import { UpdateCandidatUseCase } from "./core/candidat/ports/UpdateCandidatUseCase";
+import { UpdateCandidatController } from "./core/candidat/controllers/UpdateCandidatController";
 
 export async function main(): Promise<void> {
   const poolClient = pool;
@@ -43,6 +45,10 @@ export async function main(): Promise<void> {
   );
   const addCandidatUseCase = new AddCandidatUseCase(postgreRepository);
   const addCandidatController = new AddCandidatController(addCandidatUseCase);
+  const updateCandidatUseCase = new UpdateCandidatUseCase(postgreRepository);
+  const updateCandidatController = new UpdateCandidatController(
+    updateCandidatUseCase
+  );
 
   // Dashboard
   const getCandidatCandidaturesCountUseCase =
@@ -117,6 +123,9 @@ export async function main(): Promise<void> {
       getCandidatInfoMiddleware.handle,
       getDashboardStatisticsController.handle
     );
+  userRouter
+    .route("/v1/users")
+    .put(getCandidatInfoMiddleware.handle, updateCandidatController.handle);
 
   // Secteur routes
   const secteurRouter = Router();
