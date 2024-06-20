@@ -24,6 +24,28 @@ export class PostgresRepository
 {
     public constructor(private readonly _pool: Pool) {}
 
+    async addCandidature(offre_id: number, user_id: number): Promise<void> {
+        const client = await this._pool.connect();
+        try {
+            const values = [user_id, offre_id];
+
+            const currentQuery = `SELECT * FROM candidat_offres WHERE candidat_id=$1 AND offre_id=$2;`;
+            const {
+                rows: [candidatureExists],
+            } = await client.query(currentQuery, values);
+            if (candidatureExists) {
+                throw new Error("Candidature déjà appliquée");
+            }
+            const query = `
+                INSERT INTO candidat_offres VALUES ($1 , $2, current_timestamp);
+            `;
+
+            await client.query(query, values);
+        } finally {
+            client.release();
+        }
+    }
+
     async getCandidatCandidatures(user_id: TCandidatId): Promise<IGraphData> {
         const client = await this._pool.connect();
         try {
