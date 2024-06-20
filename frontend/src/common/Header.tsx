@@ -18,7 +18,7 @@ interface HeaderProps {
     currentView: TCurrentView;
 }
 export default function Header({ currentView }: HeaderProps) {
-    const { logout } = useAuth0();
+    const { logout, user } = useAuth0();
 
     return (
         <div className="flex w-full flex-col">
@@ -28,7 +28,7 @@ export default function Header({ currentView }: HeaderProps) {
                         <DropdownMenuTrigger asChild>
                             <div className="flex items-center border px-3 py-2 rounded-lg gap-4 cursor-pointer w-16 md:w-80">
                                 <CircleUser className="h-6 w-6" />
-                                <div className="hidden md:block">Florent Fauchille</div>
+                                <div className="hidden md:block">{user?.nickname}</div>
                             </div>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="start" className="w-16 md:w-80">
