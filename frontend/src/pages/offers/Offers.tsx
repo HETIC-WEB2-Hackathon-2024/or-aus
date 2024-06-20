@@ -52,15 +52,17 @@ export default function Offers() {
     });
 
     useEffect(() => {
-        const periodStart = date?.from?.toISOString().split("T")[0];
-        const periodEnd = date?.to?.toISOString().split("T")[0];
-        if (periodStart && periodEnd)
-            setQueryFilters({
-                ...queryFilters,
-                period_start: periodStart,
-                period_end: periodEnd,
-            });
-    }, [date]);
+        const periodStart = date?.from?.toISOString().split('T')[0]
+        const periodEnd = date?.to?.toISOString().split('T')[0]
+        if (periodStart && periodEnd) {
+            setQueryFilters({...queryFilters, period_start: periodStart, period_end: periodEnd})
+        } else {
+            const noDateQueryFilters = queryFilters
+            if (noDateQueryFilters.period_start) delete noDateQueryFilters.period_start
+            if (noDateQueryFilters.period_end) delete noDateQueryFilters.period_end
+            setQueryFilters({...noDateQueryFilters})
+        }
+    }, [date])
 
     const getContractTypes = useCallback(async () => {
         try {
@@ -91,17 +93,38 @@ export default function Offers() {
     }, []);
 
     const addContractTypeFilter = (e: React.FormEvent<HTMLButtonElement>) => {
-        let filterArray: string[];
-        if (queryFilters.type_contrat && queryFilters.type_contrat.length > 0) {
-            filterArray = queryFilters.type_contrat;
+        if (e.currentTarget.getAttribute("data-state") == "unchecked") {
+            let filterArray: string[]
+            if (queryFilters.type_contrat && queryFilters.type_contrat.length > 0) {
+                filterArray = queryFilters.type_contrat
+            } else {
+                filterArray = []
+            }
+            filterArray.push(e.currentTarget.id)
+            setQueryFilters({...queryFilters, type_contrat: filterArray})
         } else {
-            filterArray = [];
+            const updatedFilterContractTypeFilter = queryFilters.type_contrat?.filter((type) => type !== e.currentTarget.id)
+            if (updatedFilterContractTypeFilter && updatedFilterContractTypeFilter.length > 0) {
+                setQueryFilters({...queryFilters, type_contrat: updatedFilterContractTypeFilter})
+            } else {
+                const noContractTypeFilter = queryFilters
+                if (noContractTypeFilter.type_contrat) delete noContractTypeFilter.type_contrat
+                setQueryFilters({...queryFilters})
+            }
         }
-        filterArray.push(e.currentTarget.id);
-        setQueryFilters({ ...queryFilters, type_contrat: filterArray });
-    };
+    }
 
-    return (
+    const changeSecteurFilter = (option: string) => {
+        if (option === "") {
+            const noSecteurQueryFilters = queryFilters
+            if (noSecteurQueryFilters.secteur) delete noSecteurQueryFilters.secteur
+            setQueryFilters({...noSecteurQueryFilters})
+        } else {
+            setQueryFilters({...queryFilters, secteur: option})
+        }
+    }
+ 
+    return(
         <div className="flex flex-row justify-between h-screen mt-5">
             <div className="basis-1/5 border-r flex flex-col space-y-5 items-center pr-3 pl-3">
                 <div className="py-4 pl-4 w-full">
@@ -149,12 +172,7 @@ export default function Offers() {
                         <div>
                             <AutoComplete
                                 options={secteurOptions}
-                                onSelection={(option) =>
-                                    setQueryFilters({
-                                        ...queryFilters,
-                                        secteur: option,
-                                    })
-                                }
+                                onSelection={(option) => changeSecteurFilter(option)}
                                 variant="search"
                                 placeholder="Secteur d'activités"
                             />

@@ -13,6 +13,17 @@ export default function SearchBar({
     setQueryFilters,
 }: SearchBarProps) {
     const [filters, setFilters] = useState<IFilters>({});
+        const changeFilters = (value: string, filter: "search" | "city_or_department") => {
+        if (value === "") {
+            const updatedFilters = filters
+            const updatedQueryFilters = queryFilters
+            delete updatedFilters[filter]
+            delete updatedQueryFilters[filter]
+            setFilters({...updatedFilters, ...updatedQueryFilters})
+        } else {
+            setFilters({...filters, ...queryFilters, [filter]: value})
+        }
+    }
     return (
         <div className="flex justify-between p-3 items-center">
             <AutoComplete
@@ -20,18 +31,14 @@ export default function SearchBar({
                 placeholder={"Intitulé du poste"}
                 options={[]}
                 className="m-2 w-full"
-                onChange={(value: string) =>
-                    setFilters({ ...filters, search: value })
-                }
+                onChange={(value: string) => changeFilters(value, "search")}
             />
             <AutoComplete
                 variant="pin"
                 placeholder={"Ville, département"}
                 options={[]}
                 className="m-2 w-full"
-                onChange={(value: string) =>
-                    setFilters({ ...filters, city_or_department: value })
-                }
+                onChange={(value: string) => changeFilters(value, "city_or_department")}
             />
             <Button
                 className="m-2"
