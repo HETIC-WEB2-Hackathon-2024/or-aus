@@ -1,4 +1,4 @@
-name: Continuous Integration - Run Frontend Lint
+name: CI - Run Frontend Lint
 
 on:
     push:
