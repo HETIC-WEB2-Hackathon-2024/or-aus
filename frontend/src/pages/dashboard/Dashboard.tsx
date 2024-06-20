@@ -6,13 +6,14 @@ import { useQuery } from "@tanstack/react-query";
 import { Heart } from "lucide-react";
 import StatisticsCard from "./components/StatisticsCard";
 import { DashboardData, StatsEnum, StatsTitleEnum } from "./interfaces/dashboard.types";
+import GraphicCard from "./components/GraphicCard";
 
 interface DashboardProps {
     uri: string;
 }
 
 export function Dashboard({ uri }: DashboardProps) {
-    const { getAccessTokenSilently } = useAuth0();
+    const { getAccessTokenSilently, user } = useAuth0();
 
     // TODO: COMBINE
     const {
@@ -32,7 +33,7 @@ export function Dashboard({ uri }: DashboardProps) {
             <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
                 <h1 className="text-4xl font-bold py-6">
                     Bon retour parmi nous
-                    <span className="text-primary"> Florent !</span> 👋
+                    <span className="text-primary">{user?.nickname}</span> 👋
                 </h1>
                 <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
                     <StatisticsCard
@@ -65,13 +66,7 @@ export function Dashboard({ uri }: DashboardProps) {
                     />
                 </div>
                 <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
-                    <Card className="xl:col-span-2" x-chunk="dashboard-01-chunk-4">
-                        <CardHeader className="flex flex-row items-center">
-                            <div className="grid gap-2">
-                                <CardTitle>Vos candidatures envoyées sur la dernière semaine</CardTitle>
-                            </div>
-                        </CardHeader>
-                    </Card>
+                    <GraphicCard />
                     <Card x-chunk="dashboard-01-chunk-5">
                         <CardHeader>
                             <CardTitle className="mb-1 flex justify-between items-center">
