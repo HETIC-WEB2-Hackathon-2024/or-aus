@@ -1,9 +1,14 @@
 export class StatsHelper {
-    static formatPercentage(percentage: number) {
-        let formatted = percentage.toFixed(2);
+    static formatPercentage(value: { current_month: number; previous_month: number }) {
+        const processed_value =
+            value.current_month === 0 && value.previous_month === 0
+                ? 0
+                : ((value.current_month - value.previous_month) / value.previous_month) * 100;
+
+        let formatted = processed_value.toFixed(2);
 
         if (formatted.endsWith(".00")) {
-            formatted = parseInt(formatted, 10).toString();
+            formatted = processed_value >= 0 ? "+" : "" + parseInt(formatted, 10).toString();
         }
 
         return formatted;
