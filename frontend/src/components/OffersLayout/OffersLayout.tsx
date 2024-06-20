@@ -33,21 +33,35 @@ const intialSelectedOffer = {
 export default function OffersLayout({ children, filters, uri, isSelection }: OffersLayoutProps) {
 
     const [selectedOffer, setSelectedOffer] = useState<IOffer>(intialSelectedOffer)
+    const [offerListClass, setOfferListClass] = useState("")
+    const [offerDetailClass, setOfferDetailClass] = useState("hidden")
+    const handleClick = () => {
+        console.log("handleClick")
+        setOfferListClass("hidden")
+        setOfferDetailClass("block")
+    }
+
+    const handleClose = () => {
+        setOfferListClass("block")
+        setOfferDetailClass("hidden")
+    }
 
     return (
         <div className="flex h-full">
-            <div className="flex flex-col lg:basis-1/2 border-r">
+            <div className={`flex flex-col ${offerListClass} lg:basis-1/2 border-r`} >
                 {children && children}
-                <OffersList
-                    filters={filters}
-                    uri={uri}
-                    selectedOffer={selectedOffer}
-                    setSelectedOffer={setSelectedOffer}
-                    isSelection={isSelection}
-                    initialSelectedOffer={intialSelectedOffer} />
+                <div onClick={handleClick}>
+                    <OffersList
+                        filters={filters}
+                        uri={uri}
+                        selectedOffer={selectedOffer}
+                        setSelectedOffer={setSelectedOffer}
+                        isSelection={isSelection}
+                        initialSelectedOffer={intialSelectedOffer} />
+                </div>
             </div>
-            <div className="basis-1/2 hidden lg:block">
-                <OfferDetail selectedOffer={selectedOffer} />
+            <div className={`lg:basis-1/2 ${offerDetailClass} lg:block`}>
+                <OfferDetail selectedOffer={selectedOffer} handleClose={handleClose} />
             </div>
         </div>
     )
