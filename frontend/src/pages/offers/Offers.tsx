@@ -64,7 +64,7 @@ export default function Offers() {
             const data = await authenticatedGet(token, "/v1/offres/contractTypes");
             setContractTypes(data)
         } catch (err) {
-            
+            console.log(err)
         } 
     }, [getAccessTokenSilently])
 
@@ -74,7 +74,7 @@ export default function Offers() {
             const data = await authenticatedGet(token, "/v1/secteurs");
             setSecteurOptions(data)
         } catch (err) {
-            
+            console.log(err)
         } 
     }, [getAccessTokenSilently])
 
