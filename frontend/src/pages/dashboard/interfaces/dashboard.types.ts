@@ -9,7 +9,7 @@ export enum StatsEnum {
 export enum StatsTitleEnum {
     Commune = "Offres dans votre commune",
     Secteur = "Offres dans votre secteur",
-    Candidature = "Candidatures envoyées",
+    Candidature = "Nouvelles candidatures envoyées",
     Favoris = "Offres sauvegardées",
     Graphique = "Candidatures envoyées ces derniers jours",
 }
