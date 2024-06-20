@@ -38,15 +38,15 @@ export function Dashboard({ uri }: DashboardProps) {
                 <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
                     <StatisticsCard
                         title={StatsTitleEnum.Commune}
-                        main_data={dashboardData?.[StatsEnum.Commune].current_month || 0}
-                        comparison_data={dashboardData?.[StatsEnum.Commune].comparison_percentage}
+                        main_data={dashboardData?.[StatsEnum.Commune]?.current_month || 0}
+                        comparison_data={dashboardData?.[StatsEnum.Commune]?.comparison_percentage}
                         isLoading={isLoading}
                         isError={isError}
                     />
                     <StatisticsCard
                         title={StatsTitleEnum.Secteur}
-                        main_data={dashboardData?.[StatsEnum.Secteur].current_month || 0}
-                        comparison_data={dashboardData?.[StatsEnum.Secteur].comparison_percentage}
+                        main_data={dashboardData?.[StatsEnum.Secteur]?.current_month || 0}
+                        comparison_data={dashboardData?.[StatsEnum.Secteur]?.comparison_percentage}
                         isLoading={isLoading}
                         isError={isError}
                     />
