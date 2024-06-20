@@ -36,3 +36,5 @@ export type CommuneMonthlyStats = {
 export type SecteurMonthlyStats = {
     secteur: string;
 } & MonthlyStat;
+
+export type CandidatureMonthlyStats = {} & MonthlyStat;
