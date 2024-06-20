@@ -15,8 +15,11 @@ import { TContract } from "../core/offre/shared/TContract";
 import { TUserPayload } from "../core/candidat/ports/GetCandidatInfoUseCase";
 import { IFavoriteRepository } from "../core/favorite/ports/IFavoriteRepository";
 import { RemoveFavoriteDto } from "../core/favorite/ports/RemoveFavoriteUseCase";
+import { IDashboardRepository } from "../core/dashboard/ports/IDashboardRepository";
 
-export class PostgresRepository implements IOfferRepository, ICandidatRepository, IFavoriteRepository {
+export class PostgresRepository
+    implements IOfferRepository, ICandidatRepository, IFavoriteRepository, IDashboardRepository
+{
     public constructor(private readonly _pool: Pool) {}
 
     async addCandidat(input: Pick<TUserPayload, "email">): Promise<void> {

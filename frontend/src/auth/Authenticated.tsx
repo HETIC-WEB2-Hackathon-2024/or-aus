@@ -1,5 +1,6 @@
 import React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
+import { Progress } from "@/components/ui/progress";
 
 /**
  * Makes sure user is authenticated before rendering children.
@@ -9,13 +10,23 @@ import { useAuth0 } from "@auth0/auth0-react";
  *
  */
 export function Authenticated({ children }: React.PropsWithChildren) {
-  const { loginWithRedirect, user, isLoading, error } = useAuth0();
-  React.useEffect(() => {
-    if (error) {
-      return;
-    } else if (!user && !isLoading) loginWithRedirect();
-  }, [user, isLoading, loginWithRedirect, error]);
+    const { loginWithRedirect, user, isLoading, error } = useAuth0();
+    const [progress, setProgress] = React.useState(13);
 
-  if (error) return <div>Oops... {error.message}</div>;
-  return isLoading ? <div>Loading...</div> : <>{children}</>;
+    React.useEffect(() => {
+        const timer = setTimeout(() => setProgress(100), 100);
+        if (error) {
+            return;
+        } else if (!user && !isLoading) loginWithRedirect();
+        return () => clearTimeout(timer);
+    }, [user, isLoading, loginWithRedirect, error]);
+
+    if (error) return <div>Oops... {error.message}</div>;
+    return isLoading ? (
+        <div className="w-full flex items-center justify-center h-screen">
+            <Progress value={progress} className="w-[60%]" />
+        </div>
+    ) : (
+        <>{children}</>
+    );
 }

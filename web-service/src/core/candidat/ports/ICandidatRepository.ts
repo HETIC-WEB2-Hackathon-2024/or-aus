@@ -16,13 +16,6 @@ export interface ICandidatCommuneOffersStatsResponse extends OfferStats {
 }
 
 export interface ICandidatRepository {
-    getCandidatSecteurOffersStats(
-        user_id: TCandidatId
-    ): Promise<Omit<ICandidatSecteurOffersStatsResponse, "comparison_percentage">>;
-    getCandidatCommuneOffersStats(
-        user_id: TCandidatId
-    ): Promise<Omit<ICandidatCommuneOffersStatsResponse, "comparison_percentage">>;
-    getCandidatCandidaturesCount(user_id: TCandidatId): Promise<number>;
     getCandidatInfo(input: TCandidatEmail): Promise<Candidat>;
     addCandidat(input: Pick<TUserPayload, "email">): Promise<void>;
 }

@@ -1,16 +1,13 @@
-import { Request, Response, Router } from "express";
+import { Router } from "express";
 import { ApiServer } from "./adapter.api.express/ApiServer";
 import { Auth0Repository } from "./adapter.spi.postgresql/Auth0Repository";
 import { PostgresRepository } from "./adapter.spi.postgresql/PostgresRepository";
-import { GetCandidatCandidaturesCountController } from "./core/candidat/controllers/GetCandidatCandidaturesCountController";
-import { GetCandidatCommuneOffersStatsController } from "./core/candidat/controllers/GetCandidatCommuneOffersStatsController";
 import { AddFavoriteUseCase } from "./core/favorite/ports/AddFavoriteUseCase";
 import { AddFavoriteController } from "./core/favorite/controllers/AddFavoriteController";
-import { GetCandidatSecteurOffersStatsController } from "./core/candidat/controllers/GetCandidatSecteurOffersStatsController";
-import { GetCandidatCandidaturesCountUseCase } from "./core/candidat/ports/GetCandidatCandidaturesCountUseCase";
-import { GetCandidatCommuneOffersStatsUseCase } from "./core/candidat/ports/GetCandidatCommuneOffersStatsUseCase";
+import { GetCandidatCandidaturesCountUseCase } from "./core/dashboard/ports/GetCandidatCandidaturesCountUseCase";
+import { GetCandidatCommuneOffersStatsUseCase } from "./core/dashboard/ports/GetCandidatCommuneOffersStatsUseCase";
 import { GetCandidatInfoUseCase } from "./core/candidat/ports/GetCandidatInfoUseCase";
-import { GetCandidatSecteurOffersStatsUseCase } from "./core/candidat/ports/GetCandidatSecteurOffersStatsUseCase";
+import { GetCandidatSecteurOffersStatsUseCase } from "./core/dashboard/ports/GetCandidatSecteurOffersStatsUseCase";
 import { GetFavoriteController } from "./core/favorite/controllers/GetFavoriteController";
 import { RemoveFavoriteController } from "./core/favorite/controllers/RemoveFavoriteControllers";
 import { GetFavoritesUseCase } from "./core/favorite/ports/GetFavoritesUseCase";
@@ -23,31 +20,27 @@ import { GetContractTypesController } from "./core/offre/controllers/GetContract
 import { GetCandidatInfoMiddleware, RequestWithUserInfo } from "./core/candidat/controllers/GetCandidatInfoMiddleware";
 import { AddCandidatUseCase } from "./core/candidat/ports/AddCandidatUseCase";
 import { AddCandidatController } from "./core/candidat/controllers/AddCandidatController";
+import { GetDashboardStatisticsController } from "./core/dashboard/controllers/GetDashboardStatisticsController";
 
 export async function main(): Promise<void> {
     const poolClient = pool;
     const postgreRepository = new PostgresRepository(poolClient);
     const auth0Repository = new Auth0Repository();
 
-    // Get application stats
-    const getCandidatCandidaturesCountUseCase = new GetCandidatCandidaturesCountUseCase(postgreRepository);
-    const getCandidatCandidaturesCountController = new GetCandidatCandidaturesCountController(
-        getCandidatCandidaturesCountUseCase
-    );
-
-    const getCandidatCommuneOffersStatsUseCase = new GetCandidatCommuneOffersStatsUseCase(postgreRepository);
-    const getCandidatCommuneOffersStatsController = new GetCandidatCommuneOffersStatsController(
-        getCandidatCommuneOffersStatsUseCase
-    );
     // Candidat
     const getCandidatInfoUseCase = new GetCandidatInfoUseCase(auth0Repository, postgreRepository);
     const getCandidatInfoMiddleware = new GetCandidatInfoMiddleware(getCandidatInfoUseCase);
     const addCandidatUseCase = new AddCandidatUseCase(postgreRepository);
     const addCandidatController = new AddCandidatController(addCandidatUseCase);
 
-    // Candidat dashboard
+    // Dashboard
+    const getCandidatCandidaturesCountUseCase = new GetCandidatCandidaturesCountUseCase(postgreRepository);
+    const getCandidatCommuneOffersStatsUseCase = new GetCandidatCommuneOffersStatsUseCase(postgreRepository);
     const getCandidatSecteurOffersStatsUseCase = new GetCandidatSecteurOffersStatsUseCase(postgreRepository);
-    const getCandidatSecteurOffersStatsController = new GetCandidatSecteurOffersStatsController(
+
+    const getDashboardStatisticsController = new GetDashboardStatisticsController(
+        getCandidatCandidaturesCountUseCase,
+        getCandidatCommuneOffersStatsUseCase,
         getCandidatSecteurOffersStatsUseCase
     );
 
@@ -81,17 +74,8 @@ export async function main(): Promise<void> {
     const userRouter = Router();
     userRouter.route("/v1/users").post(getCandidatInfoMiddleware.handle, addCandidatController.handle);
     userRouter
-        .route("/v1/users/getApplicationCount")
-        .get(getCandidatInfoMiddleware.handle, getCandidatCandidaturesCountController.handle);
-    userRouter
-        .route("/v1/users/getSecteurOffersStats")
-        .get(getCandidatInfoMiddleware.handle, getCandidatSecteurOffersStatsController.handle);
-    userRouter
-        .route("/v1/users/getCommuneOffersStats")
-        .get(getCandidatInfoMiddleware.handle, getCandidatCommuneOffersStatsController.handle);
-    userRouter.route("/v1/users/me").get(getCandidatInfoMiddleware.handle, (req: RequestWithUserInfo, res) => {
-        res.json(req.user);
-    });
+        .route("/v1/users/dashboard")
+        .get(getCandidatInfoMiddleware.handle, getDashboardStatisticsController.handle);
 
     // Configure and listen
     const app = new ApiServer();

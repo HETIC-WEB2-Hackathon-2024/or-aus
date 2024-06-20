@@ -1,9 +1,4 @@
-import {
-    Outlet,
-    RouterProvider,
-    createBrowserRouter,
-    useLocation,
-} from "react-router-dom";
+import { Outlet, RouterProvider, createBrowserRouter, useLocation } from "react-router-dom";
 import { Dashboard } from "./pages/dashboard/Dashboard";
 import Settings from "./pages/settings/Settings";
 import Offers from "./pages/offers/Offers";
@@ -18,7 +13,7 @@ const router = createBrowserRouter([
         children: [
             {
                 path: "dashboard",
-                element: <Dashboard />,
+                element: <Dashboard uri={"/v1/users"} />,
             },
             {
                 path: "offres",

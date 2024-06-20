@@ -1,12 +1,13 @@
 import { IUseCase } from "../../../shared/IUseCase";
-import { TCandidatId } from "../domain/Candidat";
-import { StatsHelper } from "../shared/stats-helper";
-import { ICandidatCommuneOffersStatsResponse, ICandidatRepository } from "./ICandidatRepository";
+import { TCandidatId } from "../../candidat/domain/Candidat";
+import { StatsHelper } from "../../candidat/shared/stats-helper";
+import { ICandidatCommuneOffersStatsResponse, ICandidatRepository } from "../../candidat/ports/ICandidatRepository";
+import { IDashboardRepository } from "./IDashboardRepository";
 
 export class GetCandidatCommuneOffersStatsUseCase
     implements IUseCase<TCandidatId, ICandidatCommuneOffersStatsResponse>
 {
-    public constructor(private readonly _candidatRepository: ICandidatRepository) {}
+    public constructor(private readonly _candidatRepository: IDashboardRepository) {}
 
     async execute(input: TCandidatId): Promise<ICandidatCommuneOffersStatsResponse> {
         const communesOffersStats = await this._candidatRepository.getCandidatCommuneOffersStats(input);
