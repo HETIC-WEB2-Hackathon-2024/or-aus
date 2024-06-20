@@ -13,10 +13,6 @@ const router = createBrowserRouter([
         element: <Layout />,
         children: [
             {
-                path: "/",
-                element: <Navigate to="dashboard" />,
-            },
-            {
                 path: "dashboard",
                 element: <Dashboard uri={"/v1/users"} />,
             },
