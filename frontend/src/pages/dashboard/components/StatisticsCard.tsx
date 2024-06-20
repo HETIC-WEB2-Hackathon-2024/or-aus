@@ -5,7 +5,7 @@ import LoadingStatisticsCard from "./StateStatisticsCard";
 interface StatisticsCardProps {
     title: string;
     main_data: number;
-    secondary_data?: Object[];
+    secondary_data?: [];
     comparison_data?: string;
     isLoading: boolean;
     isError: boolean;
