@@ -1,7 +1,5 @@
 #!/bin/bash
-
 echo "Migrating database"
-
 for file in ./migration/*; do
     echo "Running migration: $file"
     
