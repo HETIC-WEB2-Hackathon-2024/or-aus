@@ -28,7 +28,7 @@ export class PostgresRepository
         const client = await this._pool.connect();
         try {
             const queryGraph = `
-            SELECT COUNT(co.*) AS value, co.date 
+            SELECT COUNT(co.*)::INTEGER AS value, co.date 
             FROM candidat_offres AS co 
             WHERE candidat_id = $1 AND co.date >= CURRENT_DATE - INTERVAL '30 days'
             GROUP BY co.date 
@@ -47,7 +47,11 @@ export class PostgresRepository
 
             return {
                 graph_data: graphValue,
-                stats: candidaturesStats,
+                stats: {
+                    previous_month: +candidaturesStats.previous_month,
+                    current_month: +candidaturesStats.current_month,
+                    comparison_percentage: "",
+                },
             };
         } finally {
             client.release();
@@ -88,26 +92,6 @@ export class PostgresRepository
                 rows: [result],
             } = await client.query<Candidat>(query, [input]);
             return result;
-        } finally {
-            client.release();
-        }
-    }
-
-    async getCandidatCandidaturesCount(input: TCandidatId): Promise<number> {
-        const client = await this._pool.connect();
-        try {
-            const query = `SELECT 
-                        COUNT(*) AS nombre
-                        FROM 
-                        public.offre AS o
-                        JOIN 
-                        public.candidat_communes AS c ON c.commune_id = o.commune_id
-                        WHERE c.candidat_id = $1`;
-            const {
-                rows: [result],
-            } = await client.query<{ nombre: number }>(query, [input.id]);
-
-            return result.nombre;
         } finally {
             client.release();
         }

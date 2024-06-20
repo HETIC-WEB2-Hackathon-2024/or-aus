@@ -66,7 +66,8 @@ export function Dashboard({ uri }: DashboardProps) {
                     />
                     <StatisticsCard
                         title={StatsTitleEnum.Candidature}
-                        main_data={dashboardData?.[StatsEnum.Candidature] || 0}
+                        main_data={dashboardData?.[StatsEnum.Candidature]?.current_month || 0}
+                        comparison_data={dashboardData?.[StatsEnum.Candidature].comparison_percentage}
                         isLoading={isLoading}
                         isError={isError}
                     />

@@ -17,9 +17,9 @@ export enum StatsTitleEnum {
 export type DashboardData = {
     [StatsEnum.Commune]: CommuneMonthlyStats;
     [StatsEnum.Secteur]: SecteurMonthlyStats;
-    [StatsEnum.Candidature]: number;
-    [StatsEnum.Favoris]: undefined;
-    [StatsEnum.Graphique]: undefined;
+    [StatsEnum.Candidature]: CandidatureMonthlyStats;
+    [StatsEnum.Favoris]: number;
+    [StatsEnum.Graphique]: TGraphValue;
 };
 
 type MonthlyStat = {
@@ -38,3 +38,8 @@ export type SecteurMonthlyStats = {
 } & MonthlyStat;
 
 export type CandidatureMonthlyStats = {} & MonthlyStat;
+
+export type TGraphValue = {
+    value: number;
+    date: Date;
+};
