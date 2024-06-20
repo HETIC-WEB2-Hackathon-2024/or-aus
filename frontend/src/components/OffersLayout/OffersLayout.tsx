@@ -1,14 +1,14 @@
-import { useState } from "react"
-import { OfferDetail } from "../OfferDetail/OfferDetail"
-import OffersList from "@/components/OffersList/OffersList"
+import { useState } from "react";
+import { OfferDetail } from "../OfferDetail/OfferDetail";
+import OffersList from "@/components/OffersList/OffersList";
 import { IFilters, IOffer } from "@/pages/offers/Offers";
-import { useMediaQuery } from 'react-responsive'
+import { useMediaQuery } from "react-responsive";
 
 interface OffersLayoutProps {
     children?: React.ReactNode;
-    filters: IFilters,
+    filters: IFilters;
     uri: string;
-    isSelection?: boolean,
+    isSelection?: boolean;
 }
 
 const intialSelectedOffer = {
@@ -30,33 +30,39 @@ const intialSelectedOffer = {
     code_region: 0,
     secteur: "",
     is_favorite: false,
-}
+};
 
-export default function OffersLayout({ children, filters, uri }: OffersLayoutProps) {
+export default function OffersLayout({
+    children,
+    filters,
+    uri,
+}: OffersLayoutProps) {
+    const [selectedOffer, setSelectedOffer] =
+        useState<IOffer>(intialSelectedOffer);
+    const [offerListClass, setOfferListClass] = useState("");
+    const [offerDetailClass, setOfferDetailClass] = useState("hidden");
+    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1024px)" });
 
-    const [selectedOffer, setSelectedOffer] = useState<IOffer>(intialSelectedOffer)
-    const [offerListClass, setOfferListClass] = useState("")
-    const [offerDetailClass, setOfferDetailClass] = useState("hidden")
-    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1024px)' })
-    
     const handleClick = () => {
         if (isTabletOrMobile) {
-            setOfferListClass("hidden")
-            setOfferDetailClass("block")
-            window.scrollTo({top: 0})
+            setOfferListClass("hidden");
+            setOfferDetailClass("block");
+            window.scrollTo({ top: 0 });
         }
-    }
+    };
 
     const handleClose = () => {
         if (isTabletOrMobile) {
-            setOfferListClass("block")
-            setOfferDetailClass("hidden")
+            setOfferListClass("block");
+            setOfferDetailClass("hidden");
         }
-    }
+    };
 
     return (
         <div className="flex h-full">
-            <div className={`flex flex-col ${offerListClass} lg:basis-1/2 border-r`} >
+            <div
+                className={`flex flex-col ${offerListClass} lg:basis-1/2 border-r`}
+            >
                 {children && children}
                 <div onClick={handleClick}>
                     <OffersList
@@ -64,12 +70,16 @@ export default function OffersLayout({ children, filters, uri }: OffersLayoutPro
                         uri={uri}
                         selectedOffer={selectedOffer}
                         setSelectedOffer={setSelectedOffer}
-                        initialSelectedOffer={intialSelectedOffer} />
+                        initialSelectedOffer={intialSelectedOffer}
+                    />
                 </div>
             </div>
             <div className={`lg:basis-1/2 ${offerDetailClass} lg:block`}>
-                <OfferDetail selectedOffer={selectedOffer} handleClose={handleClose} />
+                <OfferDetail
+                    selectedOffer={selectedOffer}
+                    handleClose={handleClose}
+                />
             </div>
         </div>
-    )
+    );
 }
