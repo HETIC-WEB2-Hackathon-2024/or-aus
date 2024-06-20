@@ -35,14 +35,14 @@ export class GetDashboardStatisticsController implements IController {
             const commune_stats = await this._communeUseCase.execute({ id: user_id });
             const secteur_stats = await this._secteurUseCase.execute({ id: user_id });
             const candidatures_stats = await this._candidatureUseCase.execute({ id: user_id });
-            const favorite_stats = await this._favoriteUseCase.execute({ id: user_id });
+            const favorites_stats = await this._favoriteUseCase.execute({ id: user_id });
 
             res.status(200).json(
                 new Dashboard(
                     commune_stats,
                     secteur_stats,
                     candidatures_stats.stats,
-                    favorite_stats,
+                    favorites_stats,
                     candidatures_stats.graph_data
                 )
             );

@@ -39,7 +39,7 @@ export function Dashboard({ uri }: DashboardProps) {
                     <StatisticsCard
                         title={
                             dashboardData
-                                ? `Nouvelles offre à ${dashboardData[StatsEnum.Commune].commune}`
+                                ? `Nouvelles offre ${dashboardData?.[StatsEnum.Commune].commune ? `à ${dashboardData[StatsEnum.Commune].commune}` : `dans ta commune`}`
                                 : StatsTitleEnum.Commune
                         }
                         main_data={dashboardData?.[StatsEnum.Commune]?.current_month || 0}
@@ -50,7 +50,7 @@ export function Dashboard({ uri }: DashboardProps) {
                     <StatisticsCard
                         title={
                             dashboardData
-                                ? `Nouvelles offre en ${dashboardData[StatsEnum.Secteur].secteur}`
+                                ? `Nouvelles offre ${dashboardData?.[StatsEnum.Secteur].secteur ? `en ${dashboardData[StatsEnum.Secteur].secteur}` : `dans ton secteur`}`
                                 : StatsTitleEnum.Secteur
                         }
                         main_data={dashboardData?.[StatsEnum.Secteur]?.current_month || 0}

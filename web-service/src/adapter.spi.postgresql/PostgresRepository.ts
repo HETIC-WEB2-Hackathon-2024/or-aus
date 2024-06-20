@@ -110,15 +110,15 @@ export class PostgresRepository
         const favoriteNumber = await this._pool.connect();
         try {
             const query = `SELECT 
-                        COUNT(*) AS nombre
+                        COUNT(*) AS favorite_stats
                         FROM 
                         public.favorite AS f
                         WHERE f.candidat_id = $1`;
             const {
                 rows: [result],
-            } = await favoriteNumber.query<{ nombre: number }>(query, [input.id]);
+            } = await favoriteNumber.query<{ favorite_stats: number }>(query, [input.id]);
 
-            return result.nombre;
+            return result.favorite_stats;
         } finally {
             favoriteNumber.release();
         }
