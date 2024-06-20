@@ -8,26 +8,24 @@ import { authenticatedGet } from "./../../auth/helper";
 import { IFilters } from "../../pages/offers/Offers";
 
 interface OffersListProps {
-  filters: IFilters;
-  uri: string;
-  selectedOffer: IOffer;
-  setSelectedOffer: React.Dispatch<React.SetStateAction<IOffer>>;
-  initialSelectedOffer: IOffer;
-  isSelection?: boolean;
+    filters: IFilters;
+    uri: string;
+    selectedOffer: IOffer;
+    setSelectedOffer: React.Dispatch<React.SetStateAction<IOffer>>;
+    initialSelectedOffer: IOffer;
+    isSelection?: boolean;
 }
 
 interface IPagination {
-  limit: number;
-  offset: number;
+    limit: number;
+    offset: number;
 }
 
 export default function OffersList({
     filters,
     uri,
     selectedOffer,
-    setSelectedOffer,
-    initialSelectedOffer,
-    isSelection
+    setSelectedOffer
 }: OffersListProps) {
     const [offers, setOffers] = useState<IOffer[]>([]);
     const [loading, setLoading] = useState(true);
@@ -41,7 +39,7 @@ export default function OffersList({
 
     const changeSelectedOffer = useCallback(
         (id: number) => {
-            const index = offers.findIndex((offer) => offer.offre_id === id);
+            const index = offers.findIndex((offer) => offer.id === id);
             setSelectedOffer(offers[index]);
         },
         [offers]
@@ -61,54 +59,62 @@ export default function OffersList({
         []
     );
 
-    const getOffers = useCallback(
-        async (isNext = false) => {
-            try {
-                const token = await getAccessTokenSilently();
-                setSelectedOffer(initialSelectedOffer);
-                const path = createQueryString(uri, filters, pagination);
-                const newOffers = await authenticatedGet(token, path);
-                if (!Array.isArray(newOffers)) {
+    const getOffers = useCallback(async (queryType: "first" | "next" | "filter") => {
+        try {
+            const token = await getAccessTokenSilently();
+            let offset: number = pagination.offset
+            switch (queryType) {
+                case "first":
+                    setPagination({ ...pagination, offset: 0})
+                    setPage(0)
+                    offset = 0
+                    break;
+                case "next":
+                    setPagination({ ...pagination, offset: (page + 1) * pagination.limit })
+                    setPage((prev) => prev + 1);
+                    break;
+                case "filter":
+                    setPagination({ ...pagination, offset: 0})
+                    setPage(0)
+                    offset = 0
+                    break;
+                default:
+                    break;
+            }
+            const path = createQueryString(uri, filters, {limit: pagination.limit, offset})
+            const newOffers = await authenticatedGet(token, path);
+            if (!Array.isArray(newOffers)) {
                     throw new Error("newOffers is not an array");
                 }
-                setPage((prev) => prev + 1);
-                setPagination({
-                    ...pagination,
-                    offset: page * pagination.limit,
-                });
-                if (newOffers.length === 0 || newOffers.length < 20) {
-                    setHasMore(false);
-                }
-                if (isNext) {
-                    setOffers([...offers, ...newOffers]);
-                } else {
-                    setOffers(newOffers);
-                }
-            } catch (err) {
+            if (newOffers.length === 0 || newOffers.length < 20) {
                 setHasMore(false);
-            } finally {
-                setLoading(false);
             }
-        },
-        [filters, getAccessTokenSilently, createQueryString, offers, page]
-    );
+            if (queryType === "next") {
+                setOffers([...offers, ...newOffers])
+            } else {
+                setOffers([...newOffers])
+                if (newOffers.length > 0) setSelectedOffer(newOffers[0])
+            }
+        } catch (err) {
+            setHasMore(false);
+        } finally {
+            setLoading(false);
+        }
+    }, [filters, getAccessTokenSilently, createQueryString, offers, page, pagination])
 
     useEffect(() => {
-        getOffers();
-        if (offers.length > 0) setSelectedOffer(offers[0]);
-    }, []);
+        getOffers("first")
+    }, [])
 
     useEffect(() => {
-        getOffers();
-        if (offers.length > 0) setSelectedOffer(offers[0]);
-    }, [filters]);
+        getOffers("filter")  
+    }, [filters])
 
     const next = async () => {
         setLoading(true);
-        getOffers(true);
+        getOffers("next")
         setLoading(false);
     };
-
     const handleFavoriteToggle = async (offerId: number, isFavorite: boolean) => {
         try {
           const token = await getAccessTokenSilently();
@@ -125,41 +131,29 @@ export default function OffersList({
         }
       };
     return (
-        <div className="flex flex-col items-center p-4 space-y-3 h-full overflow-scroll">
+        <div className="flex flex-col items-center p-4 space-y-3 h-80 md:h-full overflow-scroll">
             {offers.map((offer) => {
                 return (
                     <div
-                        key={offer.offre_id}
-                        onClick={() => changeSelectedOffer(offer.offre_id)}
+                        key={offer.id}
+                        onClick={() => changeSelectedOffer(offer.id)}
                     >
-                        {selectedOffer.offre_id === offer.offre_id ? (
-                            <OfferCard
-                                title={offer.titre_emploi}
-                                subtitle={offer.entreprise}
-                                shortDescription={offer.description_courte}
-                                tags={[
-                                    offer.contrat,
-                                    `${offer.nom_commune} (${offer.code_region})`,
-                                ]}
-                                className="bg-primary/30"
-                                offerId={offer.offre_id}
-                                onFavoriteToggle={handleFavoriteToggle}
-                                isFavoriteBase={isSelection}
-                            />
-                        ) : (
-                            <OfferCard
-                                title={offer.titre_emploi}
-                                subtitle={offer.entreprise}
-                                shortDescription={offer.description_courte}
-                                tags={[
-                                    offer.contrat,
-                                    `${offer.nom_commune} (${offer.code_region})`,
-                                ]}
-                                offerId={offer.offre_id}
-                                onFavoriteToggle={handleFavoriteToggle}
-                                isFavoriteBase={isSelection}
-                            />
-                        )}
+                        <OfferCard
+                            title={offer.titre_emploi}
+                            subtitle={offer.entreprise}
+                            shortDescription={offer.description_courte.replace(
+                                /\\n/g,
+                                ""
+                            )}
+                            tags={[
+                                offer.contrat,
+                                `${offer.nom_commune} (${offer.code_region})`,
+                            ]}
+                            className={selectedOffer.id === offer.id ? "bg-primary/30" : ""}
+                            onFavoriteToggle={handleFavoriteToggle}
+                            isFavoriteBase={offer.is_favorite}
+                            offerId={offer.id}
+                        />
                     </div>
                 );
             })}
