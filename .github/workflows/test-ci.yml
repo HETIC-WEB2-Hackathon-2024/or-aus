@@ -1,4 +1,4 @@
-name: CI - Run Web Service Tests
+name: Continuous Integration - Run Web Service Tests
 
 on:
     pull_request:
