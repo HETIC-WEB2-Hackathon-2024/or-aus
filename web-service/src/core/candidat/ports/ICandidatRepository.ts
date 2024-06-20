@@ -15,6 +15,8 @@ export interface ICandidatCommuneOffersStatsResponse extends OfferStats {
     code_postal: string;
 }
 
+export interface ICandidatureStatsResponse extends OfferStats {}
+
 export interface ICandidatRepository {
     getCandidatInfo(input: TCandidatEmail): Promise<Candidat>;
     addCandidat(input: Pick<TUserPayload, "email">): Promise<void>;

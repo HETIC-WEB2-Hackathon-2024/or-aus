@@ -1,4 +1,4 @@
-import { Outlet, RouterProvider, createBrowserRouter, useLocation } from "react-router-dom";
+import { Navigate, Outlet, RouterProvider, createBrowserRouter, useLocation } from "react-router-dom";
 import { Dashboard } from "./pages/dashboard/Dashboard";
 import Settings from "./pages/settings/Settings";
 import Offers from "./pages/offers/Offers";
@@ -12,6 +12,10 @@ const router = createBrowserRouter([
         path: "/",
         element: <Layout />,
         children: [
+            {
+                path: "/",
+                element: <Navigate to="dashboard" />,
+            },
             {
                 path: "dashboard",
                 element: <Dashboard uri={"/v1/users"} />,

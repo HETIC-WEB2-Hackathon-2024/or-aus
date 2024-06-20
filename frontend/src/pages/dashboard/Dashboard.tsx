@@ -61,20 +61,19 @@ export function Dashboard({ uri }: DashboardProps) {
                     <StatisticsCard
                         title={StatsTitleEnum.Favoris}
                         main_data={dashboardData?.[StatsEnum.Favoris] || 0}
-                        comparison_data={dashboardData?.[StatsEnum.Favoris]}
                         isLoading={isLoading}
                         isError={isError}
                     />
                     <StatisticsCard
                         title={StatsTitleEnum.Candidature}
-                        main_data={dashboardData?.[StatsEnum.Candidature] || 0}
-                        comparison_data={undefined}
+                        main_data={dashboardData?.[StatsEnum.Candidature]?.current_month || 0}
+                        comparison_data={dashboardData?.[StatsEnum.Candidature].comparison_percentage}
                         isLoading={isLoading}
                         isError={isError}
                     />
                 </div>
                 <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
-                    <GraphicCard />
+                    <GraphicCard data={dashboardData?.[StatsEnum.Graphique] || []} />
                     <Card x-chunk="dashboard-01-chunk-5">
                         <CardHeader>
                             <CardTitle className="mb-1 flex justify-between items-center">
