@@ -24,8 +24,7 @@ export default function OffersList({
     filters,
     uri,
     selectedOffer,
-    setSelectedOffer,
-    initialSelectedOffer,
+    setSelectedOffer
 }: OffersListProps) {
     const [offers, setOffers] = useState<IOffer[]>([]);
     const [loading, setLoading] = useState(true);
