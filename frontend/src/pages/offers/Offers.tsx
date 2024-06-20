@@ -7,7 +7,6 @@ import { authenticatedGet } from "./../../auth/helper";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { AutoComplete } from "@/components/Autocompelte/Autocomplete";
-import { addDays } from "date-fns"
 import { DateRange } from "react-day-picker"
 
 export interface IOffer {
