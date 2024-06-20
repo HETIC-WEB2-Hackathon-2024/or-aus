@@ -68,13 +68,13 @@ export default function GraphicCard({ data, isLoading }: GraphicCardProps) {
 
     return (
         <Card className="xl:col-span-2" x-chunk="dashboard-01-chunk-4">
-            <CardHeader className="flex flex-row items-center">
-                <div className="grid gap-2">
+            <CardHeader className="flex flex-row ">
+                <div className="grid gap-1">
                     <CardTitle>Vos candidatures envoyées sur la dernière semaine</CardTitle>
                 </div>
             </CardHeader>
-            <CardContent className="h-auto w-auto justify-self-center">
-                <Line options={graphOptions} data={initData} />
+            <CardContent className="flex justify-center w-full">
+                <Line className="w-full" options={graphOptions} data={initData} />
             </CardContent>
         </Card>
     );
