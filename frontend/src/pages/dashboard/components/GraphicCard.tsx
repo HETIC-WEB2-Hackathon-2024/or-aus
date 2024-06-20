@@ -21,7 +21,7 @@ interface GraphicCardProps {
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 export const graphOptions = {
     responsive: true,
-    maintainAspectRatio: true,
+    maintainAspectRatio: false,
     plugins: {
         legend: {
             position: "bottom" as const,
