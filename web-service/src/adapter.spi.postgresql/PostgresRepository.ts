@@ -16,6 +16,8 @@ import { TUserPayload } from "../core/candidat/ports/GetCandidatInfoUseCase";
 import { IFavoriteRepository } from "../core/favorite/ports/IFavoriteRepository";
 import { RemoveFavoriteDto } from "../core/favorite/ports/RemoveFavoriteUseCase";
 import { IDashboardRepository } from "../core/dashboard/ports/IDashboardRepository";
+import { ISecteurRepository } from "../core/secteur/ports/ISecteurRepository";
+import { Secteur } from "../core/secteur/domain/Secteur";
 
 export class PostgresRepository
     implements IOfferRepository, ICandidatRepository, IFavoriteRepository, IDashboardRepository
@@ -208,6 +210,16 @@ export class PostgresRepository
         const client = await this._pool.connect();
         try {
             const results = await client.query("SELECT DISTINCT contrat FROM offre", []);
+            return results.rows;
+        } finally {
+            client.release();
+        }
+    }
+
+    async getSecteursDistinct(): Promise<Secteur[]> {
+        const client = await this._pool.connect();
+        try {
+            const results = await client.query<Secteur>("SELECT DISTINCT secteur FROM secteur", []);
             return results.rows;
         } finally {
             client.release();
