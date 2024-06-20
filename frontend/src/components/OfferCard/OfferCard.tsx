@@ -25,19 +25,19 @@ export function OfferCard({
     className,
 }: OfferCardProps) {
     return (
-        <Card className={`w-full ${className}`}>
-            <CardHeader className="flex-row justify-between items-center space-y-1 p-3">
-                <CardTitle className="basis-14/15">{title}</CardTitle>
+        <Card className={`w-full cursor-pointer ${className}`}>
+            <CardHeader className="flex-row justify-between items-center space-y-1 p-4 pt-5 pb-2">
+                <CardTitle className="basis-14/15 text-lg">{title}</CardTitle>
                 {/* Heart on click, save or delete favorite */}
                 <Heart className="text-primary hover:fill-primary basis-1/15 h-6 w-6 shrink-0" />
             </CardHeader>
-            <CardContent className="p-3 pt-0">
-                <p className="font-semibold">{subtitle}</p>
+            <CardContent className="p-4 pb-0 pt-0">
+                <p className="font-medium text-sm mb-2">{subtitle}</p>
                 <CardDescription className="">
                     {shortDescription}
                 </CardDescription>
             </CardContent>
-            <CardFooter className="p-3 space-x-1">
+            <CardFooter className="p-4 space-x-3">
                 {tags.length > 0 &&
                     tags.map((tag, index) => {
                         return <Badge key={`${tag}-${index}`}>{tag}</Badge>;

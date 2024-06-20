@@ -8,7 +8,7 @@ interface OfferDetailProps {
 export function OfferDetail({ selectedOffer }: OfferDetailProps) {
     return (
         <>
-            <div className="border-b py-3 pl-3">
+            <div className="border-b py-6 pl-6">
                 <h2 className="text-2xl font-bold">
                     {selectedOffer.titre_emploi}
                 </h2>
@@ -19,7 +19,7 @@ export function OfferDetail({ selectedOffer }: OfferDetailProps) {
                     </span>
                 </p>
             </div>
-            <div className="pt-4 pl-4 pr-4">
+            <div className="pt-4 pl-6 pr-4">
                 <h3 className="text-xl font-bold pt-4 pb-2">
                     Détails de l'emploi
                 </h3>
@@ -37,7 +37,7 @@ export function OfferDetail({ selectedOffer }: OfferDetailProps) {
                 <h3 className="text-xl font-bold pt-4 pb-2">
                     Description du poste
                 </h3>
-                <p>
+                <p className="font-light pr-4 text-gray-500">
                     {selectedOffer.description
                         .split("\\n")
                         .map((line, index) => (
