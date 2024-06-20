@@ -70,7 +70,7 @@ export function Dashboard({ uri }: DashboardProps) {
           <StatisticsCard
             title={StatsTitleEnum.Favoris}
             main_data={dashboardData?.[StatsEnum.Favoris] || 0}
-            comparison_data={dashboardData?.[StatsEnum.Favoris]}
+            comparison_data={undefined}
             isLoading={isLoading}
             isError={isError}
           />
