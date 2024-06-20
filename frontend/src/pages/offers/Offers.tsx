@@ -48,14 +48,14 @@ export default function Offers() {
     const [secteurOptions, setSecteurOptions] = useState<string[]>([])
     const { getAccessTokenSilently } = useAuth0();
     const [date, setDate] = useState<DateRange | undefined>({
-        from: new Date(),
-        to: addDays(new Date(), 20),
+        from: undefined,
+        to: undefined,
       })
 
     useEffect(() => {
         const periodStart = date?.from?.toISOString().split('T')[0]
         const periodEnd = date?.to?.toISOString().split('T')[0]
-        setQueryFilters({...queryFilters, period_start: periodStart, period_end: periodEnd})
+        if (periodStart && periodEnd) setQueryFilters({...queryFilters, period_start: periodStart, period_end: periodEnd})
     }, [date])
 
     const getContractTypes = useCallback(async () => {
@@ -92,7 +92,6 @@ export default function Offers() {
         }
         filterArray.push(e.currentTarget.id)
         setQueryFilters({...queryFilters, type_contrat: filterArray})
-        console.log("here")
     }
 
     return(
