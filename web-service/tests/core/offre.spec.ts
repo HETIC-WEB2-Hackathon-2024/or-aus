@@ -71,7 +71,7 @@ describe("Get offers", () => {
     describe("Test createOffersQueryWithFilters", () => {
         it("Should create query correctly with given filters", async () => {
             const filters: IOfferFilter = {
-                secteur_id: "1",
+                secteur: "1",
                 type_contrat: "CDI",
                 commune_id: "1",
                 metier_id: "1",
