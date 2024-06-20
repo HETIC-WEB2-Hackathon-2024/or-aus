@@ -28,7 +28,8 @@ export class PostgresRepository
     IOfferRepository,
     ICandidatRepository,
     IFavoriteRepository,
-    IDashboardRepository
+    IDashboardRepository,
+    ISecteurRepository
 {
   public constructor(private readonly _pool: Pool) {}
 
