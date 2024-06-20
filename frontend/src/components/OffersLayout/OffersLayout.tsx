@@ -2,6 +2,7 @@ import { useState } from "react"
 import { OfferDetail } from "../OfferDetail/OfferDetail"
 import OffersList from "@/components/OffersList/OffersList"
 import { IFilters, IOffer } from "@/pages/offers/Offers";
+import { useMediaQuery } from 'react-responsive'
 
 interface OffersLayoutProps {
     children?: React.ReactNode;
@@ -33,21 +34,41 @@ const intialSelectedOffer = {
 export default function OffersLayout({ children, filters, uri, isSelection }: OffersLayoutProps) {
 
     const [selectedOffer, setSelectedOffer] = useState<IOffer>(intialSelectedOffer)
+    const [offerListClass, setOfferListClass] = useState("")
+    const [offerDetailClass, setOfferDetailClass] = useState("hidden")
+    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1024px)' })
+    
+    const handleClick = () => {
+        if (isTabletOrMobile) {
+            setOfferListClass("hidden")
+            setOfferDetailClass("block")
+            window.scrollTo({top: 0})
+        }
+    }
+
+    const handleClose = () => {
+        if (isTabletOrMobile) {
+            setOfferListClass("block")
+            setOfferDetailClass("hidden")
+        }
+    }
 
     return (
         <div className="flex h-full">
-            <div className="flex flex-col basis-1/2 border-r">
+            <div className={`flex flex-col ${offerListClass} lg:basis-1/2 border-r`} >
                 {children && children}
-                <OffersList
-                    filters={filters}
-                    uri={uri}
-                    selectedOffer={selectedOffer}
-                    setSelectedOffer={setSelectedOffer}
-                    isSelection={isSelection}
-                    initialSelectedOffer={intialSelectedOffer} />
+                <div onClick={handleClick}>
+                    <OffersList
+                        filters={filters}
+                        uri={uri}
+                        selectedOffer={selectedOffer}
+                        setSelectedOffer={setSelectedOffer}
+                        isSelection={isSelection}
+                        initialSelectedOffer={intialSelectedOffer} />
+                </div>
             </div>
-            <div className="basis-1/2">
-                <OfferDetail selectedOffer={selectedOffer} />
+            <div className={`lg:basis-1/2 ${offerDetailClass} lg:block`}>
+                <OfferDetail selectedOffer={selectedOffer} handleClose={handleClose} />
             </div>
         </div>
     )

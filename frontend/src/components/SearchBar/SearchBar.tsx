@@ -25,7 +25,7 @@ export default function SearchBar({
         }
     }
     return (
-        <div className="flex justify-between p-3 items-center">
+        <div className="flex flex-col lg:flex-row justify-between p-3 items-center">
             <AutoComplete
                 variant="search"
                 placeholder={"Intitulé du poste"}
@@ -41,7 +41,7 @@ export default function SearchBar({
                 onChange={(value: string) => changeFilters(value, "city_or_department")}
             />
             <Button
-                className="m-2"
+                className="m-2 w-full"
                 onClick={() => setQueryFilters({ ...queryFilters, ...filters })}
             >
                 Rechercher

@@ -125,14 +125,14 @@ export default function Offers() {
     }
  
     return(
-        <div className="flex flex-row justify-between h-screen mt-5">
+        <div className="flex flex-col lg:flex-row justify-between h-screen mt-5">
             <div className="basis-1/5 border-r flex flex-col space-y-5 items-center pr-3 pl-3">
                 <div className="py-4 pl-4 w-full">
                     <h2 className="text-2xl font-bold text-left">Filtres</h2>
                 </div>
                 <div className="w-full space-y-1">
                     <Button
-                        className="w-full justify-start border-2 font-semibold"
+                        className="w-full text-center lg:justify-start border-2 font-semibold"
                         onClick={() => setContractTypeOpen(!contractTypeOpen)}
                         variant={contractTypeOpen ? "default" : "outline"}
                     >
@@ -162,7 +162,7 @@ export default function Offers() {
                 </div>
                 <div className="w-full space-y-1">
                     <Button
-                        className="w-full justify-start border-2 font-semibold"
+                        className="w-full text-center lg:justify-start border-2 font-semibold"
                         onClick={() => setSectorOpen(!sectorOpen)}
                         variant={sectorOpen ? "default" : "outline"}
                     >
@@ -181,7 +181,7 @@ export default function Offers() {
                 </div>
                 <div className="w-full space-y-1">
                     <Button
-                        className="w-full justify-start border-2 font-semibold"
+                        className="w-full text-center lg:justify-start border-2 font-semibold"
                         onClick={() => setPeriodOpen(!periodOpen)}
                         variant={periodOpen ? "default" : "outline"}
                     >
@@ -199,7 +199,7 @@ export default function Offers() {
                 </div>
             </div>
             <div className="basis-4/5">
-                <div className="border-b py-4 pl-4">
+                <div className="border-b py-4 pl-4 hidden lg:block">
                     <h2 className="text-2xl font-bold">
                         Trouver le job qu'il vous faut
                     </h2>

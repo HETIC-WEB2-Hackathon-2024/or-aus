@@ -1,17 +1,22 @@
 import { Badge } from "@/components/ui/badge";
 import { IOffer } from "../../pages/offers/Offers";
+import { X } from "lucide-react"
 
 interface OfferDetailProps {
     selectedOffer: IOffer;
+    handleClose: () => void;
 }
 
-export function OfferDetail({ selectedOffer }: OfferDetailProps) {
+export function OfferDetail({ selectedOffer, handleClose }: OfferDetailProps) {
     return (
         <>
             <div className="border-b py-6 pl-6">
-                <h2 className="text-2xl font-bold">
-                    {selectedOffer.titre_emploi}
-                </h2>
+                <div className="flex items-center justify-between">
+                    <h2 className="text-2xl font-bold basis-4/5">
+                        {selectedOffer.titre_emploi}
+                    </h2>
+                    < X onClick={handleClose} className="lg:hidden  basis-1/5"/>
+                </div>
                 <p className="text-md">
                     Chez{" "}
                     <span className="font-bold">
