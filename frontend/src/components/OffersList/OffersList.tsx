@@ -4,7 +4,7 @@ import { Loader2 } from "lucide-react";
 import { IOffer } from "@/pages/offers/Offers";
 import { useState, useCallback, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { authenticatedGet } from "./../../auth/helper";
+import { authenticatedGet, authenticatedPost, authenticatedDelete } from "./../../auth/helper";
 import { IFilters } from "../../pages/offers/Offers";
 
 interface OffersListProps {
@@ -118,14 +118,11 @@ export default function OffersList({
     const handleFavoriteToggle = async (offerId: number, isFavorite: boolean) => {
         try {
           const token = await getAccessTokenSilently();
-          const method = isFavorite ? "DELETE" : "POST";
-          await fetch(`http://localhost:3000/v1/offres/favorite?offre_id=${offerId}`, {
-            method,
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          });
+          if (isFavorite) {
+              await authenticatedDelete(token, `v1/offres/favorite?offre_id=${offerId}`)
+        } else {
+              await authenticatedPost(token, `v1/offres/favorite?offre_id=${offerId}`, {})
+          }
         } catch (error) {
           console.error("Failed to update favorite status", error);
         }
