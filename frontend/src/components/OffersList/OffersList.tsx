@@ -118,7 +118,10 @@ export default function OffersList({
                             <OfferCard
                                 title={offer.titre_emploi}
                                 subtitle={offer.entreprise}
-                                shortDescription={offer.description_courte}
+                                shortDescription={offer.description_courte.replace(
+                                    /\\n/g,
+                                    ""
+                                )}
                                 tags={[
                                     offer.contrat,
                                     `${offer.nom_commune} (${offer.code_region})`,
@@ -129,7 +132,10 @@ export default function OffersList({
                             <OfferCard
                                 title={offer.titre_emploi}
                                 subtitle={offer.entreprise}
-                                shortDescription={offer.description_courte}
+                                shortDescription={offer.description_courte.replace(
+                                    /\\n/g,
+                                    ""
+                                )}
                                 tags={[
                                     offer.contrat,
                                     `${offer.nom_commune} (${offer.code_region})`,
