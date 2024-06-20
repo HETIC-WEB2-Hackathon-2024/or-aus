@@ -13,7 +13,6 @@ interface OffersListProps {
   selectedOffer: IOffer;
   setSelectedOffer: React.Dispatch<React.SetStateAction<IOffer>>;
   initialSelectedOffer: IOffer;
-  candidateId: number;
   isSelection?: boolean;
 }
 
@@ -28,7 +27,6 @@ export default function OffersList({
     selectedOffer,
     setSelectedOffer,
     initialSelectedOffer,
-    candidateId,
     isSelection
 }: OffersListProps) {
     const [offers, setOffers] = useState<IOffer[]>([]);
@@ -115,13 +113,12 @@ export default function OffersList({
         try {
           const token = await getAccessTokenSilently();
           const method = isFavorite ? "DELETE" : "POST";
-          await fetch(`http://localhost:3000/v1/offres/favorite?offre_id=${offerId}&candidat_id=${candidateId}`, {
+          await fetch(`http://localhost:3000/v1/offres/favorite?offre_id=${offerId}`, {
             method,
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify({ candidatId: candidateId, offreId: offerId }),
           });
         } catch (error) {
           console.error("Failed to update favorite status", error);
@@ -146,7 +143,6 @@ export default function OffersList({
                                 ]}
                                 className="bg-primary/30"
                                 offerId={offer.offre_id}
-                                candidateId={candidateId}
                                 onFavoriteToggle={handleFavoriteToggle}
                                 isFavoriteBase={isSelection}
                             />
@@ -160,7 +156,6 @@ export default function OffersList({
                                     `${offer.nom_commune} (${offer.code_region})`,
                                 ]}
                                 offerId={offer.offre_id}
-                                candidateId={candidateId}
                                 onFavoriteToggle={handleFavoriteToggle}
                                 isFavoriteBase={isSelection}
                             />
