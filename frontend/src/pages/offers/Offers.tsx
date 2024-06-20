@@ -199,7 +199,7 @@ export default function Offers() {
                 </div>
             </div>
             <div className="basis-4/5">
-                <div className="border-b py-4 pl-4">
+                <div className="border-b py-4 pl-4 hidden lg:block">
                     <h2 className="text-2xl font-bold">
                         Trouver le job qu'il vous faut
                     </h2>
