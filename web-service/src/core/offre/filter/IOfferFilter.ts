@@ -1,6 +1,6 @@
 export interface IOfferFilter {
     id?: string;
-    secteur_id?: string;
+    secteur?: string;
     type_contrat?: string;
     commune_id?: string;
     metier_id?: string;

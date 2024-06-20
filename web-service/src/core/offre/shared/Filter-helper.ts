@@ -29,17 +29,29 @@ export class FilterHelper {
                         optionNumber++;
                         if (filters.metier_id) options.push(filters.metier_id);
                         break;
-                    case "secteur_id":
+                    case "secteur":
                         if (optionNumber > 3) query += ` AND`;
-                        query += ` secteur_id = $${optionNumber}`;
+                        query += ` secteur = $${optionNumber}`;
                         optionNumber++;
-                        if (filters.secteur_id) options.push(filters.secteur_id);
+                        if (filters.secteur) options.push(filters.secteur);
                         break;
                     case "type_contrat":
                         if (optionNumber > 3) query += ` AND`;
-                        query += ` type_contrat = $${optionNumber}`;
-                        optionNumber++;
-                        if (filters.type_contrat) options.push(filters.type_contrat);
+                        query += ` contrat IN (`
+                        const types = filters.type_contrat?.split(',')
+                        types?.forEach((type, index) => {
+                            console.log(types.length)
+                            console.log(index)
+                            if (index === types.length - 1) {
+                                query +=`$${optionNumber}`;
+                            } else {
+                                query +=`$${optionNumber}, `;
+                            }
+                            options.push(type);
+                            optionNumber++;
+                        })
+                        query += ")"
+                        console.log(query)
                         break;
                     case "commune_id":
                         if (optionNumber > 3) query += ` AND`;
