@@ -7,6 +7,7 @@ interface OffersLayoutProps {
     children?: React.ReactNode;
     filters: IFilters,
     uri: string;
+    isSelection: boolean,
 }
 
 const intialSelectedOffer = {
@@ -29,7 +30,7 @@ const intialSelectedOffer = {
     secteur: ""
 }
 
-export default function OffersLayout({ children, filters, uri }: OffersLayoutProps) {
+export default function OffersLayout({ children, filters, uri, isSelection }: OffersLayoutProps) {
 
     const [selectedOffer, setSelectedOffer] = useState<IOffer>(intialSelectedOffer)
 
@@ -42,6 +43,7 @@ export default function OffersLayout({ children, filters, uri }: OffersLayoutPro
                     uri={uri}
                     selectedOffer={selectedOffer}
                     setSelectedOffer={setSelectedOffer}
+                    isSelection={isSelection}
                     initialSelectedOffer={intialSelectedOffer} />
             </div>
             <div className="basis-1/2">

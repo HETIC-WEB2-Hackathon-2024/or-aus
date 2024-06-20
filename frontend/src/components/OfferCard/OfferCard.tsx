@@ -19,11 +19,12 @@ interface OfferCardProps {
   offerId: number;
   candidateId: number;
   className?: string;
+  isFavoriteBase: boolean;
   onFavoriteToggle: (offerId: number, isFavorite: boolean) => void;
 }
 
-export function OfferCard({ title, subtitle, shortDescription, tags, offerId, candidateId, className, onFavoriteToggle }: OfferCardProps) {
-  const [isFavorite, setIsFavorite] = useState(false);
+export function OfferCard({ title, subtitle, shortDescription, tags, offerId, candidateId, className, onFavoriteToggle, isFavoriteBase}: OfferCardProps) {
+  const [isFavorite, setIsFavorite] = useState(isFavoriteBase);
 
   const handleFavoriteClick = () => {
     setIsFavorite(!isFavorite);

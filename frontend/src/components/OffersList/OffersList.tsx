@@ -14,6 +14,7 @@ interface OffersListProps {
   setSelectedOffer: React.Dispatch<React.SetStateAction<IOffer>>;
   initialSelectedOffer: IOffer;
   candidateId: number;
+  isSelection: boolean;
 }
 
 interface IPagination {
@@ -28,6 +29,7 @@ export default function OffersList({
     setSelectedOffer,
     initialSelectedOffer,
     candidateId,
+    isSelection
 }: OffersListProps) {
     const [offers, setOffers] = useState<IOffer[]>([]);
     const [loading, setLoading] = useState(true);
@@ -146,6 +148,7 @@ export default function OffersList({
                                 offerId={offer.offre_id}
                                 candidateId={candidateId}
                                 onFavoriteToggle={handleFavoriteToggle}
+                                isSelection={isSelection}
                             />
                         ) : (
                             <OfferCard
@@ -159,6 +162,7 @@ export default function OffersList({
                                 offerId={offer.offre_id}
                                 candidateId={candidateId}
                                 onFavoriteToggle={handleFavoriteToggle}
+                                isSelection={isSelection}
                             />
                         )}
                     </div>
