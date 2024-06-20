@@ -28,10 +28,15 @@ export default function Header({ currentView }: HeaderProps) {
                         <DropdownMenuTrigger asChild>
                             <div className="flex items-center border px-3 py-2 rounded-lg gap-4 cursor-pointer w-16 md:w-80">
                                 <CircleUser className="h-6 w-6" />
-                                <div className="hidden md:block">{user?.nickname}</div>
+                                <div className="hidden md:block">
+                                    {user?.nickname}
+                                </div>
                             </div>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="start" className="w-16 md:w-80">
+                        <DropdownMenuContent
+                            align="start"
+                            className="w-16 md:w-80"
+                        >
                             <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
@@ -53,7 +58,9 @@ export default function Header({ currentView }: HeaderProps) {
                         <Link
                             to="dashboard"
                             className={`${
-                                currentView === "dashboard" ? "text-primary" : "text-secondary"
+                                currentView === "dashboard"
+                                    ? "text-primary"
+                                    : "text-secondary"
                             }  hover:text-primary `}
                         >
                             Dashboard
@@ -61,69 +68,107 @@ export default function Header({ currentView }: HeaderProps) {
                         <Link
                             to="offres"
                             className={`${
-                                currentView === "offres" ? "text-primary" : "text-secondary"
+                                currentView === "offres"
+                                    ? "text-primary"
+                                    : "text-secondary"
                             }  hover:text-primary `}
                         >
                             Offres
                         </Link>
                         <Link
-                            to="parametres"
-                            className={`${
-                                currentView === "parametres" ? "text-primary" : "text-secondary"
-                            }  hover:text-primary `}
-                        >
-                            Paramètres
-                        </Link>
-                        <Link
                             to="selection"
                             className={`${
-                                currentView === "selection" ? "text-primary" : "text-secondary"
+                                currentView === "selection"
+                                    ? "text-primary"
+                                    : "text-secondary"
                             }  hover:text-primary `}
                         >
                             Sélection
+                        </Link>
+                        <Link
+                            to="parametres"
+                            className={`${
+                                currentView === "parametres"
+                                    ? "text-primary"
+                                    : "text-secondary"
+                            }  hover:text-primary `}
+                        >
+                            Paramètres
                         </Link>
                     </div>
                 </nav>
                 <Sheet>
                     <SheetTrigger asChild>
-                        <Button variant="outline" size="icon" className="shrink-0 md:hidden">
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            className="shrink-0 md:hidden"
+                        >
                             <Menu className="h-5 w-5" />
-                            <span className="sr-only">Toggle navigation menu</span>
+                            <span className="sr-only">
+                                Toggle navigation menu
+                            </span>
                         </Button>
                     </SheetTrigger>
                     <SheetContent side="left">
                         <nav className="grid gap-6 text-lg font-medium">
-                            <Link to="/dashboard" className="flex items-center gap-2 text-lg font-semibold">
-                                <img className="w-64" src="/assets/logo.png" alt="" />
+                            <Link
+                                to="/dashboard"
+                                className="flex items-center gap-2 text-lg font-semibold"
+                            >
+                                <img
+                                    className="w-64"
+                                    src="/assets/logo.png"
+                                    alt=""
+                                />
                             </Link>
                             <Link
                                 to="dashboard"
-                                className={`${currentView === "dashboard" ? "text-primary" : "text-secondary"} `}
+                                className={`${
+                                    currentView === "dashboard"
+                                        ? "text-primary"
+                                        : "text-secondary"
+                                } `}
                             >
                                 Dashboard
                             </Link>
                             <Link
                                 to="offres"
-                                className={`${currentView === "offres" ? "text-primary" : "text-secondary"} `}
+                                className={`${
+                                    currentView === "offres"
+                                        ? "text-primary"
+                                        : "text-secondary"
+                                } `}
                             >
                                 Offres
                             </Link>
                             <Link
-                                to="parametres"
-                                className={`${currentView === "parametres" ? "text-primary" : "text-secondary"} `}
-                            >
-                                Paramètres
-                            </Link>
-                            <Link
                                 to="selection"
-                                className={`${currentView === "selection" ? "text-primary" : "text-secondary"} `}
+                                className={`${
+                                    currentView === "selection"
+                                        ? "text-primary"
+                                        : "text-secondary"
+                                } `}
                             >
                                 Ma sélection
+                            </Link>
+                            <Link
+                                to="parametres"
+                                className={`${
+                                    currentView === "parametres"
+                                        ? "text-primary"
+                                        : "text-secondary"
+                                } `}
+                            >
+                                Paramètres
                             </Link>
                         </nav>
                     </SheetContent>
                 </Sheet>
-                <Link to="/dashboard" className="hidden lg:block absolute top-5 right-5">
+                <Link
+                    to="/dashboard"
+                    className="hidden lg:block absolute top-5 right-5"
+                >
                     <img className="w-64" src="/assets/logo.png" alt="" />
                 </Link>
             </header>
