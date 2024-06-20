@@ -18,9 +18,8 @@ import { RemoveFavoriteDto } from "../core/favorite/ports/RemoveFavoriteUseCase"
 import { IDashboardRepository } from "../core/dashboard/ports/IDashboardRepository";
 
 export class PostgresRepository
-    implements IOfferRepository, ICandidatRepository, IFavoriteRepository, IDashboardRepository
-{
-    public constructor(private readonly _pool: Pool) {}
+    implements IOfferRepository, ICandidatRepository, IFavoriteRepository, IDashboardRepository {
+    public constructor(private readonly _pool: Pool) { }
 
     async addCandidat(input: Pick<TUserPayload, "email">): Promise<void> {
         const client = await this._pool.connect();
@@ -55,7 +54,6 @@ export class PostgresRepository
             const {
                 rows: [result],
             } = await client.query<Candidat>(query, [input]);
-
             return result;
         } finally {
             client.release();

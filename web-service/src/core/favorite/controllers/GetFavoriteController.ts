@@ -3,7 +3,7 @@ import { GetFavoritesUseCase } from "../ports/GetFavoritesUseCase";
 import { RequestWithUserInfo } from "../../candidat/controllers/GetCandidatInfoMiddleware";
 
 export class GetFavoriteController {
-    public constructor(private readonly _useCase: GetFavoritesUseCase) {}
+    public constructor(private readonly _useCase: GetFavoritesUseCase) { }
 
     public handle = async (req: RequestWithUserInfo, res: Response) => {
         try {

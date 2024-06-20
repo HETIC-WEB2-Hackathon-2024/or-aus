@@ -20,7 +20,7 @@ interface IPagination {
     offset: number;
 }
 
-export default function OffersList({filters, uri, selectedOffer, setSelectedOffer, initialSelectedOffer}: OffersListProps) {
+export default function OffersList({ filters, uri, selectedOffer, setSelectedOffer, initialSelectedOffer }: OffersListProps) {
     const [offers, setOffers] = useState<IOffer[]>([])
     const [loading, setLoading] = useState(true);
     const { getAccessTokenSilently } = useAuth0();
@@ -30,19 +30,19 @@ export default function OffersList({filters, uri, selectedOffer, setSelectedOffe
         limit: 20,
         offset: 0
     })
-    
+
     const changeSelectedOffer = useCallback((id: number) => {
         const index = offers.findIndex((offer) => offer.offre_id === id)
         setSelectedOffer(offers[index])
     }, [offers])
-    
-    const createQueryString = useCallback((path:string, filters: IFilters, pagination: IPagination) => {
+
+    const createQueryString = useCallback((path: string, filters: IFilters, pagination: IPagination) => {
         let queryString = `${path}?`;
         Object.entries(filters).forEach((filter) => queryString += `${filter[0]}=${filter[1]}&`)
         Object.entries(pagination).forEach((filter) => queryString += `${filter[0]}=${filter[1]}&`)
         return queryString;
     }, [])
-    
+
     const getOffers = useCallback(async (isNext = false) => {
         try {
             const token = await getAccessTokenSilently();
@@ -50,7 +50,7 @@ export default function OffersList({filters, uri, selectedOffer, setSelectedOffe
             const path = createQueryString(uri, filters, pagination)
             const newOffers = await authenticatedGet(token, path);
             setPage((prev) => prev + 1);
-            setPagination({...pagination, offset: page * pagination.limit})
+            setPagination({ ...pagination, offset: page * pagination.limit })
             if (newOffers.length === 0 || newOffers.length < 20) {
                 setHasMore(false);
             }
@@ -80,25 +80,25 @@ export default function OffersList({filters, uri, selectedOffer, setSelectedOffe
         setLoading(true);
         getOffers(true)
         setLoading(false);
-      };
-    return(
+    };
+    return (
         <div className="flex flex-col items-center justify-between p-4 space-y-3 h-full overflow-scroll">
             {offers.map((offer) => {
                 return (
                     <div key={offer.offre_id} onClick={() => changeSelectedOffer(offer.offre_id)}>
-                        {selectedOffer.offre_id === offer.offre_id ? 
-                        (<OfferCard 
-                            title={offer.titre_emploi} 
-                            subtitle={offer.entreprise} 
-                            shortDescription={offer.description_courte} 
-                            tags={[offer.contrat, `${offer.nom_commune} (${offer.code_region})`]}
-                            className="bg-primary/30"/>):
-                            (<OfferCard 
-                                title={offer.titre_emploi} 
-                                subtitle={offer.entreprise} 
-                                shortDescription={offer.description_courte} 
+                        {selectedOffer.offre_id === offer.offre_id ?
+                            (<OfferCard
+                                title={offer.titre_emploi}
+                                subtitle={offer.entreprise}
+                                shortDescription={offer.description_courte}
+                                tags={[offer.contrat, `${offer.nom_commune} (${offer.code_region})`]}
+                                className="bg-primary/30" />) :
+                            (<OfferCard
+                                title={offer.titre_emploi}
+                                subtitle={offer.entreprise}
+                                shortDescription={offer.description_courte}
                                 tags={[offer.contrat, `${offer.nom_commune} (${offer.code_region})`]} />)
-                            }
+                        }
                     </div>
                 )
             })}
@@ -106,6 +106,6 @@ export default function OffersList({filters, uri, selectedOffer, setSelectedOffe
                 {hasMore && <Loader2 className="my-4 h-8 w-8 animate-spin" />}
             </InfiniteScroll>
         </div>
-                    
+
     )
 }
