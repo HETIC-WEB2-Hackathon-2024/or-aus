@@ -12,9 +12,11 @@ export class GetCandidatCommuneOffersStatsUseCase
     async execute(input: TCandidatId): Promise<ICandidatCommuneOffersStatsResponse> {
         const communesOffersStats = await this._candidatRepository.getCandidatCommuneOffersStats(input);
         const comparison_percentage =
-            ((communesOffersStats.current_month - communesOffersStats.previous_month) /
-                communesOffersStats.previous_month) *
-            100;
+            communesOffersStats.current_month === 0 && communesOffersStats.previous_month === 0
+                ? 0
+                : ((communesOffersStats.current_month - communesOffersStats.previous_month) /
+                      communesOffersStats.previous_month) *
+                  100;
         return {
             ...communesOffersStats,
             comparison_percentage: `${StatsHelper.formatPercentage(comparison_percentage)}%`,
