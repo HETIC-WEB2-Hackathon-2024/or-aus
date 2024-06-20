@@ -8,23 +8,26 @@ import { authenticatedGet } from "./../../auth/helper";
 import { IFilters } from "../../pages/offers/Offers";
 
 interface OffersListProps {
-    filters: IFilters;
-    uri: string;
-    selectedOffer: IOffer;
-    setSelectedOffer: React.Dispatch<React.SetStateAction<IOffer>>;
-    initialSelectedOffer: IOffer;
+  filters: IFilters;
+  uri: string;
+  selectedOffer: IOffer;
+  setSelectedOffer: React.Dispatch<React.SetStateAction<IOffer>>;
+  initialSelectedOffer: IOffer;
+  isSelection?: boolean;
 }
 
 interface IPagination {
-    limit: number;
-    offset: number;
+  limit: number;
+  offset: number;
 }
 
 export default function OffersList({
     filters,
     uri,
     selectedOffer,
-    setSelectedOffer
+    setSelectedOffer,
+    initialSelectedOffer,
+    isSelection
 }: OffersListProps) {
     const [offers, setOffers] = useState<IOffer[]>([]);
     const [loading, setLoading] = useState(true);
@@ -58,62 +61,69 @@ export default function OffersList({
         []
     );
 
-    const getOffers = useCallback(async (queryType: "first" | "next" | "filter") => {
-        try {
-            const token = await getAccessTokenSilently();
-            let offset: number = pagination.offset
-            switch (queryType) {
-                case "first":
-                    setPagination({ ...pagination, offset: 0})
-                    setPage(0)
-                    offset = 0
-                    break;
-                case "next":
-                    setPagination({ ...pagination, offset: (page + 1) * pagination.limit })
-                    setPage((prev) => prev + 1);
-                    break;
-                case "filter":
-                    setPagination({ ...pagination, offset: 0})
-                    setPage(0)
-                    offset = 0
-                    break;
-                default:
-                    break;
-            }
-            const path = createQueryString(uri, filters, {limit: pagination.limit, offset})
-            const newOffers = await authenticatedGet(token, path);
-            if (!Array.isArray(newOffers)) {
+    const getOffers = useCallback(
+        async (isNext = false) => {
+            try {
+                const token = await getAccessTokenSilently();
+                setSelectedOffer(initialSelectedOffer);
+                const path = createQueryString(uri, filters, pagination);
+                const newOffers = await authenticatedGet(token, path);
+                if (!Array.isArray(newOffers)) {
                     throw new Error("newOffers is not an array");
                 }
-            if (newOffers.length === 0 || newOffers.length < 20) {
+                setPage((prev) => prev + 1);
+                setPagination({
+                    ...pagination,
+                    offset: page * pagination.limit,
+                });
+                if (newOffers.length === 0 || newOffers.length < 20) {
+                    setHasMore(false);
+                }
+                if (isNext) {
+                    setOffers([...offers, ...newOffers]);
+                } else {
+                    setOffers(newOffers);
+                }
+            } catch (err) {
                 setHasMore(false);
+            } finally {
+                setLoading(false);
             }
-            if (queryType === "next") {
-                setOffers([...offers, ...newOffers])
-            } else {
-                setOffers([...newOffers])
-                if (newOffers.length > 0) setSelectedOffer(newOffers[0])
-            }
-        } catch (err) {
-            setHasMore(false);
-        } finally {
-            setLoading(false);
-        }
-    }, [filters, getAccessTokenSilently, createQueryString, offers, page, pagination])
+        },
+        [filters, getAccessTokenSilently, createQueryString, offers, page]
+    );
 
     useEffect(() => {
-        getOffers("first")
-    }, [])
+        getOffers();
+        if (offers.length > 0) setSelectedOffer(offers[0]);
+    }, []);
 
     useEffect(() => {
-        getOffers("filter")  
-    }, [filters])
+        getOffers();
+        if (offers.length > 0) setSelectedOffer(offers[0]);
+    }, [filters]);
 
     const next = async () => {
         setLoading(true);
-        getOffers("next")
+        getOffers(true);
         setLoading(false);
     };
+
+    const handleFavoriteToggle = async (offerId: number, isFavorite: boolean) => {
+        try {
+          const token = await getAccessTokenSilently();
+          const method = isFavorite ? "DELETE" : "POST";
+          await fetch(`http://localhost:3000/v1/offres/favorite?offre_id=${offerId}`, {
+            method,
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          });
+        } catch (error) {
+          console.error("Failed to update favorite status", error);
+        }
+      };
     return (
         <div className="flex flex-col items-center p-4 space-y-3 h-full overflow-scroll">
             {offers.map((offer) => {
@@ -126,28 +136,28 @@ export default function OffersList({
                             <OfferCard
                                 title={offer.titre_emploi}
                                 subtitle={offer.entreprise}
-                                shortDescription={offer.description_courte.replace(
-                                    /\\n/g,
-                                    ""
-                                )}
+                                shortDescription={offer.description_courte}
                                 tags={[
                                     offer.contrat,
                                     `${offer.nom_commune} (${offer.code_region})`,
                                 ]}
                                 className="bg-primary/30"
+                                offerId={offer.offre_id}
+                                onFavoriteToggle={handleFavoriteToggle}
+                                isFavoriteBase={isSelection}
                             />
                         ) : (
                             <OfferCard
                                 title={offer.titre_emploi}
                                 subtitle={offer.entreprise}
-                                shortDescription={offer.description_courte.replace(
-                                    /\\n/g,
-                                    ""
-                                )}
+                                shortDescription={offer.description_courte}
                                 tags={[
                                     offer.contrat,
                                     `${offer.nom_commune} (${offer.code_region})`,
                                 ]}
+                                offerId={offer.offre_id}
+                                onFavoriteToggle={handleFavoriteToggle}
+                                isFavoriteBase={isSelection}
                             />
                         )}
                     </div>
