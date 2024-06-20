@@ -24,8 +24,7 @@ export default function OffersList({
     filters,
     uri,
     selectedOffer,
-    setSelectedOffer,
-    initialSelectedOffer,
+    setSelectedOffer
 }: OffersListProps) {
     const [offers, setOffers] = useState<IOffer[]>([]);
     const [loading, setLoading] = useState(true);
@@ -59,51 +58,60 @@ export default function OffersList({
         []
     );
 
-    const getOffers = useCallback(
-        async (isNext = false) => {
-            try {
-                const token = await getAccessTokenSilently();
-                setSelectedOffer(initialSelectedOffer);
-                const path = createQueryString(uri, filters, pagination);
-                const newOffers = await authenticatedGet(token, path);
-                if (!Array.isArray(newOffers)) {
+    const getOffers = useCallback(async (queryType: "first" | "next" | "filter") => {
+        try {
+            const token = await getAccessTokenSilently();
+            let offset: number = pagination.offset
+            switch (queryType) {
+                case "first":
+                    setPagination({ ...pagination, offset: 0})
+                    setPage(0)
+                    offset = 0
+                    break;
+                case "next":
+                    setPagination({ ...pagination, offset: (page + 1) * pagination.limit })
+                    setPage((prev) => prev + 1);
+                    break;
+                case "filter":
+                    setPagination({ ...pagination, offset: 0})
+                    setPage(0)
+                    offset = 0
+                    break;
+                default:
+                    break;
+            }
+            const path = createQueryString(uri, filters, {limit: pagination.limit, offset})
+            const newOffers = await authenticatedGet(token, path);
+            if (!Array.isArray(newOffers)) {
                     throw new Error("newOffers is not an array");
                 }
-                setPage((prev) => prev + 1);
-                setPagination({
-                    ...pagination,
-                    offset: page * pagination.limit,
-                });
-                if (newOffers.length === 0 || newOffers.length < 20) {
-                    setHasMore(false);
-                }
-                if (isNext) {
-                    setOffers([...offers, ...newOffers]);
-                } else {
-                    setOffers(newOffers);
-                }
-            } catch (err) {
+            if (newOffers.length === 0 || newOffers.length < 20) {
                 setHasMore(false);
-            } finally {
-                setLoading(false);
             }
-        },
-        [filters, getAccessTokenSilently, createQueryString, offers, page]
-    );
+            if (queryType === "next") {
+                setOffers([...offers, ...newOffers])
+            } else {
+                setOffers([...newOffers])
+                if (newOffers.length > 0) setSelectedOffer(newOffers[0])
+            }
+        } catch (err) {
+            setHasMore(false);
+        } finally {
+            setLoading(false);
+        }
+    }, [filters, getAccessTokenSilently, createQueryString, offers, page, pagination])
 
     useEffect(() => {
-        getOffers();
-        if (offers.length > 0) setSelectedOffer(offers[0]);
-    }, []);
+        getOffers("first")
+    }, [])
 
     useEffect(() => {
-        getOffers();
-        if (offers.length > 0) setSelectedOffer(offers[0]);
-    }, [filters]);
+        getOffers("filter")  
+    }, [filters])
 
     const next = async () => {
         setLoading(true);
-        getOffers(true);
+        getOffers("next")
         setLoading(false);
     };
     return (
