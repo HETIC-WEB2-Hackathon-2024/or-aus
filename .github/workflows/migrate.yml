@@ -7,15 +7,36 @@ jobs:
   migrate:
     runs-on: ubuntu-latest
     steps:
-      - name: Apply migrate script to postgres in prod
+      - name: Checkout code
+        uses: action
+      - name: Checkout migration folder
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.ssh_user }}
+          key: ${{ secrets.SSH_KEY_PSQL }}
+          source: ./migrations
+          target: /home/ubuntu/
+      - name: Setup Docker compose
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
+          key: ${{ secrets.SSH_KEY_PSQL }}
           script: |
-            echo "PGPASSWORD=${{ secrets.PGPASSWORD }}" > .env 
-            for file in /sql/migration/*; do
-              [ -e "$file" ] || continue
-              docker container run --env-file .env -v ./migration:/sql/migration --rm --network=web postgis/postgis:16-3.4-alpine psql -h postgres-aus -p 5432 -U aus-user -d aus -f $file
-            done
+            cd /home/ubuntu/postgresql
+            docker compose up postgres-aus -d
+            sleep 10
+      - name: Apply migrations
+        run: |
+          cd /home/ubuntu/migrations
+          for migration in *.sql; do
+            echo "Applying migration: $migration"
+            docker compose exec -it postgres-aus psql -U aus-user -d aus -f $migration
+            if [ $? -ne 0 ]; then
+              echo "Error applying migration: $migration"
+              exit 1
+            fi
+          done
+
+
