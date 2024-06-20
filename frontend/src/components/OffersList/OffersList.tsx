@@ -123,15 +123,6 @@ export default function OffersList({
         } else {
               await authenticatedPost(token, `v1/offres/favorite?offre_id=${offerId}`, {})
           }
-        //   const method = isFavorite ? "DELETE" : "POST";
-
-        //   await fetch(`http://localhost:3000/v1/offres/favorite?offre_id=${offerId}`, {
-        //     method,
-        //     headers: {
-        //       "Content-Type": "application/json",
-        //       Authorization: `Bearer ${token}`,
-        //     },
-        //   });
         } catch (error) {
           console.error("Failed to update favorite status", error);
         }
