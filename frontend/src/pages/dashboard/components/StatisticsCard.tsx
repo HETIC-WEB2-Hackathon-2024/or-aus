@@ -1,5 +1,4 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Target } from "lucide-react";
 import LoadingStatisticsCard from "./StateStatisticsCard";
 
