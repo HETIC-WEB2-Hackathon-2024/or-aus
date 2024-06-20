@@ -62,8 +62,8 @@ export function Dashboard({ uri }: DashboardProps) {
                         title={StatsTitleEnum.Favoris}
                         main_data={dashboardData?.[StatsEnum.Favoris] || 0}
                         comparison_data={dashboardData?.[StatsEnum.Favoris]}
-                        isLoading={true}
-                        isError={true}
+                        isLoading={isLoading}
+                        isError={isError}
                     />
                     <StatisticsCard
                         title={StatsTitleEnum.Candidature}
