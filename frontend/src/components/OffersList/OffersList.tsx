@@ -62,7 +62,6 @@ export default function OffersList({
     const getOffers = useCallback(async (queryType: "first" | "next" | "filter") => {
         try {
             const token = await getAccessTokenSilently();
-            setSelectedOffer(initialSelectedOffer)
             let offset: number = pagination.offset
             switch (queryType) {
                 case "first":
