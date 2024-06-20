@@ -63,7 +63,7 @@ export default function Offers() {
             if (noDateQueryFilters.period_end) delete noDateQueryFilters.period_end
             setQueryFilters({...noDateQueryFilters})
         }
-    }, [date, queryFilters])
+    }, [date])
 
     const getContractTypes = useCallback(async () => {
         try {
@@ -91,7 +91,7 @@ export default function Offers() {
     useEffect(() => {
         getContractTypes();
         getSecteursOptions();
-    }, [getContractTypes, getSecteursOptions]);
+    }, []);
 
     const addContractTypeFilter = (e: React.FormEvent<HTMLButtonElement>) => {
         if (e.currentTarget.getAttribute("data-state") == "unchecked") {

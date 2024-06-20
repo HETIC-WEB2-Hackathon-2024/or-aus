@@ -46,7 +46,7 @@ export default function OffersList({
             const index = offers.findIndex((offer) => offer.id === id);
             setSelectedOffer(offers[index]);
         },
-        [offers, setSelectedOffer]
+        [offers]
     );
 
     const createQueryString = useCallback(
@@ -115,22 +115,20 @@ export default function OffersList({
         [
             filters,
             getAccessTokenSilently,
-            setSelectedOffer,
             createQueryString,
             offers,
             page,
             pagination,
-            uri
         ]
     );
 
     useEffect(() => {
         getOffers("first");
-    }, [getOffers]);
+    }, []);
 
     useEffect(() => {
         getOffers("filter");
-    }, [getOffers]);
+    }, [filters]);
 
     const next = async () => {
         setLoading(true);

@@ -28,6 +28,10 @@ const router = createBrowserRouter([
                 path: "selection",
                 element: <Favorite />,
             },
+            {
+                path: "/",
+                element: <Navigate to="dashboard" />,
+            },
         ],
     },
     {
