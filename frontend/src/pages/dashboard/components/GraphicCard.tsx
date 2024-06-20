@@ -18,7 +18,8 @@ interface GraphicCardProps {
 }
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
-export const graphOptions = {
+
+const graphOptions = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
@@ -42,7 +43,6 @@ export const graphOptions = {
 };
 
 export default function GraphicCard({ data }: GraphicCardProps) {
-
     const initData = {
         labels: data.map((x) => moment(x.date).format("MMM DD")),
         datasets: [

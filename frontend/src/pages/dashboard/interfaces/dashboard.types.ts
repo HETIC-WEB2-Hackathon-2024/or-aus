@@ -37,7 +37,7 @@ export type SecteurMonthlyStats = {
     secteur: string;
 } & MonthlyStat;
 
-export type CandidatureMonthlyStats = {} & MonthlyStat;
+export type CandidatureMonthlyStats = MonthlyStat;
 
 export type TGraphValue = {
     value: number;
