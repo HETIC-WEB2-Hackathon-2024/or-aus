@@ -13,7 +13,7 @@ jobs:
             - name: Checkout migration folder
               uses: appleboy/scp-action@master
               with:
-                  host: ${{ secrets.SSH_HOST }}
+                  host: ${{ secrets.SSH_HOST_PSQL }}
                   username: ${{ secrets.ssh_user }}
                   key: ${{ secrets.SSH_KEY_PSQL }}
                   source: ./migrations
