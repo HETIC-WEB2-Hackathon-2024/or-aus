@@ -21,7 +21,7 @@ export function Dashboard({ uri }: DashboardProps) {
         isError,
         isLoading,
     } = useQuery<DashboardData>({
-        queryKey: ["dashboard"],
+        queryKey: ["dashboardUri", uri],
         queryFn: async () => {
             return authenticatedGet(await getAccessTokenSilently(), `${uri}/dashboard`);
         },
