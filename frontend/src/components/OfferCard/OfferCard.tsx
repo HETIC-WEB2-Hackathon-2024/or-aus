@@ -19,7 +19,7 @@ interface OfferCardProps {
   offerId: number;
   candidateId: number;
   className?: string;
-  isFavoriteBase: boolean;
+  isFavoriteBase?: boolean;
   onFavoriteToggle: (offerId: number, isFavorite: boolean) => void;
 }
 

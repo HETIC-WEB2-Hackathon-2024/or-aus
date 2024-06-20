@@ -7,7 +7,7 @@ interface OffersLayoutProps {
     children?: React.ReactNode;
     filters: IFilters,
     uri: string;
-    isSelection: boolean,
+    isSelection?: boolean,
 }
 
 const intialSelectedOffer = {
