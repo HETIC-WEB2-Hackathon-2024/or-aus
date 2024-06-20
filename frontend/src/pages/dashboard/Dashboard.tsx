@@ -1,14 +1,44 @@
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
+import { authenticatedGet } from "@/auth/helper";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAuth0 } from "@auth0/auth0-react";
+import { useQuery } from "@tanstack/react-query";
 
 import { Pin, Target, Bookmark, Send, Heart } from "lucide-react";
 
-export function Dashboard() {
+interface DashboardProps {
+    uri: string;
+}
+
+enum StatsEnum {
+    Commune = "commune_stats",
+    Secteur = "secteur_stats",
+    Candidature = "candidatures_stats",
+    Graphique = "graphique_stats",
+}
+
+const dashboardConfig = {
+    availableStats: {
+        [StatsEnum.Commune]: true,
+        [StatsEnum.Secteur]: true,
+        [StatsEnum.Candidature]: true,
+        [StatsEnum.Graphique]: false,
+    },
+};
+
+export function Dashboard({ uri }: DashboardProps) {
+    const { getAccessTokenSilently } = useAuth0();
+
+    // TODO: COMBINE
+    const dashboardData = useQuery({
+        queryKey: ['dashboard'],
+        queryFn: async () => {
+            return authenticatedGet(await getAccessTokenSilently(), `${uri}/dashboard`);
+
+        },
+        retryDelay: 2000
+    })
+
+
     return (
         <div className="flex min-h-screen w-full flex-col">
             <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
@@ -19,18 +49,12 @@ export function Dashboard() {
                 <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
                     <Card x-chunk="dashboard-01-chunk-0">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-xl font-b mb-2">
-                                Nouvelles offres dans votre commune
-                            </CardTitle>
+                            <CardTitle className="text-xl font-b mb-2">Nouvelles offres dans votre commune</CardTitle>
                             <Pin className="h-6 w-6 text-muted-foreground stroke-primary" />
                         </CardHeader>
                         <CardContent className="ml-4">
-                            <div className="text-4xl font-bold text-primary">
-                                24
-                            </div>
-                            <p className="text-md text-[#71717A] mt-2">
-                                +20% par rapport au mois dernier
-                            </p>
+                            <div className="text-4xl font-bold text-primary">24</div>
+                            <p className="text-md text-[#71717A] mt-2">+20% par rapport au mois dernier</p>
                         </CardContent>
                     </Card>
                     <Card x-chunk="dashboard-01-chunk-1">
@@ -41,58 +65,36 @@ export function Dashboard() {
                             <Target className="h-6 w-6 text-muted-foreground stroke-primary" />
                         </CardHeader>
                         <CardContent className="ml-4">
-                            <div className="text-4xl font-bold text-primary">
-                                349
-                            </div>
-                            <p className="text-md text-[#71717A] mt-2">
-                                -11.5% par rapport au mois dernier
-                            </p>
+                            <div className="text-4xl font-bold text-primary">349</div>
+                            <p className="text-md text-[#71717A] mt-2">-11.5% par rapport au mois dernier</p>
                         </CardContent>
                     </Card>
                     <Card x-chunk="dashboard-01-chunk-2">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-xl font-semibold mb-2">
-                                Nouvelles offres enregistrées
-                            </CardTitle>
+                            <CardTitle className="text-xl font-semibold mb-2">Nouvelles offres enregistrées</CardTitle>
                             <Bookmark className="h-6 w-6 text-muted-foreground stroke-primary" />
                         </CardHeader>
                         <CardContent className="ml-4">
-                            <div className="text-4xl font-bold text-primary">
-                                4
-                            </div>
-                            <p className="text-md text-[#71717A] mt-2">
-                                -15% par rapport au mois dernier
-                            </p>
+                            <div className="text-4xl font-bold text-primary">4</div>
+                            <p className="text-md text-[#71717A] mt-2">-15% par rapport au mois dernier</p>
                         </CardContent>
                     </Card>
                     <Card x-chunk="dashboard-01-chunk-3">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-xl font-semibold mb-2">
-                                Candidatures envoyées
-                            </CardTitle>
+                            <CardTitle className="text-xl font-semibold mb-2">Candidatures envoyées</CardTitle>
                             <Send className="h-6 w-6 text-muted-foreground stroke-primary" />
                         </CardHeader>
                         <CardContent className="ml-4">
-                            <div className="text-4xl font-bold text-primary">
-                                2
-                            </div>
-                            <p className="text-md text-[#71717A] mt-2">
-                                -10% par rapport au mois dernier
-                            </p>
+                            <div className="text-4xl font-bold text-primary">2</div>
+                            <p className="text-md text-[#71717A] mt-2">-10% par rapport au mois dernier</p>
                         </CardContent>
                     </Card>
                 </div>
                 <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
-                    <Card
-                        className="xl:col-span-2"
-                        x-chunk="dashboard-01-chunk-4"
-                    >
+                    <Card className="xl:col-span-2" x-chunk="dashboard-01-chunk-4">
                         <CardHeader className="flex flex-row items-center">
                             <div className="grid gap-2">
-                                <CardTitle>
-                                    Vos candidatures envoyées sur la dernière
-                                    semaine
-                                </CardTitle>
+                                <CardTitle>Vos candidatures envoyées sur la dernière semaine</CardTitle>
                             </div>
                         </CardHeader>
                     </Card>
@@ -100,56 +102,32 @@ export function Dashboard() {
                         <CardHeader>
                             <CardTitle className="mb-1 flex justify-between items-center">
                                 Vos offres sauvegardées
-                                <Heart
-                                    fill="#D8AA75"
-                                    className="h-7 w-7 text-muted-foreground stroke-none"
-                                />
+                                <Heart fill="#D8AA75" className="h-7 w-7 text-muted-foreground stroke-none" />
                             </CardTitle>
                             <CardDescription className="text-md">
-                                Retrouvez les offres que vous avez sauvegardées
-                                en un clic !
+                                Retrouvez les offres que vous avez sauvegardées en un clic !
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="grid gap-3">
                             <Card className="px-5 py-3 shadow-none">
-                                <CardTitle className="text-md mb-1">
-                                    Développeur web (H/F)
-                                </CardTitle>
-                                <CardDescription className="text-sm">
-                                    Apple - CHATEAUROUX (36)
-                                </CardDescription>
+                                <CardTitle className="text-md mb-1">Développeur web (H/F)</CardTitle>
+                                <CardDescription className="text-sm">Apple - CHATEAUROUX (36)</CardDescription>
                             </Card>
                             <Card className="px-5 py-3 shadow-none">
-                                <CardTitle className="text-md mb-1">
-                                    Eleveur de légumes
-                                </CardTitle>
-                                <CardDescription className="text-sm">
-                                    Google - SANNOIS (95)
-                                </CardDescription>
+                                <CardTitle className="text-md mb-1">Eleveur de légumes</CardTitle>
+                                <CardDescription className="text-sm">Google - SANNOIS (95)</CardDescription>
                             </Card>
                             <Card className="px-5 py-3 shadow-none">
-                                <CardTitle className="text-md mb-1">
-                                    Assistant marketing H/F
-                                </CardTitle>
-                                <CardDescription className="text-sm">
-                                    SNCF - BARD (42)
-                                </CardDescription>
+                                <CardTitle className="text-md mb-1">Assistant marketing H/F</CardTitle>
+                                <CardDescription className="text-sm">SNCF - BARD (42)</CardDescription>
                             </Card>
                             <Card className="px-5 py-3 shadow-none">
-                                <CardTitle className="text-md mb-1">
-                                    Testeur d’eau H/F
-                                </CardTitle>
-                                <CardDescription className="text-sm">
-                                    Evian - EVIAN-LES-BAINS (74)
-                                </CardDescription>
+                                <CardTitle className="text-md mb-1">Testeur d’eau H/F</CardTitle>
+                                <CardDescription className="text-sm">Evian - EVIAN-LES-BAINS (74)</CardDescription>
                             </Card>
                             <Card className="px-5 py-3 shadow-none">
-                                <CardTitle className="text-md mb-1">
-                                    Employé polyvalent
-                                </CardTitle>
-                                <CardDescription className="text-sm">
-                                    McDonald’s - SERRIS (77)
-                                </CardDescription>
+                                <CardTitle className="text-md mb-1">Employé polyvalent</CardTitle>
+                                <CardDescription className="text-sm">McDonald’s - SERRIS (77)</CardDescription>
                             </Card>
                         </CardContent>
                     </Card>
