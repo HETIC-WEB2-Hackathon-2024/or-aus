@@ -28,11 +28,20 @@ export class PostgresRepository
         const client = await this._pool.connect();
         try {
             const queryGraph = `
-            SELECT COUNT(co.*)::INTEGER AS value, co.date 
-            FROM candidat_offres AS co 
-            WHERE candidat_id = $1 AND co.date >= CURRENT_DATE - INTERVAL '30 days'
-            GROUP BY co.date 
-            ORDER BY co.date;`;
+            WITH date_series AS (
+            SELECT generate_series(
+                CURRENT_DATE - INTERVAL '30 days', 
+                CURRENT_DATE, 
+                '1 day'::interval
+                )::date AS date
+            )
+            SELECT 
+                ds.date,
+                COALESCE(COUNT(co.*), 0) AS value
+            FROM date_series ds
+            LEFT JOIN candidat_offres co ON ds.date = co.date AND co.candidat_id = $1
+            GROUP BY ds.date
+            ORDER BY ds.date;`;
             const queryStats = `
             SELECT 
               COUNT(CASE WHEN date_trunc('month', co.date) = date_trunc('month', CURRENT_DATE) THEN 1 END) AS current_month,

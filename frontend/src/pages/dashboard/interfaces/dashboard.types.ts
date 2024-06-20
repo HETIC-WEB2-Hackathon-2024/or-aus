@@ -19,7 +19,7 @@ export type DashboardData = {
     [StatsEnum.Secteur]: SecteurMonthlyStats;
     [StatsEnum.Candidature]: CandidatureMonthlyStats;
     [StatsEnum.Favoris]: number;
-    [StatsEnum.Graphique]: TGraphValue;
+    [StatsEnum.Graphique]: TGraphValue[];
 };
 
 type MonthlyStat = {
