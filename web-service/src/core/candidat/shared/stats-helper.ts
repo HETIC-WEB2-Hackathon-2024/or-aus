@@ -8,7 +8,8 @@ export class StatsHelper {
         let formatted = processed_value.toFixed(2);
 
         if (formatted.endsWith(".00")) {
-            formatted = processed_value >= 0 ? "+" : "" + parseInt(formatted, 10).toString();
+            formatted =
+                processed_value > 0 ? "+" : processed_value == 0 ? "+0" : "" + parseInt(formatted, 10).toString();
         }
 
         return formatted;
