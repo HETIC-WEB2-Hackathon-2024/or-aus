@@ -11,9 +11,9 @@ export class PutCandidatParametreTelController implements IController {
     async handle(req: RequestWithUserInfo, res: Response<any, Record<string, any>>): Promise<void> {
         try {
             const candidat_id = req.user?.id;
-            console.log(req.params)
             if (!candidat_id) throw new Error("Token problem, unable to obtain user ID");
-            const result = await this._useCase.execute({ id: candidat_id });
+            if (!req.body.tel) throw new Error("You must fill in the necessary information.");
+            await this._useCase.execute({ id: candidat_id, tel: req.body.tel });
 
             res.status(201).json();
         } catch (e) {

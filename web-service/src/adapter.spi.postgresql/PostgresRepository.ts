@@ -17,7 +17,7 @@ import { IOfferRepository } from "../core/offre/ports/IOfferRepository";
 import { FilterHelper } from "../core/offre/shared/Filter-helper";
 import { TContract } from "../core/offre/shared/TContract";
 import { CandidatParametre } from "../core/parametre/domains/CandidatParametre";
-import { ICandidatParametreRepository } from "../core/parametre/ports/ICandidatParametreRepository";
+import { ICandidatParametreRepository, TParamEmail, TParamInfo, TParamLoc, TParamPassword, TParamTel } from "../core/parametre/ports/ICandidatParametreRepository";
 import { Secteur } from "../core/secteur/domain/Secteur";
 
 export class PostgresRepository
@@ -248,16 +248,16 @@ export class PostgresRepository
         }
     }
 
-    async putCandidatParametreInfo(input: TCandidatId): Promise<void> {
+    async putCandidatParametreInfo(input: TParamInfo): Promise<void> {
         const client = await this._pool.connect();
         try {
-            // const results = await client.query<CandidatParametre>("UPDATE candidat SET nom = $1, prenom = $2, date_naissance = $3 WHERE id=$4", [nom, prenom, date_naissance, input.id]);
+            await client.query<CandidatParametre>("UPDATE candidat SET nom = $1, prenom = $2, date_naissance = $3 WHERE id=$4", [input.nom, input.prenom, input.date_naissance, input.id]);
         } finally {
             client.release();
         }
     }
 
-    async putCandidatParametreLoc(input: TCandidatId): Promise<void> {
+    async putCandidatParametreLoc(input: TParamLoc): Promise<void> {
         const client = await this._pool.connect();
         try {
             // const results = await client.query<CandidatParametre>("UPDATE candidat_communes SET commune_id = (SELECT id FROM commune WHERE nom_departement = $1 AND nom_commune = $2) WHERE id=$3", [nom_departement, nom_commune, input.id]);
@@ -266,7 +266,7 @@ export class PostgresRepository
         }
     }
 
-    async putCandidatParametrePassword(input: TCandidatId): Promise<void> {
+    async putCandidatParametrePassword(input: TParamPassword): Promise<void> {
         const client = await this._pool.connect();
         try {
             throw Error('TODO')
@@ -275,7 +275,7 @@ export class PostgresRepository
         }
     }
 
-    async putCandidatParametreEmail(input: TCandidatId): Promise<void> {
+    async putCandidatParametreEmail(input: TParamEmail): Promise<void> {
         const client = await this._pool.connect();
         try {
             // const results = await client.query<CandidatParametre>("UPDATE candidat SET email = $1 WHERE id=$2", [email, input.id]);
@@ -284,10 +284,10 @@ export class PostgresRepository
         }
     }
 
-    async putCandidatParametreTel(input: TCandidatId): Promise<void> {
+    async putCandidatParametreTel(input: TParamTel): Promise<void> {
         const client = await this._pool.connect();
         try {
-            // const results = await client.query<CandidatParametre>("UPDATE candidat SET telephone = $1 WHERE id=$2", [tel, input.id]);
+            await client.query<CandidatParametre>("UPDATE candidat SET telephone = $1 WHERE id=$2", [input.tel, input.id]);
         } finally {
             client.release();
         }

@@ -32,3 +32,15 @@ export async function authenticatedPost<T>(token: string, path: string, body: T)
     const data = await response.json();
     return data;
 }
+
+export async function authenticatedPut<T>(token: string, path: string, body: T) {
+    const url = await makeUrl(path);
+    const headers = makeHeaders(token);
+    await fetch(url, {
+        method: "PUT",
+        headers,
+        body: JSON.stringify(body),
+    });
+    // const data = await response.json();
+    // return data;
+}

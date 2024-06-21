@@ -12,7 +12,8 @@ export class PutCandidatParametreEmailController implements IController {
         try {
             const candidat_id = req.user?.id;
             if (!candidat_id) throw new Error("Token problem, unable to obtain user ID");
-            const result = await this._useCase.execute({ id: candidat_id });
+            if (!req.body.email) throw new Error("You must fill in the necessary information.");
+            const result = await this._useCase.execute({ id: candidat_id, email: req.body.email });
 
             res.status(201).json();
         } catch (e) {

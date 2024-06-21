@@ -12,7 +12,8 @@ export class PutCandidatParametreLocController implements IController {
         try {
             const candidat_id = req.user?.id;
             if (!candidat_id) throw new Error("Token problem, unable to obtain user ID");
-            const result = await this._useCase.execute({ id: candidat_id });
+            if (!req.body.nom_departement || !req.body.nom_commune) throw new Error("You must fill in the necessary information.");
+            const result = await this._useCase.execute({ id: candidat_id, nom_departement: req.body.nom_departement, nom_commune: req.body.nom_commune });
 
             res.status(201).json();
         } catch (e) {

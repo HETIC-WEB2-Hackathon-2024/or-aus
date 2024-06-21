@@ -14,6 +14,7 @@ export class ApiServer {
         this.app = express();
         this.app.use(cors(this.corsOptions));
         this.app.use(morgan("dev"));
+        this.app.use(express.json());
         this.app.use(
             auth({
                 audience: "api.or.aus.floless.fr",

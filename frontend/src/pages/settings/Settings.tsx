@@ -1,4 +1,4 @@
-import { authenticatedGet } from "@/auth/helper";
+import { authenticatedGet, authenticatedPut } from "@/auth/helper";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useAuth0 } from "@auth0/auth0-react";
-import { SetStateAction, useEffect, useState } from "react";
+import { ChangeEvent, MouseEvent, SetStateAction, useEffect, useState } from "react";
 
 type CandidatParameters = {
     id: number,
@@ -24,11 +24,45 @@ type CandidatParameters = {
     telephone: string,
 }
 
+type TParamInfo = {
+    nom?: string,
+    prenom?: string,
+    date_naissance?: string,
+}
+
+type TParamLoc = {
+    nom_departement?: string,
+    nom_commune?: string,
+}
+
+type TParamPassword = {
+    password?: string,
+}
+
+type TParamEmail = {
+    email?: string,
+}
+
+type TParamTel = {
+    tel?: string,
+}
+
 export default function Settings() {
     const [activeLink, setActiveLink] = useState("#perso-anchor");
     const [highlightedCard, setHighlightedCard] = useState("");
     const { getAccessTokenSilently } = useAuth0();
     const [userInformations, setUserInformations] = useState<CandidatParameters | null>(null);
+    const [userParamInfo, setUserParamInfo] = useState<TParamInfo>({
+        nom: "",
+        prenom: "",
+        date_naissance: ""
+    });
+    const [userParamLoc, setUserParamLoc] = useState<TParamLoc>();
+    const [userParamPassword, setUserParamPassword] = useState<TParamPassword>();
+    const [userParamEmail, setUserParamEmail] = useState<TParamEmail>();
+    const [userParamTel, setUserParamTel] = useState<TParamTel>({
+        tel: ""
+    });
 
     useEffect(() => {
         const getUserInformations = async () => {
@@ -52,6 +86,21 @@ export default function Settings() {
         getUserInformations();
     }, []);
 
+    useEffect(() => {
+        setUserParamInfo({
+            ...userParamInfo,
+            nom: userInformations?.nom,
+            prenom: userInformations?.prenom,
+            date_naissance: userInformations?.date_naissance,
+        });
+
+        if (userInformations?.telephone) {
+            setUserParamTel({
+                tel: userInformations?.telephone
+            });
+        }
+    }, [userInformations]);
+
     const handleLinkClick = (link: SetStateAction<string>) => {
         setActiveLink(link);
         setHighlightedCard(link);
@@ -59,7 +108,37 @@ export default function Settings() {
         setTimeout(() => {
             setHighlightedCard("");
         }, 1000);
-    };
+    }
+
+    // PARAMS
+    const handleChangeInfo = (e: ChangeEvent<HTMLInputElement>): void => {
+        const { name, value } = e.target;
+        console.log(userParamInfo)
+        if (name in userParamInfo)
+            setUserParamInfo({
+                ...userParamInfo,
+                [name]: value
+            });
+    }
+
+    const handleUpdateInfo = async (e: MouseEvent<HTMLButtonElement>): Promise<void> => {
+        e.preventDefault();
+        const token = await getAccessTokenSilently();
+        await authenticatedPut(token, '/v1/parameters/info', userParamInfo);
+    }
+
+    const handleChangeTel = (e: ChangeEvent<HTMLInputElement>): void => {
+        const { value } = e.target;
+        setUserParamTel({
+            tel: value,
+        });
+    }
+
+    const handleUpdateTel = async (e: MouseEvent<HTMLButtonElement>): Promise<void> => {
+        e.preventDefault();
+        const token = await getAccessTokenSilently();
+        await authenticatedPut(token, '/v1/parameters/tel', userParamTel);
+    }
 
     return (
         <div className="flex min-h-screen w-full flex-col">
@@ -142,13 +221,13 @@ export default function Settings() {
                             </CardHeader>
                             <CardContent>
                                 <form className="flex gap-5">
-                                    <Input placeholder="Nom" defaultValue={userInformations?.nom} />
-                                    <Input placeholder="Prénom" defaultValue={userInformations?.prenom} />
-                                    <Input type="date" defaultValue={userInformations?.date_naissance.split('T')[0]} />
+                                    <Input name="nom" onChange={handleChangeInfo} placeholder="Nom" defaultValue={userParamInfo?.nom} />
+                                    <Input name="prenom" onChange={handleChangeInfo} placeholder="Prénom" defaultValue={userParamInfo?.prenom} />
+                                    <Input name="date_naissance" onChange={handleChangeInfo} type="date" defaultValue={userParamInfo?.date_naissance?.split('T')[0]} />
                                 </form>
                             </CardContent>
                             <CardFooter className="border-t px-6 py-4">
-                                <Button>Enregistrer</Button>
+                                <Button onClick={handleUpdateInfo}>Enregistrer</Button>
                             </CardFooter>
                         </Card>
                         <Card
@@ -247,12 +326,11 @@ export default function Settings() {
                             </CardHeader>
                             <CardContent>
                                 <form className="flex gap-5">
-                                    {/* !en dur! il faudra recup l'adresse mail et la mettre en placeholder */}
-                                    <Input placeholder="06 00 00 00 00" defaultValue={userInformations?.telephone} />
+                                    <Input name="tel" type="tel" placeholder="06 00 00 00 00" defaultValue={userParamTel?.tel} onChange={handleChangeTel} />
                                 </form>
                             </CardContent>
                             <CardFooter className="border-t px-6 py-4">
-                                <Button>Enregistrer</Button>
+                                <Button onClick={handleUpdateTel}>Enregistrer</Button>
                             </CardFooter>
                         </Card>
                     </div>
