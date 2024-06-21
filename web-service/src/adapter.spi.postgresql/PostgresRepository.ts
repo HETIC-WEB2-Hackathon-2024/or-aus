@@ -1,26 +1,27 @@
-import { Client, Pool } from "pg";
+import { Pool } from "pg";
 
 import { Candidat, TCandidatEmail, TCandidatId } from "../core/candidat/domain/Candidat";
+import { TUserPayload } from "../core/candidat/ports/GetCandidatInfoUseCase";
 import {
     ICandidatCommuneOffersStatsResponse,
     ICandidatRepository,
     ICandidatSecteurOffersStatsResponse,
 } from "../core/candidat/ports/ICandidatRepository";
-import { Favorite, TFavoriteId } from "../core/favorite/domains/Favorite";
+import { IDashboardRepository } from "../core/dashboard/ports/IDashboardRepository";
+import { Favorite } from "../core/favorite/domains/Favorite";
+import { IFavoriteRepository } from "../core/favorite/ports/IFavoriteRepository";
+import { RemoveFavoriteDto } from "../core/favorite/ports/RemoveFavoriteUseCase";
 import { Offre } from "../core/offre/domain/Offre";
 import { IOfferFilter } from "../core/offre/filter/IOfferFilter";
 import { IOfferRepository } from "../core/offre/ports/IOfferRepository";
 import { FilterHelper } from "../core/offre/shared/Filter-helper";
 import { TContract } from "../core/offre/shared/TContract";
-import { TUserPayload } from "../core/candidat/ports/GetCandidatInfoUseCase";
-import { IFavoriteRepository } from "../core/favorite/ports/IFavoriteRepository";
-import { RemoveFavoriteDto } from "../core/favorite/ports/RemoveFavoriteUseCase";
-import { IDashboardRepository } from "../core/dashboard/ports/IDashboardRepository";
-import { ISecteurRepository } from "../core/secteur/ports/ISecteurRepository";
+import { CandidatParametre } from "../core/parametre/domains/CandidatParametre";
+import { ICandidatParametreRepository } from "../core/parametre/ports/ICandidatParametreRepository";
 import { Secteur } from "../core/secteur/domain/Secteur";
 
 export class PostgresRepository
-    implements IOfferRepository, ICandidatRepository, IFavoriteRepository, IDashboardRepository {
+    implements IOfferRepository, ICandidatRepository, IFavoriteRepository, IDashboardRepository, ICandidatParametreRepository {
     public constructor(private readonly _pool: Pool) { }
 
     async addCandidat(input: Pick<TUserPayload, "email">): Promise<void> {
@@ -232,6 +233,61 @@ export class PostgresRepository
         try {
             const results = await client.query<Secteur>("SELECT DISTINCT secteur FROM secteur", []);
             return results.rows;
+        } finally {
+            client.release();
+        }
+    }
+
+    async getCandidatParametre(input: TCandidatId): Promise<CandidatParametre> {
+        const client = await this._pool.connect();
+        try {
+            const results = await client.query<CandidatParametre>("SELECT ca.id, ca.nom, ca.prenom, ca.date_naissance, ca.pays, co.nom_departement, co.nom_commune, ca.email, ca.telephone FROM candidat ca, candidat_communes cc, commune co WHERE ca.id = $1 AND ca.id = cc.candidat_id AND cc.commune_id = co.id", [input.id]);
+            return results.rows[0];
+        } finally {
+            client.release();
+        }
+    }
+
+    async putCandidatParametreInfo(input: TCandidatId): Promise<void> {
+        const client = await this._pool.connect();
+        try {
+            // const results = await client.query<CandidatParametre>("UPDATE candidat SET nom = $1, prenom = $2, date_naissance = $3 WHERE id=$4", [nom, prenom, date_naissance, input.id]);
+        } finally {
+            client.release();
+        }
+    }
+
+    async putCandidatParametreLoc(input: TCandidatId): Promise<void> {
+        const client = await this._pool.connect();
+        try {
+            // const results = await client.query<CandidatParametre>("UPDATE candidat_communes SET commune_id = (SELECT id FROM commune WHERE nom_departement = $1 AND nom_commune = $2) WHERE id=$3", [nom_departement, nom_commune, input.id]);
+        } finally {
+            client.release();
+        }
+    }
+
+    async putCandidatParametrePassword(input: TCandidatId): Promise<void> {
+        const client = await this._pool.connect();
+        try {
+            throw Error('TODO')
+        } finally {
+            client.release();
+        }
+    }
+
+    async putCandidatParametreEmail(input: TCandidatId): Promise<void> {
+        const client = await this._pool.connect();
+        try {
+            // const results = await client.query<CandidatParametre>("UPDATE candidat SET email = $1 WHERE id=$2", [email, input.id]);
+        } finally {
+            client.release();
+        }
+    }
+
+    async putCandidatParametreTel(input: TCandidatId): Promise<void> {
+        const client = await this._pool.connect();
+        try {
+            // const results = await client.query<CandidatParametre>("UPDATE candidat SET telephone = $1 WHERE id=$2", [tel, input.id]);
         } finally {
             client.release();
         }
