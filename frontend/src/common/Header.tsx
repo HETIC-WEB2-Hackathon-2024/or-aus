@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { CircleUser, Menu } from "lucide-react";
-import { useState, useEffect } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
