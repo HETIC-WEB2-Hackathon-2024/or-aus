@@ -60,6 +60,9 @@ jobs:
         env:
           CI: true
 
+      - name: Wait for application to be ready
+        run: npx wait-on http://localhost:5173
+
       - name: Run Cypress tests
         run: |
             cd frontend
