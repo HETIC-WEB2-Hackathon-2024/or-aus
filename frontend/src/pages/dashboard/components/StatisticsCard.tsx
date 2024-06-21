@@ -1,6 +1,6 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Target } from "lucide-react";
-import LoadingStatisticsCard from "./LoadingStatisticsCard";
+import LoadingStatisticsCard from "./LoadingCard";
 
 interface StatisticsCardProps {
     title: string;

@@ -8,7 +8,7 @@ import StatisticsCard from "./components/StatisticsCard";
 import { DashboardData, StatsEnum, StatsTitleEnum } from "./interfaces/dashboard.types";
 import GraphicCard from "./components/GraphicCard";
 import { IOffer } from "../offers/Offers";
-import LoadingStatisticsCard from "./components/LoadingStatisticsCard";
+import LoadingCard from "./components/LoadingCard";
 
 interface DashboardProps {
     uri: string;
@@ -103,6 +103,12 @@ export function Dashboard({ uri }: DashboardProps) {
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="grid gap-3">
+                            {favoriteData?.length === 0 && (
+                                <LoadingCard
+                                    isError={true}
+                                    errorTitle={"Commencez votre recherche dans la page Offres"}
+                                />
+                            )}
                             {favoriteData ? (
                                 favoriteData?.map((favorite) => {
                                     return (
@@ -115,7 +121,7 @@ export function Dashboard({ uri }: DashboardProps) {
                                     );
                                 })
                             ) : (
-                                <LoadingStatisticsCard isError={true} errorTitle={"Widget en travaux"} />
+                                <LoadingCard isError={true} errorTitle={"Widget en travaux"} />
                             )}
                         </CardContent>
                     </Card>
