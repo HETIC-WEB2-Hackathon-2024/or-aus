@@ -21,7 +21,7 @@ export function Dashboard({ uri }: DashboardProps) {
     const {
         data: dashboardData,
         isError,
-        isLoading,
+        isLoading
     } = useQuery<DashboardData>({
         queryKey: ["dashboardUri", uri],
         queryFn: async () => {
@@ -50,8 +50,8 @@ export function Dashboard({ uri }: DashboardProps) {
                         title={
                             dashboardData
                                 ? `Nouvelles offre ${
-                                      dashboardData?.[StatsEnum.Commune].commune
-                                          ? `à ${dashboardData[StatsEnum.Commune].commune}`
+                                      dashboardData?.[StatsEnum.Commune]?.commune
+                                          ? `à ${dashboardData[StatsEnum.Commune]?.commune}`
                                           : `dans ta commune`
                                   }`
                                 : StatsTitleEnum.Commune
@@ -65,8 +65,8 @@ export function Dashboard({ uri }: DashboardProps) {
                         title={
                             dashboardData
                                 ? `Nouvelles offre ${
-                                      dashboardData?.[StatsEnum.Secteur].secteur
-                                          ? `en ${dashboardData[StatsEnum.Secteur].secteur}`
+                                      dashboardData?.[StatsEnum.Secteur]?.secteur
+                                          ? `en ${dashboardData[StatsEnum.Secteur]?.secteur}`
                                           : `dans ton secteur`
                                   }`
                                 : StatsTitleEnum.Secteur
@@ -85,7 +85,7 @@ export function Dashboard({ uri }: DashboardProps) {
                     <StatisticsCard
                         title={StatsTitleEnum.Candidature}
                         main_data={dashboardData?.[StatsEnum.Candidature]?.current_month || 0}
-                        comparison_data={dashboardData?.[StatsEnum.Candidature].comparison_percentage}
+                        comparison_data={dashboardData?.[StatsEnum.Candidature]?.comparison_percentage}
                         isLoading={isLoading}
                         isError={isError}
                     />
@@ -109,7 +109,7 @@ export function Dashboard({ uri }: DashboardProps) {
                                     errorTitle={"Commencez votre recherche dans la page Offres"}
                                 />
                             )}
-                            {favoriteData ? (
+                            {favoriteData && Array.isArray(favoriteData) ? (
                                 favoriteData?.map((favorite) => {
                                     return (
                                         <Card className="px-5 py-3 shadow-none" key={favorite.id}>
