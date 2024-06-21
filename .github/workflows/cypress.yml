@@ -22,6 +22,8 @@ jobs:
         run: |
             cd web-service
             npm run dev &
+            cd ../frontend
+            npm run dev &
 
       # Cypress has its own package.json in folder "e2e"
       - name: Install Cypress and run tests
