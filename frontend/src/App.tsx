@@ -6,6 +6,7 @@ import Offers from "./pages/offers/Offers";
 import Header, { TCurrentView } from "./common/Header";
 import ErrorPage from "./pages/error/Error";
 import Favorite from "./pages/favorite/Favorite";
+import { Toaster } from "./components/ui/toaster";
 
 const router = createBrowserRouter([
     {
@@ -49,6 +50,7 @@ function Layout() {
         <>
             <Header currentView={currentView} />
             <Outlet />
+            <Toaster />
         </>
     );
 }

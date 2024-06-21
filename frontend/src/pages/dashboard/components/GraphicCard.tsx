@@ -8,6 +8,7 @@ import {
     Title,
     Tooltip,
     Legend,
+    Filler
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { TGraphValue } from "../interfaces/dashboard.types";
@@ -17,7 +18,7 @@ interface GraphicCardProps {
     data: TGraphValue[];
 }
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
 const graphOptions = {
     responsive: true,
@@ -34,7 +35,7 @@ const graphOptions = {
     scales: {
         y: {
             min: 0,
-            suggestedMax: 5,
+            suggestedMax: 7,
             ticks: {
                 stepSize: 1,
             },
@@ -56,7 +57,7 @@ export default function GraphicCard({ data }: GraphicCardProps) {
             {
                 label: "Objectif",
                 fill: true,
-                backgroundColor: "rgb(255, 0, 0, 0.5)",
+                backgroundColor: "rgb(255, 0, 0, 0.2)",
                 borderColor: "rgba(255, 0, 0, 0.5)",
                 data: Array(data.length).fill(3),
                 borderDash: [5, 5],

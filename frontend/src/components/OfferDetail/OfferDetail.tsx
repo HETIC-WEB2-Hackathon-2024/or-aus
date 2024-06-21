@@ -1,6 +1,11 @@
 import { Badge } from "@/components/ui/badge";
 import { IOffer } from "../../pages/offers/Offers";
 import { X } from "lucide-react"
+import { Button } from "../ui/button";
+import { useMutation } from "@tanstack/react-query";
+import { authenticatedPost } from "@/auth/helper";
+import { useAuth0 } from "@auth0/auth0-react";
+import { useToast } from "../ui/use-toast";
 
 interface OfferDetailProps {
     selectedOffer: IOffer;
@@ -8,14 +13,37 @@ interface OfferDetailProps {
 }
 
 export function OfferDetail({ selectedOffer, handleClose }: OfferDetailProps) {
+    const { getAccessTokenSilently } = useAuth0();
+    const { toast } = useToast()
+
+    const apply = useMutation({
+        mutationKey: ["offer_id", selectedOffer.id],
+        mutationFn: async () => authenticatedPost(await getAccessTokenSilently(), `v1/users/offres?offre_id=${selectedOffer.id}`, {}),
+        onSuccess(data) {
+            toast({
+                title: data.message || data.error,
+                description: data.error ? "Soyons patient." : "Puisse le sort vous être favorable !",
+            })
+        },
+        onError(error) {
+            toast({
+                title: error.message,
+                description: "Veuillez nous excuser.",
+            })
+        }
+    })
+
     return (
         <>
-            <div className="border-b py-6 pl-6">
-                <div className="flex items-center justify-between">
+            <div className="border-b py-6 px-6 flex flex-col justify-between items-start w-full">
+                <div className="flex justify-between w-full">
                     <h2 className="text-2xl font-bold basis-4/5">
                         {selectedOffer.titre_emploi}
                     </h2>
-                    < X onClick={handleClose} className="lg:hidden  basis-1/5"/>
+                    <div className="flex flex-col gap-2 items-end">
+                        < X onClick={handleClose} className="lg:hidden  basis-1/5"/>
+                        <Button onClick={() => apply.mutate()}>Postuler</Button>
+                    </div>
                 </div>
                 <p className="text-md">
                     Chez{" "}

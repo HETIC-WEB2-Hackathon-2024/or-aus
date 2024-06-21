@@ -12,7 +12,6 @@ interface StatisticsCardProps {
 }
 
 export default function StatisticsCard({ title, main_data, comparison_data, isLoading, isError }: StatisticsCardProps) {
-    console.log(comparison_data)
     return (
         <>
             {isLoading ? (
