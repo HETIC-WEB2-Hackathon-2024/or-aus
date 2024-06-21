@@ -16,7 +16,10 @@ jobs:
       - name: Install root dependencies
         run: |
             cd frontend
-            npm i
+            npm ci
+            cd ..
+            cd web-service
+            npm ci
 
       - name: Start server in the background
         run: |
