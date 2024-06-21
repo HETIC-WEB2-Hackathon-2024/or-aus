@@ -7,8 +7,9 @@ import { GetCandidatInfoMiddleware } from "./core/candidat/controllers/GetCandid
 import { AddCandidatUseCase } from "./core/candidat/ports/AddCandidatUseCase";
 import { GetCandidatInfoUseCase } from "./core/candidat/ports/GetCandidatInfoUseCase";
 import { GetDashboardStatisticsController } from "./core/dashboard/controllers/GetDashboardStatisticsController";
-import { GetCandidatCandidaturesCountUseCase } from "./core/dashboard/ports/GetCandidatCandidaturesCountUseCase";
+import { GetCandidatCandidaturesUseCase } from "./core/dashboard/ports/GetCandidatCandidaturesUseCase";
 import { GetCandidatCommuneOffersStatsUseCase } from "./core/dashboard/ports/GetCandidatCommuneOffersStatsUseCase";
+import { GetCandidatFavoriteCountUseCase } from "./core/dashboard/ports/GetCandidatFavoriteCountUseCase";
 import { GetCandidatSecteurOffersStatsUseCase } from "./core/dashboard/ports/GetCandidatSecteurOffersStatsUseCase";
 import { AddFavoriteController } from "./core/favorite/controllers/AddFavoriteController";
 import { GetFavoriteController } from "./core/favorite/controllers/GetFavoriteController";
@@ -16,17 +17,21 @@ import { RemoveFavoriteController } from "./core/favorite/controllers/RemoveFavo
 import { AddFavoriteUseCase } from "./core/favorite/ports/AddFavoriteUseCase";
 import { GetFavoritesUseCase } from "./core/favorite/ports/GetFavoritesUseCase";
 import { RemoveFavoriteUseCase } from "./core/favorite/ports/RemoveFavoriteUseCase";
+import { AddCandidatureController } from "./core/offre/controllers/AddCandidatureController";
 import { GetContractTypesController } from "./core/offre/controllers/GetContractTypesController";
 import { GetOffersController } from "./core/offre/controllers/GetOffersController";
+import { AddCandidatureUseCase } from "./core/offre/ports/AddCandidatureUseCase";
 import { GetContractTypesUseCase } from "./core/offre/ports/GetContractTypesUseCase";
 import { GetOffersUseCase } from "./core/offre/ports/GetOffersUseCase";
 import { GetCandidatParametreController } from "./core/parametre/controllers/GetCandidatParametreController";
+import { GetParametreLocController } from "./core/parametre/controllers/GetParametreLocController";
 import { PutCandidatParametreEmailController } from "./core/parametre/controllers/PutCandidatParametreEmailController";
 import { PutCandidatParametreInfoController } from "./core/parametre/controllers/PutCandidatParametreInfoController";
 import { PutCandidatParametreLocController } from "./core/parametre/controllers/PutCandidatParametreLocController";
 import { PutCandidatParametrePasswordController } from "./core/parametre/controllers/PutCandidatParametrePasswordController";
 import { PutCandidatParametreTelController } from "./core/parametre/controllers/PutCandidatParametreTelController";
 import { GetCandidatParametreUseCase } from "./core/parametre/ports/GetCandidatParametreUseCase";
+import { GetParametreLocUseCase } from "./core/parametre/ports/GetParametreLocUseCase";
 import { PutCandidatParametreEmailUseCase } from "./core/parametre/ports/PutCandidatParametreEmailUseCase";
 import { PutCandidatParametreInfoUseCase } from "./core/parametre/ports/PutCandidatParametreInfoUseCase";
 import { PutCandidatParametreLocUseCase } from "./core/parametre/ports/PutCandidatParametreLocUseCase";
@@ -48,14 +53,16 @@ export async function main(): Promise<void> {
     const addCandidatController = new AddCandidatController(addCandidatUseCase);
 
     // Dashboard
-    const getCandidatCandidaturesCountUseCase = new GetCandidatCandidaturesCountUseCase(postgreRepository);
+    const getCandidatCandidaturesUseCase = new GetCandidatCandidaturesUseCase(postgreRepository);
     const getCandidatCommuneOffersStatsUseCase = new GetCandidatCommuneOffersStatsUseCase(postgreRepository);
     const getCandidatSecteurOffersStatsUseCase = new GetCandidatSecteurOffersStatsUseCase(postgreRepository);
+    const getCandidatFavoriteCountUseCase = new GetCandidatFavoriteCountUseCase(postgreRepository);
 
     const getDashboardStatisticsController = new GetDashboardStatisticsController(
-        getCandidatCandidaturesCountUseCase,
+        getCandidatCandidaturesUseCase,
         getCandidatCommuneOffersStatsUseCase,
-        getCandidatSecteurOffersStatsUseCase
+        getCandidatSecteurOffersStatsUseCase,
+        getCandidatFavoriteCountUseCase
     );
 
     // Offers
@@ -63,6 +70,8 @@ export async function main(): Promise<void> {
     const getOffersController = new GetOffersController(getOffersUseCase);
     const getContractTypesUseCase = new GetContractTypesUseCase(postgreRepository);
     const getContractTypesController = new GetContractTypesController(getContractTypesUseCase);
+    const addCandidatureUseCase = new AddCandidatureUseCase(postgreRepository);
+    const addCandidatureController = new AddCandidatureController(addCandidatureUseCase);
 
     // Favorite
     const addFavoriteUseCase = new AddFavoriteUseCase(postgreRepository);
@@ -74,13 +83,15 @@ export async function main(): Promise<void> {
     const getFavoriteUseCase = new GetFavoritesUseCase(postgreRepository);
     const getFavoriteController = new GetFavoriteController(getFavoriteUseCase);
 
-    // Secteur 
+    // Secteur
     const getSecteursUseCase = new GetSecteursUseCase(postgreRepository);
     const getSecteursController = new GetSecteursController(getSecteursUseCase);
 
     // Parameters
     const getCandidatParametreUseCase = new GetCandidatParametreUseCase(postgreRepository);
     const getCandidatParametreController = new GetCandidatParametreController(getCandidatParametreUseCase);
+    const getParametreLocUseCase = new GetParametreLocUseCase(postgreRepository);
+    const getParametreLocController = new GetParametreLocController(getParametreLocUseCase);
     const putCandidatParametreInfoUseCase = new PutCandidatParametreInfoUseCase(postgreRepository);
     const putCandidatParametreInfoController = new PutCandidatParametreInfoController(putCandidatParametreInfoUseCase);
     const putCandidatParametreLocUseCase = new PutCandidatParametreLocUseCase(postgreRepository);
@@ -111,9 +122,11 @@ export async function main(): Promise<void> {
     userRouter
         .route("/v1/users/dashboard")
         .get(getCandidatInfoMiddleware.handle, getDashboardStatisticsController.handle);
+    userRouter.route("/v1/users/offres").post(getCandidatInfoMiddleware.handle, addCandidatureController.handle);
 
     // Parameter routes
     const parametersRouter = Router();
+    parametersRouter.route("/v1/parameters/loc").get(getParametreLocController.handle);
     parametersRouter.route("/v1/parameters").get(getCandidatInfoMiddleware.handle, getCandidatParametreController.handle);
     parametersRouter.route("/v1/parameters/info").put(getCandidatInfoMiddleware.handle, putCandidatParametreInfoController.handle);
     parametersRouter.route("/v1/parameters/loc").put(getCandidatInfoMiddleware.handle, putCandidatParametreLocController.handle);

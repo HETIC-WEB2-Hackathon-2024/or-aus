@@ -6,8 +6,9 @@ import {
     ICandidatCommuneOffersStatsResponse,
     ICandidatRepository,
     ICandidatSecteurOffersStatsResponse,
+    ICandidatureStatsResponse,
 } from "../core/candidat/ports/ICandidatRepository";
-import { IDashboardRepository } from "../core/dashboard/ports/IDashboardRepository";
+import { IDashboardRepository, IGraphData, TGraphValue } from "../core/dashboard/ports/IDashboardRepository";
 import { Favorite } from "../core/favorite/domains/Favorite";
 import { IFavoriteRepository } from "../core/favorite/ports/IFavoriteRepository";
 import { RemoveFavoriteDto } from "../core/favorite/ports/RemoveFavoriteUseCase";
@@ -17,12 +18,78 @@ import { IOfferRepository } from "../core/offre/ports/IOfferRepository";
 import { FilterHelper } from "../core/offre/shared/Filter-helper";
 import { TContract } from "../core/offre/shared/TContract";
 import { CandidatParametre } from "../core/parametre/domains/CandidatParametre";
-import { ICandidatParametreRepository, TParamEmail, TParamInfo, TParamLoc, TParamPassword, TParamTel } from "../core/parametre/ports/ICandidatParametreRepository";
+import { TDepAndCo, TParamEmail, TParamInfo, TParamLoc, TParamPassword, TParamTel } from "../core/parametre/ports/ICandidatParametreRepository";
 import { Secteur } from "../core/secteur/domain/Secteur";
+import { ISecteurRepository } from "../core/secteur/ports/ISecteurRepository";
 
 export class PostgresRepository
-    implements IOfferRepository, ICandidatRepository, IFavoriteRepository, IDashboardRepository, ICandidatParametreRepository {
+    implements IOfferRepository, ICandidatRepository, IFavoriteRepository, IDashboardRepository, ISecteurRepository {
     public constructor(private readonly _pool: Pool) { }
+
+    async addCandidature(offre_id: number, user_id: number): Promise<void> {
+        const client = await this._pool.connect();
+        try {
+            const values = [user_id, offre_id];
+
+            const currentQuery = `SELECT * FROM candidat_offres WHERE candidat_id=$1 AND offre_id=$2;`;
+            const {
+                rows: [candidatureExists],
+            } = await client.query(currentQuery, values);
+            if (candidatureExists) {
+                throw new Error("Candidature déjà appliquée");
+            }
+            const query = `
+                INSERT INTO candidat_offres VALUES ($1 , $2, current_timestamp);
+            `;
+
+            await client.query(query, values);
+        } finally {
+            client.release();
+        }
+    }
+
+    async getCandidatCandidatures(user_id: TCandidatId): Promise<IGraphData> {
+        const client = await this._pool.connect();
+        try {
+            const queryGraph = `
+            WITH date_series AS (
+            SELECT generate_series(
+                CURRENT_DATE - INTERVAL '30 days', 
+                CURRENT_DATE, 
+                '1 day'::interval
+                )::date AS date
+            )
+            SELECT 
+                ds.date,
+                COALESCE(COUNT(co.*), 0) AS value
+            FROM date_series ds
+            LEFT JOIN candidat_offres co ON ds.date = co.date AND co.candidat_id = $1
+            GROUP BY ds.date
+            ORDER BY ds.date;`;
+            const queryStats = `
+            SELECT 
+              COUNT(CASE WHEN date_trunc('month', co.date) = date_trunc('month', CURRENT_DATE) THEN 1 END) AS current_month,
+              COUNT(CASE WHEN date_trunc('month', co.date) = date_trunc('month', CURRENT_DATE - INTERVAL '1 month') THEN 1 END) AS previous_month
+            FROM candidat_offres AS co
+            WHERE candidat_id = $1;`;
+
+            const { rows: graphValue } = await client.query<TGraphValue>(queryGraph, [user_id.id]);
+            const {
+                rows: [candidaturesStats],
+            } = await client.query<ICandidatureStatsResponse>(queryStats, [user_id.id]);
+
+            return {
+                graph_data: graphValue,
+                stats: {
+                    previous_month: +candidaturesStats.previous_month,
+                    current_month: +candidaturesStats.current_month,
+                    comparison_percentage: "",
+                },
+            };
+        } finally {
+            client.release();
+        }
+    }
 
     async addCandidat(input: Pick<TUserPayload, "email">): Promise<void> {
         const client = await this._pool.connect();
@@ -63,23 +130,21 @@ export class PostgresRepository
         }
     }
 
-    async getCandidatCandidaturesCount(input: TCandidatId): Promise<number> {
-        const client = await this._pool.connect();
+    async getCandidatFavoriteCount(input: TCandidatId): Promise<number> {
+        const favoriteNumber = await this._pool.connect();
         try {
             const query = `SELECT 
-                        COUNT(*) AS nombre
+                        COUNT(*) AS favorite_stats
                         FROM 
-                        public.offre AS o
-                        JOIN 
-                        public.candidat_communes AS c ON c.commune_id = o.commune_id
-                        WHERE c.candidat_id = $1`;
+                        public.favorite AS f
+                        WHERE f.candidat_id = $1`;
             const {
                 rows: [result],
-            } = await client.query<{ nombre: number }>(query, [input.id]);
+            } = await favoriteNumber.query<{ favorite_stats: number }>(query, [input.id]);
 
-            return result.nombre;
+            return result.favorite_stats;
         } finally {
-            client.release();
+            favoriteNumber.release();
         }
     }
 
@@ -125,7 +190,9 @@ export class PostgresRepository
                 const offers: Offre[] = [];
 
                 for (const favorite of result.rows) {
-                    const offre = await this.getOffers(1, 0, { id: favorite.offre_id.toString() });
+                    const offre = await this.getOffers(1, 0, {
+                        id: favorite.offre_id.toString(),
+                    });
                     offers.push(offre[0]);
                 }
 
@@ -202,6 +269,7 @@ export class PostgresRepository
             client.release();
         }
     }
+
     async addFavorite(candidatId: number, offreId: number): Promise<void> {
         const client = await this._pool.connect();
         try {
@@ -233,6 +301,31 @@ export class PostgresRepository
         try {
             const results = await client.query<Secteur>("SELECT DISTINCT secteur FROM secteur", []);
             return results.rows;
+        } finally {
+            client.release();
+        }
+    }
+
+    async getParametreLoc(): Promise<TDepAndCo> {
+        const client = await this._pool.connect();
+        try {
+            console.log('ici')
+            const results1 = await client.query<{ nom_departement: string }>("SELECT DISTINCT nom_departement FROM commune;", []);
+            const results2 = await client.query<{ nom_commune: string }>("SELECT DISTINCT nom_commune FROM commune", []);
+            const results = {
+                noms_departement: [],
+                noms_commune: [],
+            }
+
+            for (const result of results1.rows) {
+                results.noms_departement.push(result.nom_departement as never);
+            }
+
+            for (const result of results2.rows) {
+                results.noms_departement.push(result.nom_commune as never);
+            }
+
+            return results;
         } finally {
             client.release();
         }

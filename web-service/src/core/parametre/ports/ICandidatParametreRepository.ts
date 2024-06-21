@@ -24,8 +24,14 @@ export type TParamTel = TCandidatId & {
     tel: string,
 }
 
+export type TDepAndCo = {
+    noms_departement: string[],
+    noms_commune: string[],
+}
+
 export interface ICandidatParametreRepository {
     getCandidatParametre(input: TCandidatId): Promise<CandidatParametre>;
+    getParametreLoc(): Promise<TDepAndCo>;
     putCandidatParametreInfo(input: TParamInfo): Promise<void>;
     putCandidatParametreLoc(input: TParamLoc): Promise<void>;
     putCandidatParametrePassword(input: TParamPassword): Promise<void>;
