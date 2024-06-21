@@ -12,10 +12,8 @@ const connexion = () => {
 describe('Page offres', () => {
   beforeEach(() => {
     connexion();
-    cy.origin('http://localhost:5173', () => {
-      cy.get('a[href="/offres"]').click();
-      cy.url().should('include', '/offres');
-    });
+    cy.get('a[href="/offres"]').click();
+    cy.url().should('include', '/offres');
   });
 
 
