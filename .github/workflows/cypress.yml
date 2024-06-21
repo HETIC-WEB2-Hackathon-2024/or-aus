@@ -22,7 +22,9 @@ jobs:
             npm install
         
       - name: Run Cypress tests
-        run: npm run cypress:open
+        run: |
+            cd frontend
+            npm run cypress:open
 
       - name: Upload test results
         if: failure()
