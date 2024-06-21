@@ -9,32 +9,22 @@ on:
       - main
 
 jobs:
-  cypress-run:
-    runs-on: ubuntu-latest
-    
+  test:
+    runs-on: ubuntu-22.04
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Install dependencies
+      - uses: actions/checkout@v4
+      - name: Install root dependencies
         run: |
-            cd frontend
-            npm install
-        
-      - name: Run Cypress tests
+            npm ci
+
+      - name: Start server in the background
         run: |
-            cd frontend
-            npm run cy:open
+            cd web-service
+            npm run dev &
 
-    #   - name: Upload test results
-    #     if: failure()
-    #     uses: actions/upload-artifact@v3
-    #     with:
-    #         name: test-results
-    #         path: web-service/test-results
-
-    #   - name: Notify on failure
-    #     if: failure()
-    #     run: |
-    #       echo "Tests failed"
+      # Cypress has its own package.json in folder "e2e"
+      - name: Install Cypress and run tests
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: e2e
 
