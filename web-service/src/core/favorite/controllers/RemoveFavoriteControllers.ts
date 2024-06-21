@@ -20,7 +20,7 @@ export class RemoveFavoriteController implements IController {
                 offre_id: offre_id,
                 user_id: candidat_id,
             });
-            res.json({ message: "Favorite removed successfully" });
+            res.json({ message: "Offre retirée de la sélection" });
         } catch (error) {
             if (error instanceof Error) res.status(400).send({ error: error.message, reason: error });
         }

@@ -24,6 +24,8 @@ import { GetSecteursUseCase } from "./core/secteur/ports/GetSecteursUseCase";
 import { GetSecteursController } from "./core/secteur/controllers/GetSecteursControllers";
 import { GetCandidatFavoriteCountUseCase } from "./core/dashboard/ports/GetCandidatFavoriteCountUseCase";
 import { GetCandidatCandidaturesUseCase } from "./core/dashboard/ports/GetCandidatCandidaturesUseCase";
+import { AddCandidatureUseCase } from "./core/offre/ports/AddCandidatureUseCase";
+import { AddCandidatureController } from "./core/offre/controllers/AddCandidatureController";
 
 export async function main(): Promise<void> {
     const poolClient = pool;
@@ -54,6 +56,8 @@ export async function main(): Promise<void> {
     const getOffersController = new GetOffersController(getOffersUseCase);
     const getContractTypesUseCase = new GetContractTypesUseCase(postgreRepository);
     const getContractTypesController = new GetContractTypesController(getContractTypesUseCase);
+    const addCandidatureUseCase = new AddCandidatureUseCase(postgreRepository);
+    const addCandidatureController = new AddCandidatureController(addCandidatureUseCase);
 
     // Favorite
     const addFavoriteUseCase = new AddFavoriteUseCase(postgreRepository);
@@ -85,7 +89,7 @@ export async function main(): Promise<void> {
     userRouter
         .route("/v1/users/dashboard")
         .get(getCandidatInfoMiddleware.handle, getDashboardStatisticsController.handle);
-
+    userRouter.route("/v1/users/offres").post(getCandidatInfoMiddleware.handle, addCandidatureController.handle);
     // Secteur routes
     const secteurRouter = Router();
     secteurRouter.route("/v1/secteurs").get(getSecteursController.handle);

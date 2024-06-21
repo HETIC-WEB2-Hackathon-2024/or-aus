@@ -4,12 +4,9 @@ import { Loader2 } from "lucide-react";
 import { IOffer } from "@/pages/offers/Offers";
 import { useState, useCallback, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import {
-    authenticatedGet,
-    authenticatedPost,
-    authenticatedDelete,
-} from "./../../auth/helper";
+import { authenticatedGet, authenticatedPost, authenticatedDelete } from "./../../auth/helper";
 import { IFilters } from "../../pages/offers/Offers";
+import { useToast } from "../ui/use-toast";
 
 interface OffersListProps {
     filters: IFilters;
@@ -25,12 +22,7 @@ interface IPagination {
     offset: number;
 }
 
-export default function OffersList({
-    filters,
-    uri,
-    selectedOffer,
-    setSelectedOffer,
-}: OffersListProps) {
+export default function OffersList({ filters, uri, selectedOffer, setSelectedOffer }: OffersListProps) {
     const [offers, setOffers] = useState<IOffer[]>([]);
     const [loading, setLoading] = useState(true);
     const { getAccessTokenSilently } = useAuth0();
@@ -40,6 +32,7 @@ export default function OffersList({
         limit: 20,
         offset: 0,
     });
+    const { toast } = useToast();
 
     const changeSelectedOffer = useCallback(
         (id: number) => {
@@ -49,19 +42,12 @@ export default function OffersList({
         [offers]
     );
 
-    const createQueryString = useCallback(
-        (path: string, filters: IFilters, pagination: IPagination) => {
-            let queryString = `${path}?`;
-            Object.entries(filters).forEach(
-                (filter) => (queryString += `${filter[0]}=${filter[1]}&`)
-            );
-            Object.entries(pagination).forEach(
-                (filter) => (queryString += `${filter[0]}=${filter[1]}&`)
-            );
-            return queryString;
-        },
-        []
-    );
+    const createQueryString = useCallback((path: string, filters: IFilters, pagination: IPagination) => {
+        let queryString = `${path}?`;
+        Object.entries(filters).forEach((filter) => (queryString += `${filter[0]}=${filter[1]}&`));
+        Object.entries(pagination).forEach((filter) => (queryString += `${filter[0]}=${filter[1]}&`));
+        return queryString;
+    }, []);
 
     const getOffers = useCallback(
         async (queryType: "first" | "next" | "filter") => {
@@ -112,14 +98,7 @@ export default function OffersList({
                 setLoading(false);
             }
         },
-        [
-            filters,
-            getAccessTokenSilently,
-            createQueryString,
-            offers,
-            page,
-            pagination,
-        ]
+        [filters, getAccessTokenSilently, createQueryString, offers, page, pagination]
     );
 
     useEffect(() => {
@@ -135,24 +114,17 @@ export default function OffersList({
         getOffers("next");
         setLoading(false);
     };
-    const handleFavoriteToggle = async (
-        offerId: number,
-        isFavorite: boolean
-    ) => {
+    const handleFavoriteToggle = async (offerId: number, isFavorite: boolean) => {
         try {
             const token = await getAccessTokenSilently();
-            if (isFavorite) {
-                await authenticatedDelete(
-                    token,
-                    `v1/offres/favorite?offre_id=${offerId}`
-                );
-            } else {
-                await authenticatedPost(
-                    token,
-                    `v1/offres/favorite?offre_id=${offerId}`,
-                    {}
-                );
-            }
+            const method = isFavorite ? authenticatedDelete : authenticatedPost;
+            const [result, status] = await method(token, `v1/offres/favorite?offre_id=${offerId}`, {});
+
+            toast({
+                title:  result.message,
+                description: status === 201 ? "Retrouve cette offre dans ta page Sélection 🫣" : "D'autres offres t'attendent !"
+            });
+
         } catch (error) {
             console.error("Failed to update favorite status", error);
         }
@@ -161,27 +133,13 @@ export default function OffersList({
         <div className="flex flex-col items-center p-4 space-y-3 h-80 md:h-full">
             {offers.map((offer) => {
                 return (
-                    <div
-                        key={offer.id}
-                        onClick={() => changeSelectedOffer(offer.id)}
-                        className="w-full"
-                    >
+                    <div key={offer.id} onClick={() => changeSelectedOffer(offer.id)} className="w-full">
                         <OfferCard
                             title={offer.titre_emploi}
                             subtitle={offer.entreprise}
-                            shortDescription={offer.description_courte.replace(
-                                /\\n/g,
-                                ""
-                            )}
-                            tags={[
-                                offer.contrat,
-                                `${offer.nom_commune} (${offer.code_region})`,
-                            ]}
-                            className={
-                                selectedOffer.id === offer.id
-                                    ? "bg-primary/30"
-                                    : ""
-                            }
+                            shortDescription={offer.description_courte.replace(/\\n/g, "")}
+                            tags={[offer.contrat, `${offer.nom_commune} (${offer.code_region})`]}
+                            className={selectedOffer.id === offer.id ? "bg-primary/30" : ""}
                             onFavoriteToggle={handleFavoriteToggle}
                             isFavoriteBase={offer.is_favorite}
                             offerId={offer.id}
@@ -189,12 +147,7 @@ export default function OffersList({
                     </div>
                 );
             })}
-            <InfiniteScroll
-                hasMore={hasMore}
-                isLoading={loading}
-                next={next}
-                threshold={1}
-            >
+            <InfiniteScroll hasMore={hasMore} isLoading={loading} next={next} threshold={1}>
                 {hasMore && <Loader2 className="my-4 h-8 w-8 animate-spin" />}
             </InfiniteScroll>
         </div>
