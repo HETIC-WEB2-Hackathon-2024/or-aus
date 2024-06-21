@@ -113,7 +113,7 @@ export function Dashboard({ uri }: DashboardProps) {
                                 favoriteData?.map((favorite) => {
                                     return (
                                         <Card className="px-5 py-3 shadow-none" key={favorite.id}>
-                                            <CardTitle className="text-md mb-1">Développeur web (H/F)</CardTitle>
+                                            <CardTitle className="text-md mb-1">{favorite.titre_emploi}</CardTitle>
                                             <CardDescription className="text-sm">
                                                 {favorite.entreprise} - {favorite.lieu} ({favorite.code_region})
                                             </CardDescription>
