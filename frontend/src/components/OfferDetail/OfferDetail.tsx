@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { IOffer } from "../../pages/offers/Offers";
-import { X } from "lucide-react"
+import { X } from "lucide-react";
 import { Button } from "../ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { authenticatedPost } from "@/auth/helper";
@@ -14,24 +14,31 @@ interface OfferDetailProps {
 
 export function OfferDetail({ selectedOffer, handleClose }: OfferDetailProps) {
     const { getAccessTokenSilently } = useAuth0();
-    const { toast } = useToast()
+    const { toast } = useToast();
 
     const apply = useMutation({
         mutationKey: ["offer_id", selectedOffer.id],
-        mutationFn: async () => authenticatedPost(await getAccessTokenSilently(), `v1/users/offres?offre_id=${selectedOffer.id}`, {}),
+        mutationFn: async () =>
+            authenticatedPost(
+                await getAccessTokenSilently(),
+                `v1/users/offres?offre_id=${selectedOffer.id}`,
+                {}
+            ),
         onSuccess([data, _status]) {
             toast({
                 title: data.message || data.error,
-                description: data.error ? "Soyons patient." : "Puisse le sort vous être favorable !",
-            })
+                description: data.error
+                    ? "Soyons patient."
+                    : "Puisse le sort vous être favorable !",
+            });
         },
         onError(error) {
             toast({
                 title: error.message,
                 description: "Veuillez nous excuser.",
-            })
-        }
-    })
+            });
+        },
+    });
 
     return (
         <>
@@ -41,7 +48,10 @@ export function OfferDetail({ selectedOffer, handleClose }: OfferDetailProps) {
                         {selectedOffer.titre_emploi}
                     </h2>
                     <div className="flex flex-col gap-2 items-end">
-                        < X onClick={handleClose} className="lg:hidden  basis-1/5"/>
+                        <X
+                            onClick={handleClose}
+                            className="lg:hidden  basis-1/5"
+                        />
                         <Button onClick={() => apply.mutate()}>Postuler</Button>
                     </div>
                 </div>
@@ -52,7 +62,7 @@ export function OfferDetail({ selectedOffer, handleClose }: OfferDetailProps) {
                     </span>
                 </p>
             </div>
-            <div className="pt-4 pl-6 pr-4">
+            <div className="pt-4 pl-6 pr-4 lg:h-4/5 lg:overflow-scroll">
                 <h3 className="text-xl font-bold pt-4 pb-2">
                     Détails de l'emploi
                 </h3>
