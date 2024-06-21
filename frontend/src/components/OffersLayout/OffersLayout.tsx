@@ -61,7 +61,7 @@ export default function OffersLayout({
     return (
         <div className="flex h-full">
             <div
-                className={`flex flex-col ${offerListClass} lg:basis-1/2 border-r`}
+                className={`flex flex-col lg:overflow-scroll ${offerListClass} lg:basis-1/2 border-r`}
             >
                 {children && children}
                 <div onClick={handleClick}>
