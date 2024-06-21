@@ -8,7 +8,7 @@ import {
     Title,
     Tooltip,
     Legend,
-    Filler
+    Filler,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { TGraphValue } from "../interfaces/dashboard.types";
@@ -18,7 +18,16 @@ interface GraphicCardProps {
     data: TGraphValue[];
 }
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+    Filler
+);
 
 const graphOptions = {
     responsive: true,
@@ -69,11 +78,17 @@ export default function GraphicCard({ data }: GraphicCardProps) {
         <Card className="xl:col-span-2" x-chunk="dashboard-01-chunk-4">
             <CardHeader className="flex flex-row ">
                 <div className="grid gap-1">
-                    <CardTitle>Vos candidatures envoyées sur la dernière semaine</CardTitle>
+                    <CardTitle>
+                        Vos candidatures envoyées les 30 derniers jours
+                    </CardTitle>
                 </div>
             </CardHeader>
             <CardContent className="flex justify-center w-full">
-                <Line className="w-full" options={graphOptions} data={initData} />
+                <Line
+                    className="w-full"
+                    options={graphOptions}
+                    data={initData}
+                />
             </CardContent>
         </Card>
     );
