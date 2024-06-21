@@ -11,18 +11,30 @@ on:
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
     
-      - name: Install dependencies
-        run: | 
-            cd frontend
-            npm i
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Cypress run
-        uses: cypress-io/github-action@v6
-        with:
-          build: npm run build
-          start: npm start
-          browser: chrome
+      - name: Install dependencies
+        run: |
+            cd frontend
+            npm install
+        
+      - name: Run Cypress tests
+        run: |
+            cd frontend
+            npm run cy:open
+
+    #   - name: Upload test results
+    #     if: failure()
+    #     uses: actions/upload-artifact@v3
+    #     with:
+    #         name: test-results
+    #         path: web-service/test-results
+
+    #   - name: Notify on failure
+    #     if: failure()
+    #     run: |
+    #       echo "Tests failed"
+
