@@ -19,7 +19,7 @@ export function OfferDetail({ selectedOffer, handleClose }: OfferDetailProps) {
     const apply = useMutation({
         mutationKey: ["offer_id", selectedOffer.id],
         mutationFn: async () => authenticatedPost(await getAccessTokenSilently(), `v1/users/offres?offre_id=${selectedOffer.id}`, {}),
-        onSuccess(data) {
+        onSuccess([data, _status]) {
             toast({
                 title: data.message || data.error,
                 description: data.error ? "Soyons patient." : "Puisse le sort vous être favorable !",

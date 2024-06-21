@@ -126,7 +126,7 @@ export default function Offers() {
     }
  
     return(
-        <div className="flex flex-col lg:flex-row justify-between h-screen mt-5">
+        <div className="flex flex-col lg:flex-row justify-between h-screen">
             <div className="basis-1/5 border-r flex flex-col space-y-5 items-center pr-3 pl-3">
                 <div className="py-4 pl-4 w-full">
                     <h2 className="text-2xl font-bold text-left">Filtres</h2>

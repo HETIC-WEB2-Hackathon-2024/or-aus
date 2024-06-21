@@ -30,6 +30,8 @@ export function OfferCard({ title, subtitle, shortDescription, tags, offerId, cl
     onFavoriteToggle(offerId, isFavorite);
   };
 
+  
+
   return (
     <Card className={`w-full ${className}`}>
       <CardHeader className="flex-row justify-between items-center space-y-1 p-3">
