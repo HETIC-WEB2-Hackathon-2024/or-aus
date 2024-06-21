@@ -21,27 +21,6 @@ interface HeaderProps {
 
 export default function Header({ currentView }: HeaderProps) {
   const { logout, user } = useAuth0();
-  const [activeLink, setActiveLink] = useState("#perso-anchor");
-  const [, setHighlightedCard] = useState("");
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  useEffect(() => {
-    // Vérifier si le thème sombre est activé dans localStorage
-    const theme = localStorage.getItem("theme");
-    if (theme === "dark") {
-      setIsDarkMode(true);
-      document.documentElement.classList.add("dark");
-    }
-  }, []);
-
-  const handleLinkClick = (link: string) => {
-    setActiveLink(link);
-    setHighlightedCard(link);
-
-    setTimeout(() => {
-      setHighlightedCard("");
-    }, 1000);
-  };
 
   return (
     <div className="flex w-full flex-col">

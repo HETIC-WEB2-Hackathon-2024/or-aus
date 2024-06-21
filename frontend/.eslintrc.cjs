@@ -7,7 +7,7 @@ module.exports = {
     'plugin:@tanstack/eslint-plugin-query/recommended',
     'plugin:react-hooks/recommended',
   ],
-  ignorePatterns: ['dist', '.eslintrc.cjs', 'node_modules', 'tailwind.config.js', 'src/components/ui'],
+  ignorePatterns: ['dist', '.eslintrc.cjs', 'node_modules', 'tailwind.config.js', 'src/components/ui', 'cypress'],
   parser: '@typescript-eslint/parser',
   plugins: ['react-refresh'],
   rules: {
