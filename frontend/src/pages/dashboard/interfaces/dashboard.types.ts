@@ -9,7 +9,7 @@ export enum StatsEnum {
 export enum StatsTitleEnum {
     Commune = "Offres dans votre commune",
     Secteur = "Offres dans votre secteur",
-    Candidature = "Candidatures envoyées",
+    Candidature = "Nouvelles candidatures envoyées",
     Favoris = "Offres sauvegardées",
     Graphique = "Candidatures envoyées ces derniers jours",
 }
@@ -17,9 +17,9 @@ export enum StatsTitleEnum {
 export type DashboardData = {
     [StatsEnum.Commune]: CommuneMonthlyStats;
     [StatsEnum.Secteur]: SecteurMonthlyStats;
-    [StatsEnum.Candidature]: number;
-    [StatsEnum.Favoris]: undefined;
-    [StatsEnum.Graphique]: undefined;
+    [StatsEnum.Candidature]: CandidatureMonthlyStats;
+    [StatsEnum.Favoris]: number;
+    [StatsEnum.Graphique]: TGraphValue[];
 };
 
 type MonthlyStat = {
@@ -36,3 +36,10 @@ export type CommuneMonthlyStats = {
 export type SecteurMonthlyStats = {
     secteur: string;
 } & MonthlyStat;
+
+export type CandidatureMonthlyStats = MonthlyStat;
+
+export type TGraphValue = {
+    value: number;
+    date: Date;
+};

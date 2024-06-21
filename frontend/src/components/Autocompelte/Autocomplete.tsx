@@ -22,6 +22,7 @@ export function AutoComplete({placeholder, options, variant, className, onChange
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value)
     if (onChange) onChange(event.target.value)
+    if (event.target.value === "") handleSelect(event.target.value)
   }
 
   const handleSelect = (currentValue: string) => {

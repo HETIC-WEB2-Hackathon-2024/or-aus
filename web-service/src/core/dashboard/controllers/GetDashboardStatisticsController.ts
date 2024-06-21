@@ -2,23 +2,27 @@ import { Response } from "express";
 import { IController } from "../../../shared/IController";
 import { RequestWithUserInfo } from "../../candidat/controllers/GetCandidatInfoMiddleware";
 import { Dashboard } from "../domain/Dashboard";
-import { GetCandidatCandidaturesCountUseCase } from "../ports/GetCandidatCandidaturesCountUseCase";
 import { GetCandidatCommuneOffersStatsUseCase } from "../ports/GetCandidatCommuneOffersStatsUseCase";
 import { GetCandidatSecteurOffersStatsUseCase } from "../ports/GetCandidatSecteurOffersStatsUseCase";
+import { GetCandidatFavoriteCountUseCase } from "../ports/GetCandidatFavoriteCountUseCase";
+import { GetCandidatCandidaturesUseCase } from "../ports/GetCandidatCandidaturesUseCase";
 
 export class GetDashboardStatisticsController implements IController {
-    private _candidatureUseCase: GetCandidatCandidaturesCountUseCase;
+    private _candidatureUseCase: GetCandidatCandidaturesUseCase;
     private _communeUseCase: GetCandidatCommuneOffersStatsUseCase;
     private _secteurUseCase: GetCandidatSecteurOffersStatsUseCase;
+    private _favoriteUseCase: GetCandidatFavoriteCountUseCase;
 
     public constructor(
-        candidatureUseCase: GetCandidatCandidaturesCountUseCase,
+        candidatureUseCase: GetCandidatCandidaturesUseCase,
         communeUseCase: GetCandidatCommuneOffersStatsUseCase,
-        secteurUseCase: GetCandidatSecteurOffersStatsUseCase
+        secteurUseCase: GetCandidatSecteurOffersStatsUseCase,
+        favoriteUseCase: GetCandidatFavoriteCountUseCase
     ) {
         this._candidatureUseCase = candidatureUseCase;
         this._secteurUseCase = secteurUseCase;
         this._communeUseCase = communeUseCase;
+        this._favoriteUseCase = favoriteUseCase;
 
         this.handle = this.handle.bind(this);
     }
@@ -31,8 +35,17 @@ export class GetDashboardStatisticsController implements IController {
             const commune_stats = await this._communeUseCase.execute({ id: user_id });
             const secteur_stats = await this._secteurUseCase.execute({ id: user_id });
             const candidatures_stats = await this._candidatureUseCase.execute({ id: user_id });
+            const favorites_stats = await this._favoriteUseCase.execute({ id: user_id });
 
-            res.status(200).json(new Dashboard(commune_stats, secteur_stats, candidatures_stats));
+            res.status(200).json(
+                new Dashboard(
+                    commune_stats,
+                    secteur_stats,
+                    candidatures_stats.stats,
+                    favorites_stats,
+                    candidatures_stats.graph_data
+                )
+            );
         } catch (e) {
             if (e instanceof Error) {
                 res.status(400).send({ error: e.message, reason: e });

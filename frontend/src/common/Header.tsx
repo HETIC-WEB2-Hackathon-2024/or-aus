@@ -26,7 +26,7 @@ export default function Header({ currentView }: HeaderProps) {
                 <div className="whitespace-nowrap w-90">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <div className="flex items-center border px-3 py-2 rounded-lg gap-4 cursor-pointer w-16 md:w-80">
+                            <div className="hover:bg-primary flex items-center border px-3 py-2 rounded-lg gap-4 cursor-pointer w-16 md:w-80">
                                 <CircleUser className="h-6 w-6" />
                                 <div className="hidden md:block">
                                     {user?.nickname}

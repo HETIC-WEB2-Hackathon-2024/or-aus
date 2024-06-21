@@ -1,4 +1,4 @@
-import { Outlet, RouterProvider, createBrowserRouter, useLocation } from "react-router-dom";
+import { Navigate, Outlet, RouterProvider, createBrowserRouter, useLocation } from "react-router-dom";
 import { Dashboard } from "./pages/dashboard/Dashboard";
 import Settings from "./pages/settings/Settings";
 import Offers from "./pages/offers/Offers";
@@ -6,6 +6,7 @@ import Offers from "./pages/offers/Offers";
 import Header, { TCurrentView } from "./common/Header";
 import ErrorPage from "./pages/error/Error";
 import Favorite from "./pages/favorite/Favorite";
+import { Toaster } from "./components/ui/toaster";
 
 const router = createBrowserRouter([
     {
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
                 path: "selection",
                 element: <Favorite />,
             },
+            {
+                path: "/",
+                element: <Navigate to="dashboard" />,
+            },
         ],
     },
     {
@@ -45,6 +50,7 @@ function Layout() {
         <>
             <Header currentView={currentView} />
             <Outlet />
+            <Toaster />
         </>
     );
 }

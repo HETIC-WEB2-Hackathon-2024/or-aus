@@ -2,7 +2,6 @@ import { IAuth0Repository } from "../core/candidat/ports/ICandidatRepository";
 
 export class Auth0Repository implements IAuth0Repository {
     async getUserInfo(token_id: string): Promise<any> {
-        console.log({ token_id });
         if (!token_id) throw new Error("Token_id is not set");
 
         const res = await fetch(`https://or-aus.eu.auth0.com/userinfo`, {

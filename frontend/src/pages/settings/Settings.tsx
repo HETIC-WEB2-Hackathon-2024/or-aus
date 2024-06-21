@@ -148,7 +148,7 @@ export default function Settings() {
                 </div>
                 <div className="mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr]">
                     <nav
-                        className="sticky top-4 grid gap-4 text-sm text-muted-foreground"
+                        className="static md:sticky top-4 grid gap-4 text-sm text-muted-foreground"
                         x-chunk="dashboard-04-chunk-0"
                     >
                         <a

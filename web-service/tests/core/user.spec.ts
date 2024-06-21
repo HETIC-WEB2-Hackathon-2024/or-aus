@@ -22,19 +22,6 @@ describe("Get number of applications", () => {
         repository = new PostgresRepository(pool);
     });
 
-    // it("should return the number of applications", async () => {
-    //     const mockQuery = jest.fn().mockResolvedValue({ rows: [{ count: 5 }] });
-    //     (pool.connect as jest.Mock).mockReturnValue({
-    //         query: mockQuery,
-    //         release: jest.fn(),
-    //     });
-    //     const numberOfApplications = await repository.getCandidatCandidaturesCount({ id: 10 });
-
-    //     expect(pool.connect).toHaveBeenCalled();
-    //     expect(numberOfApplications).toBe(5);
-    //     expect((await pool.connect()).release).toHaveBeenCalled();
-    // });
-
     it("should return the -50.00% comparison for 5 current month / 10 previous month", async () => {
         const mockQuery = jest
             .fn()

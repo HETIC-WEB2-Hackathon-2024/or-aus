@@ -9,10 +9,18 @@ export class FilterHelper {
     static createOffersQueryWithFilters(limit: number, offset: number, filters: IOfferFilter): IQuery {
         let optionNumber = 3;
         const options: string[] = [limit.toString(), offset.toString()];
-        let query = `SELECT * FROM offre 
+        let query = `SELECT offre.*,
+        date_debut_stage.debut_stage, 
+        secteur.secteur, 
+        commune.nom_commune, 
+        commune.nom_departement, 
+        commune.code_region, 
+        CASE WHEN favorite.offre_id IS NOT NULL THEN 1 ELSE 0 END AS is_favorite 
+        FROM offre 
         JOIN date_debut_stage ON date_debut_stage.offre_id = offre.id 
         JOIN commune ON commune.id = offre.commune_id
-        JOIN secteur ON secteur.id = offre.secteur_id`;
+        JOIN secteur ON secteur.id = offre.secteur_id
+        LEFT JOIN favorite ON favorite.offre_id = offre.id`;
         if (Object.keys(filters).length > 0) {
             query += ` WHERE`;
             Object.keys(filters).forEach((filter) => {

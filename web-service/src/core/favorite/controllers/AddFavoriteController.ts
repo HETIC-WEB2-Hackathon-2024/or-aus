@@ -14,7 +14,7 @@ export class AddFavoriteController {
             if (!candidatId || !offreId) throw new Error("candidatId and offreId must be set");
 
             await this._useCase.execute(candidatId, offreId);
-            res.status(201).send({ message: "Favorite added successfully" });
+            res.status(201).send({ message: "Offre enregistrée" });
         } catch (error: any) {
             console.error("Error in AddFavoriteController:", error);
             if (error instanceof Error) {

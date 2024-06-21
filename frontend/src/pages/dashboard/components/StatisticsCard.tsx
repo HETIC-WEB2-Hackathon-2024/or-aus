@@ -1,6 +1,6 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Target } from "lucide-react";
-import LoadingStatisticsCard from "./StateStatisticsCard";
+import LoadingStatisticsCard from "./LoadingCard";
 
 interface StatisticsCardProps {
     title: string;
@@ -18,7 +18,7 @@ export default function StatisticsCard({ title, main_data, comparison_data, isLo
                 <LoadingStatisticsCard isError={isError} errorTitle={title} />
             ) : (
                 <Card x-chunk="dashboard-0 1-chunk-1" className="flex flex-col transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
                         <CardTitle className="text-xl font-semibold mb-2">{title}</CardTitle>
                         <Target className="h-6 w-6 text-muted-foreground stroke-primary" />
                     </CardHeader>
