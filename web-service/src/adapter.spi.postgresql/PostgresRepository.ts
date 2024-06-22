@@ -310,8 +310,8 @@ export class PostgresRepository
         const client = await this._pool.connect();
         try {
             console.log('ici')
-            const results1 = await client.query<{ nom_departement: string }>("SELECT DISTINCT nom_departement FROM commune;", []);
-            const results2 = await client.query<{ nom_commune: string }>("SELECT DISTINCT nom_commune FROM commune", []);
+            const results1 = await client.query<{ nom_departement: string }>("SELECT DISTINCT nom_departement FROM commune ORDER BY nom_departement ASC;", []);
+            const results2 = await client.query<{ nom_commune: string }>("SELECT DISTINCT nom_commune FROM commune ORDER BY nom_commune ASC;", []);
             const results = {
                 noms_departement: [],
                 noms_commune: [],
@@ -322,7 +322,7 @@ export class PostgresRepository
             }
 
             for (const result of results2.rows) {
-                results.noms_departement.push(result.nom_commune as never);
+                results.noms_commune.push(result.nom_commune as never);
             }
 
             return results;

@@ -1,5 +1,5 @@
+import { authenticatedGet } from "@/auth/helper";
 import { Button } from "@/components/ui/button";
-import { CircleUser, Menu } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,8 +9,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Link } from "react-router-dom";
+import { CandidatParameters } from "@/pages/settings/Settings";
 import { useAuth0 } from "@auth0/auth0-react";
+import { CircleUser, Menu } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 export type TCurrentView = "dashboard" | "parametres" | "offres" | "selection";
 
@@ -19,7 +22,18 @@ interface HeaderProps {
 }
 
 export default function Header({ currentView }: HeaderProps) {
-  const { logout, user } = useAuth0();
+  const { logout, user, getAccessTokenSilently } = useAuth0();
+  const [name, setName] = useState<string>('');
+
+  useEffect(() => {
+    const getUserFirstName = async () => {
+      const token = await getAccessTokenSilently();
+      const data: CandidatParameters = await authenticatedGet(token, '/v1/parameters');
+      setName(data.prenom + ' ' + data.nom);
+    }
+
+    getUserFirstName();
+  }, []);
 
   return (
     <div className="flex w-full flex-col">
@@ -29,7 +43,7 @@ export default function Header({ currentView }: HeaderProps) {
             <DropdownMenuTrigger asChild>
               <div className="hover:bg-primary flex items-center border px-3 py-2 rounded-lg gap-4 cursor-pointer w-16 md:w-80">
                 <CircleUser className="h-6 w-6" />
-                <div className="hidden md:block">{user?.nickname}</div>
+                <div className="hidden md:block">{name}</div>
               </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-16 md:w-80">
@@ -53,41 +67,37 @@ export default function Header({ currentView }: HeaderProps) {
           <div className="flex-col gap-6 w-full lg:justify-start pl-2 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6 justify-end">
             <Link
               to="dashboard"
-              className={`${
-                currentView === "dashboard"
-                  ? "text-primary"
-                  : "text-secondary darkmod"
-              } hover:text-primary `}
+              className={`${currentView === "dashboard"
+                ? "text-primary"
+                : "text-secondary darkmod"
+                } hover:text-primary `}
             >
               Dashboard
             </Link>
             <Link
               to="offres"
-              className={`${
-                currentView === "offres"
-                  ? "text-primary"
-                  : "text-secondary darkmod"
-              }  hover:text-primary `}
+              className={`${currentView === "offres"
+                ? "text-primary"
+                : "text-secondary darkmod"
+                }  hover:text-primary `}
             >
               Offres
             </Link>
             <Link
               to="selection"
-              className={`${
-                currentView === "selection"
-                  ? "text-primary"
-                  : "text-secondary darkmod"
-              }  hover:text-primary `}
+              className={`${currentView === "selection"
+                ? "text-primary"
+                : "text-secondary darkmod"
+                }  hover:text-primary `}
             >
               Sélection
             </Link>
             <Link
               to="parametres"
-              className={`${
-                currentView === "parametres"
-                  ? "text-primary"
-                  : "text-secondary darkmod"
-              }  hover:text-primary `}
+              className={`${currentView === "parametres"
+                ? "text-primary"
+                : "text-secondary darkmod"
+                }  hover:text-primary `}
             >
               Paramètres
             </Link>
@@ -114,39 +124,35 @@ export default function Header({ currentView }: HeaderProps) {
               </Link>
               <Link
                 to="dashboard"
-                className={`${
-                  currentView === "dashboard"
-                    ? "text-primary"
-                    : "text-secondary"
-                } `}
+                className={`${currentView === "dashboard"
+                  ? "text-primary"
+                  : "text-secondary"
+                  } `}
               >
                 Dashboard
               </Link>
               <Link
                 to="offres"
-                className={`${
-                  currentView === "offres" ? "text-primary" : "text-secondary"
-                } `}
+                className={`${currentView === "offres" ? "text-primary" : "text-secondary"
+                  } `}
               >
                 Offres
               </Link>
               <Link
                 to="selection"
-                className={`${
-                  currentView === "selection"
-                    ? "text-primary"
-                    : "text-secondary"
-                } `}
+                className={`${currentView === "selection"
+                  ? "text-primary"
+                  : "text-secondary"
+                  } `}
               >
                 Ma sélection
               </Link>
               <Link
                 to="parametres"
-                className={`${
-                  currentView === "parametres"
-                    ? "text-primary"
-                    : "text-secondary"
-                } `}
+                className={`${currentView === "parametres"
+                  ? "text-primary"
+                  : "text-secondary"
+                  } `}
               >
                 Paramètres
               </Link>

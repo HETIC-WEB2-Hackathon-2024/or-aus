@@ -9,10 +9,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/components/ui/use-toast";
 import { useAuth0 } from "@auth0/auth0-react";
-import { ChangeEvent, MouseEvent, SetStateAction, useEffect, useState } from "react";
+import { ChangeEvent, Fragment, MouseEvent, SetStateAction, useEffect, useState } from "react";
 
-type CandidatParameters = {
+export type CandidatParameters = {
   id: number,
   nom: string,
   prenom: string,
@@ -22,6 +24,11 @@ type CandidatParameters = {
   nom_commune: string,
   email: string,
   telephone: string,
+}
+
+type TDepAndCo = {
+  noms_departement: string[],
+  noms_commune: string[],
 }
 
 type TParamInfo = {
@@ -35,14 +42,6 @@ type TParamLoc = {
   nom_commune?: string,
 }
 
-type TParamPassword = {
-  password?: string,
-}
-
-type TParamEmail = {
-  email?: string,
-}
-
 type TParamTel = {
   tel?: string,
 }
@@ -51,15 +50,21 @@ export default function Settings() {
   const [activeLink, setActiveLink] = useState("#perso-anchor");
   const [highlightedCard, setHighlightedCard] = useState("");
   const { getAccessTokenSilently } = useAuth0();
+  const { toast } = useToast();
   const [userInformations, setUserInformations] = useState<CandidatParameters | null>(null);
+  const [localisation, setLocalisation] = useState<TDepAndCo>({
+    noms_departement: [],
+    noms_commune: [],
+  });
   const [userParamInfo, setUserParamInfo] = useState<TParamInfo>({
     nom: "",
     prenom: "",
     date_naissance: ""
   });
-  const [userParamLoc, setUserParamLoc] = useState<TParamLoc>();
-  const [userParamPassword, setUserParamPassword] = useState<TParamPassword>();
-  const [userParamEmail, setUserParamEmail] = useState<TParamEmail>();
+  const [userParamLoc, setUserParamLoc] = useState<TParamLoc>({
+    nom_departement: "",
+    nom_commune: ""
+  });
   const [userParamTel, setUserParamTel] = useState<TParamTel>({
     tel: ""
   });
@@ -83,6 +88,17 @@ export default function Settings() {
       }
     }
 
+    const getLocInformations = async () => {
+      try {
+        const token = await getAccessTokenSilently();
+        const data: TDepAndCo = await authenticatedGet(token, '/v1/parameters/loc');
+        setLocalisation(data);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    getLocInformations();
     getUserInformations();
   }, []);
 
@@ -125,6 +141,10 @@ export default function Settings() {
     e.preventDefault();
     const token = await getAccessTokenSilently();
     await authenticatedPut(token, '/v1/parameters/info', userParamInfo);
+    toast({
+      title: "Informations personnelles",
+      description: "Modifications enregistrées !",
+    });
   }
 
   const handleChangeTel = (e: ChangeEvent<HTMLInputElement>): void => {
@@ -138,6 +158,10 @@ export default function Settings() {
     e.preventDefault();
     const token = await getAccessTokenSilently();
     await authenticatedPut(token, '/v1/parameters/tel', userParamTel);
+    toast({
+      title: "Numéro de téléphone",
+      description: "Modifications enregistrées !",
+    });
   }
 
   return (
@@ -223,7 +247,8 @@ export default function Settings() {
                 <form className="flex gap-5">
                   <Input name="nom" onChange={handleChangeInfo} placeholder="Nom" defaultValue={userParamInfo?.nom} />
                   <Input name="prenom" onChange={handleChangeInfo} placeholder="Prénom" defaultValue={userParamInfo?.prenom} />
-                  <Input name="date_naissance" onChange={handleChangeInfo} type="date" defaultValue={userParamInfo?.date_naissance?.split('T')[0]} />
+                  {/* TODO FORM INPUT DATA SHADCN */}
+                  <Input name="date_naissance" type="date" defaultValue={userParamInfo?.date_naissance?.split('T')[0]} />
                 </form>
               </CardContent>
               <CardFooter className="border-t px-6 py-4">
@@ -247,7 +272,23 @@ export default function Settings() {
               <CardContent>
                 <form className="flex gap-5">
                   <Input placeholder="🇫🇷 France" disabled />
-                  <Input placeholder="Departement" defaultValue={userInformations?.nom_departement} />
+                  <Select>
+                    <SelectTrigger>
+                      <SelectValue placeholder={userInformations?.nom_departement} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {localisation.noms_departement.map((value, key) => {
+                          return <Fragment key={key}>
+                            {key !== 0 ? (localisation.noms_departement[key][0] !== localisation.noms_departement[key - 1][0] && <SelectLabel key={`label_${key}`}>{localisation.noms_departement[key][0]}</SelectLabel>) : <SelectLabel key={`label_${key}`}>{localisation.noms_departement[key][0]}</SelectLabel>}
+                            <SelectItem key={`departement_${key}`} value={`${value}`}>{value}</SelectItem>
+                          </Fragment>
+                        })
+                        }
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                  {/* TODO FORM INPUT SEARCH THROTTLE */}
                   <Input placeholder="Ville" defaultValue={userInformations?.nom_commune} />
                 </form>
               </CardContent>
@@ -255,7 +296,7 @@ export default function Settings() {
                 <Button>Enregistrer</Button>
               </CardFooter>
             </Card>
-            <Card
+            {/* <Card
               x-chunk="dashboard-04-chunk-2"
               id="password-anchor"
               className={`transition-colors duration-500 ${highlightedCard === "#password-anchor"
@@ -285,7 +326,7 @@ export default function Settings() {
               <CardFooter className="border-t px-6 py-4">
                 <Button>Enregistrer</Button>
               </CardFooter>
-            </Card>
+            </Card> */}
             <Card
               x-chunk="dashboard-04-chunk-2"
               id="email-anchor"
@@ -303,12 +344,12 @@ export default function Settings() {
               <CardContent>
                 <form className="flex gap-5">
                   {/* !en dur! il faudra recup l'adresse mail et la mettre en placeholder */}
-                  <Input placeholder="adresse@email.com" defaultValue={userInformations?.email} />
+                  <Input placeholder="adresse@email.com" defaultValue={userInformations?.email} disabled />
                 </form>
               </CardContent>
-              <CardFooter className="border-t px-6 py-4">
+              {/* <CardFooter className="border-t px-6 py-4">
                 <Button>Enregistrer</Button>
-              </CardFooter>
+              </CardFooter> */}
             </Card>
             <Card
               x-chunk="dashboard-04-chunk-2"
