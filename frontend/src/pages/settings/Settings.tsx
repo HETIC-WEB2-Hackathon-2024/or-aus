@@ -49,6 +49,7 @@ type TParamTel = {
 export default function Settings() {
   const [activeLink, setActiveLink] = useState("#perso-anchor");
   const [highlightedCard, setHighlightedCard] = useState("");
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const { getAccessTokenSilently } = useAuth0();
   const { toast } = useToast();
   const [userInformations, setUserInformations] = useState<CandidatParameters | null>(null);
@@ -98,6 +99,11 @@ export default function Settings() {
       }
     }
 
+    if (localStorage.getItem("theme") === "dark") {
+      setIsDarkMode(true);
+      document.documentElement.classList.add("dark");
+    }
+
     getLocInformations();
     getUserInformations();
   }, []);
@@ -117,6 +123,17 @@ export default function Settings() {
     }
   }, [userInformations]);
 
+  const toggleDarkMode = () => {
+    if (isDarkMode) {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    } else {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    }
+    setIsDarkMode(!isDarkMode);
+  };
+
   const handleLinkClick = (link: SetStateAction<string>) => {
     setActiveLink(link);
     setHighlightedCard(link);
@@ -124,7 +141,7 @@ export default function Settings() {
     setTimeout(() => {
       setHighlightedCard("");
     }, 1000);
-  }
+  };
 
   // PARAMS
   const handleChangeInfo = (e: ChangeEvent<HTMLInputElement>): void => {
@@ -197,7 +214,7 @@ export default function Settings() {
             >
               Localisation
             </a>
-            <a
+            {/* <a
               href="#password-anchor"
               onClick={() => handleLinkClick("#password-anchor")}
               className={`${activeLink === "#password-anchor"
@@ -206,7 +223,7 @@ export default function Settings() {
                 }`}
             >
               Mot de passe
-            </a>
+            </a> */}
             <a
               href="#email-anchor"
               onClick={() => handleLinkClick("#email-anchor")}
@@ -227,6 +244,12 @@ export default function Settings() {
             >
               Numéro de téléphone
             </a>
+            <button
+              onClick={toggleDarkMode}
+              className="mt-2 px-4 py-2 border rounded"
+            >
+              {isDarkMode ? "Light Mode" : "Dark Mode"}
+            </button>
           </nav>
           <div className="grid gap-6">
             <Card
@@ -239,7 +262,7 @@ export default function Settings() {
             >
               <CardHeader>
                 <CardTitle>Informations personnelles</CardTitle>
-                <CardDescription>
+                <CardDescription className="darkmod">
                   Changez vos informations personnelles
                 </CardDescription>
               </CardHeader>
@@ -265,7 +288,7 @@ export default function Settings() {
             >
               <CardHeader>
                 <CardTitle>Localisation</CardTitle>
-                <CardDescription>
+                <CardDescription className="darkmod">
                   Changez votre localisation
                 </CardDescription>
               </CardHeader>
@@ -306,7 +329,7 @@ export default function Settings() {
             >
               <CardHeader>
                 <CardTitle>Mot de passe</CardTitle>
-                <CardDescription>
+                <CardDescription className="darkmod">
                   Modifier votre mot de passe
                 </CardDescription>
               </CardHeader>
@@ -337,13 +360,12 @@ export default function Settings() {
             >
               <CardHeader>
                 <CardTitle>Email</CardTitle>
-                <CardDescription>
+                <CardDescription className="darkmod">
                   Modifier votre adresse-mail
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <form className="flex gap-5">
-                  {/* !en dur! il faudra recup l'adresse mail et la mettre en placeholder */}
                   <Input placeholder="adresse@email.com" defaultValue={userInformations?.email} disabled />
                 </form>
               </CardContent>
@@ -361,7 +383,7 @@ export default function Settings() {
             >
               <CardHeader>
                 <CardTitle>Numéro de téléphone</CardTitle>
-                <CardDescription>
+                <CardDescription className="darkmod">
                   Modifier votre numéro de téléphone
                 </CardDescription>
               </CardHeader>
