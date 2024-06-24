@@ -256,7 +256,7 @@ export default function Settings() {
               x-chunk="dashboard-04-chunk-1"
               id="perso-anchor"
               className={`transition-colors duration-500 ${highlightedCard === "#perso-anchor"
-                ? "bg-gray-100"
+                ? (isDarkMode ? "bg-gray-800" : "bg-gray-100")
                 : ""
                 }`}
             >
@@ -281,7 +281,7 @@ export default function Settings() {
               x-chunk="dashboard-04-chunk-1"
               id="localisation-anchor"
               className={`transition-colors duration-500 ${highlightedCard === "#localisation-anchor"
-                ? "bg-gray-100"
+                ? (isDarkMode ? "bg-gray-800" : "bg-gray-100")
                 : ""
                 }`}
             >
@@ -322,7 +322,7 @@ export default function Settings() {
               x-chunk="dashboard-04-chunk-2"
               id="password-anchor"
               className={`transition-colors duration-500 ${highlightedCard === "#password-anchor"
-                ? "bg-gray-100"
+                ? (isDarkMode ? "bg-gray-800" : "bg-gray-100")
                 : ""
                 }`}
             >
@@ -353,7 +353,7 @@ export default function Settings() {
               x-chunk="dashboard-04-chunk-2"
               id="email-anchor"
               className={`transition-colors duration-500 ${highlightedCard === "#email-anchor"
-                ? "bg-gray-100"
+                ? (isDarkMode ? "bg-gray-800" : "bg-gray-100")
                 : ""
                 }`}
             >
@@ -376,7 +376,7 @@ export default function Settings() {
               x-chunk="dashboard-04-chunk-2"
               id="phone-anchor"
               className={`transition-colors duration-500 ${highlightedCard === "#phone-anchor"
-                ? "bg-gray-100"
+                ? (isDarkMode ? "bg-gray-800" : "bg-gray-100")
                 : ""
                 }`}
             >
