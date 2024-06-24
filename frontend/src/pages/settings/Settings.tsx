@@ -270,8 +270,7 @@ export default function Settings() {
                 <form className="flex gap-5">
                   <Input name="nom" onChange={handleChangeInfo} placeholder="Nom" defaultValue={userParamInfo?.nom} />
                   <Input name="prenom" onChange={handleChangeInfo} placeholder="Prénom" defaultValue={userParamInfo?.prenom} />
-                  {/* TODO FORM INPUT DATA SHADCN */}
-                  <Input name="date_naissance" type="date" defaultValue={userParamInfo?.date_naissance?.split('T')[0]} />
+                  <Input type="date" name="date_naissance" defaultValue={userParamInfo?.date_naissance?.split('T')[0]} className="block" />
                 </form>
               </CardContent>
               <CardFooter className="border-t px-6 py-4">
