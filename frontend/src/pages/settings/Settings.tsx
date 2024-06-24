@@ -123,6 +123,10 @@ export default function Settings() {
     }
   }, [userInformations]);
 
+  useEffect(() => {
+    console.log(userParamInfo)
+  }, [userParamInfo])
+
   const toggleDarkMode = () => {
     if (isDarkMode) {
       document.documentElement.classList.remove("dark");
@@ -143,10 +147,23 @@ export default function Settings() {
     }, 1000);
   };
 
+  const showToast = (status: number): void => {
+    if (status === 201) {
+      toast({
+        title: "Informations personnelles",
+        description: "Modifications enregistrées !",
+      });
+    } else if (status === 400) {
+      toast({
+        title: "Informations personnelles",
+        description: "Problème avec les informations saisies...",
+      });
+    }
+  }
+
   // PARAMS
   const handleChangeInfo = (e: ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
-    console.log(userParamInfo)
     if (name in userParamInfo)
       setUserParamInfo({
         ...userParamInfo,
@@ -157,11 +174,24 @@ export default function Settings() {
   const handleUpdateInfo = async (e: MouseEvent<HTMLButtonElement>): Promise<void> => {
     e.preventDefault();
     const token = await getAccessTokenSilently();
-    await authenticatedPut(token, '/v1/parameters/info', userParamInfo);
-    toast({
-      title: "Informations personnelles",
-      description: "Modifications enregistrées !",
-    });
+    const resultStatus: number = await authenticatedPut(token, '/v1/parameters/info', userParamInfo);
+    showToast(resultStatus);
+  }
+
+  const handleChangeLoc = (e: ChangeEvent<HTMLInputElement>): void => {
+    const { name, value } = e.target;
+    if (name in userParamLoc)
+      setUserParamLoc({
+        ...userParamLoc,
+        [name]: value
+      });
+  }
+
+  const handleUpdateLoc = async (e: MouseEvent<HTMLButtonElement>): Promise<void> => {
+    e.preventDefault();
+    const token = await getAccessTokenSilently();
+    const resultStatus: number = await authenticatedPut(token, '/v1/parameters/info', userParamInfo);
+    showToast(resultStatus);
   }
 
   const handleChangeTel = (e: ChangeEvent<HTMLInputElement>): void => {
@@ -174,11 +204,8 @@ export default function Settings() {
   const handleUpdateTel = async (e: MouseEvent<HTMLButtonElement>): Promise<void> => {
     e.preventDefault();
     const token = await getAccessTokenSilently();
-    await authenticatedPut(token, '/v1/parameters/tel', userParamTel);
-    toast({
-      title: "Numéro de téléphone",
-      description: "Modifications enregistrées !",
-    });
+    const resultStatus: number = await authenticatedPut(token, '/v1/parameters/tel', userParamTel);
+    showToast(resultStatus);
   }
 
   return (
@@ -270,7 +297,7 @@ export default function Settings() {
                 <form className="flex gap-5">
                   <Input name="nom" onChange={handleChangeInfo} placeholder="Nom" defaultValue={userParamInfo?.nom} />
                   <Input name="prenom" onChange={handleChangeInfo} placeholder="Prénom" defaultValue={userParamInfo?.prenom} />
-                  <Input type="date" name="date_naissance" defaultValue={userParamInfo?.date_naissance?.split('T')[0]} className="block" />
+                  <Input name="date_naissance" type="date" onChange={handleChangeInfo} defaultValue={userParamInfo?.date_naissance?.split('T')[0]} className="block" />
                 </form>
               </CardContent>
               <CardFooter className="border-t px-6 py-4">
@@ -315,7 +342,7 @@ export default function Settings() {
                 </form>
               </CardContent>
               <CardFooter className="border-t px-6 py-4">
-                <Button>Enregistrer</Button>
+                <Button onClick={handleUpdateInfo}>Enregistrer</Button>
               </CardFooter>
             </Card>
             {/* <Card

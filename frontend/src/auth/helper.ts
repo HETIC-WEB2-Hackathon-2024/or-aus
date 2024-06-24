@@ -43,14 +43,15 @@ export async function authenticatedDelete(token: string, path: string) {
     return [data, response.status];
 }
 
-export async function authenticatedPut<T>(token: string, path: string, body: T) {
+export async function authenticatedPut<T>(token: string, path: string, body: T): Promise<number> {
     const url = await makeUrl(path);
     const headers = makeHeaders(token);
-    await fetch(url, {
+    const result = await fetch(url, {
         method: "PUT",
         headers,
         body: JSON.stringify(body),
     });
+    return result.status;
     // const data = await response.json();
     // return data;
 }
