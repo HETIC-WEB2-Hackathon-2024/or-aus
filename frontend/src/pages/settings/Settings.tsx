@@ -123,10 +123,6 @@ export default function Settings() {
     }
   }, [userInformations]);
 
-  useEffect(() => {
-    console.log(userParamInfo)
-  }, [userParamInfo])
-
   const toggleDarkMode = () => {
     if (isDarkMode) {
       document.documentElement.classList.remove("dark");
