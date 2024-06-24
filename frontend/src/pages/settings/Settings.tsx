@@ -69,6 +69,7 @@ export default function Settings() {
   const [userParamTel, setUserParamTel] = useState<TParamTel>({
     tel: ""
   });
+  const [needLocSearchReq, setNeedLocSearchReq] = useState<boolean>(false);
 
   useEffect(() => {
     const getUserInformations = async () => {
@@ -116,11 +117,15 @@ export default function Settings() {
       date_naissance: userInformations?.date_naissance,
     });
 
-    if (userInformations?.telephone) {
-      setUserParamTel({
-        tel: userInformations?.telephone
-      });
-    }
+    setUserParamLoc({
+      ...userParamLoc,
+      nom_departement: userInformations?.nom_departement,
+      nom_commune: userInformations?.nom_commune,
+    });
+
+    setUserParamTel({
+      tel: userInformations?.telephone
+    });
   }, [userInformations]);
 
   const toggleDarkMode = () => {
@@ -174,13 +179,22 @@ export default function Settings() {
     showToast(resultStatus);
   }
 
-  const handleChangeLoc = (e: ChangeEvent<HTMLInputElement>): void => {
+  const handleChangeCommune = (e: ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
-    if (name in userParamLoc)
+    if (name in userParamLoc) {
       setUserParamLoc({
         ...userParamLoc,
         [name]: value
       });
+      setNeedLocSearchReq(true);
+    }
+  }
+
+  const handleChangeDepartement = (value: string): void => {
+    setUserParamLoc({
+      ...userParamLoc,
+      "nom_departement": value
+    });
   }
 
   const handleUpdateLoc = async (e: MouseEvent<HTMLButtonElement>): Promise<void> => {
@@ -189,6 +203,28 @@ export default function Settings() {
     const resultStatus: number = await authenticatedPut(token, '/v1/parameters/info', userParamInfo);
     showToast(resultStatus);
   }
+
+  useEffect(() => {
+    let frame: number;
+    let timeBeforeReq = 0;
+    const startTime = Date.now();
+
+    const tick = (): void => {
+      timeBeforeReq = Date.now() - startTime;
+      if (needLocSearchReq === true && timeBeforeReq >= 1000) {
+        console.log("req", userParamLoc);
+        setNeedLocSearchReq(false);
+      }
+
+      frame = requestAnimationFrame(tick);
+    }
+
+    tick();
+
+    return () => {
+      cancelAnimationFrame(frame);
+    }
+  }, [userParamLoc, needLocSearchReq]);
 
   const handleChangeTel = (e: ChangeEvent<HTMLInputElement>): void => {
     const { value } = e.target;
@@ -317,7 +353,7 @@ export default function Settings() {
               <CardContent>
                 <form className="flex gap-5">
                   <Input placeholder="🇫🇷 France" disabled />
-                  <Select>
+                  <Select onValueChange={handleChangeDepartement} name="nom_departement">
                     <SelectTrigger>
                       <SelectValue placeholder={userInformations?.nom_departement} />
                     </SelectTrigger>
@@ -334,7 +370,7 @@ export default function Settings() {
                     </SelectContent>
                   </Select>
                   {/* TODO FORM INPUT SEARCH THROTTLE */}
-                  <Input placeholder="Ville" defaultValue={userInformations?.nom_commune} />
+                  <Input name='nom_commune' onChange={handleChangeCommune} placeholder="Ville" defaultValue={userInformations?.nom_commune} />
                 </form>
               </CardContent>
               <CardFooter className="border-t px-6 py-4">
