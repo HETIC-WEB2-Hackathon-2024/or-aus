@@ -309,7 +309,6 @@ export class PostgresRepository
     async getParametreLoc(): Promise<TDepAndCo> {
         const client = await this._pool.connect();
         try {
-            console.log('ici')
             const results1 = await client.query<{ nom_departement: string }>("SELECT DISTINCT nom_departement FROM commune ORDER BY nom_departement ASC;", []);
             const results2 = await client.query<{ nom_commune: string }>("SELECT DISTINCT nom_commune FROM commune ORDER BY nom_commune ASC;", []);
             const results = {

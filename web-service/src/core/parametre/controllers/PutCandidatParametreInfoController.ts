@@ -12,8 +12,9 @@ export class PutCandidatParametreInfoController implements IController {
         try {
             const candidat_id = req.user?.id;
             if (!candidat_id) throw new Error("Token problem, unable to obtain user ID");
-            if (!req.body.nom || !req.body.prenom || !req.body.date_naissance) throw new Error("You must fill in the necessary information.");
-            console.log(req.body.nom, req.body.prenom, req.body.date_naissance)
+            if (!req.body.nom || !req.body.prenom || !req.body.date_naissance) {
+                throw new Error("You must fill in the necessary information.");
+            };
             await this._useCase.execute({ id: candidat_id, nom: req.body.nom, prenom: req.body.prenom, date_naissance: req.body.date_naissance });
 
             res.status(201).json();

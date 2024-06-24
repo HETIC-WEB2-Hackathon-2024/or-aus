@@ -48,18 +48,15 @@ export class FilterHelper {
                         query += ` contrat IN (`
                         const types = filters.type_contrat?.split(',')
                         types?.forEach((type, index) => {
-                            console.log(types.length)
-                            console.log(index)
                             if (index === types.length - 1) {
-                                query +=`$${optionNumber}`;
+                                query += `$${optionNumber}`;
                             } else {
-                                query +=`$${optionNumber}, `;
+                                query += `$${optionNumber}, `;
                             }
                             options.push(type);
                             optionNumber++;
                         })
                         query += ")"
-                        console.log(query)
                         break;
                     case "commune_id":
                         if (optionNumber > 3) query += ` AND`;
