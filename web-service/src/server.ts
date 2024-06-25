@@ -25,6 +25,7 @@ import { GetContractTypesUseCase } from "./core/offre/ports/GetContractTypesUseC
 import { GetOffersUseCase } from "./core/offre/ports/GetOffersUseCase";
 import { GetCandidatParametreController } from "./core/parametre/controllers/GetCandidatParametreController";
 import { GetParametreLocController } from "./core/parametre/controllers/GetParametreLocController";
+import { GetParametreSuggestedCommuneController } from "./core/parametre/controllers/GetParametreSuggestedCommuneController";
 import { PutCandidatParametreEmailController } from "./core/parametre/controllers/PutCandidatParametreEmailController";
 import { PutCandidatParametreInfoController } from "./core/parametre/controllers/PutCandidatParametreInfoController";
 import { PutCandidatParametreLocController } from "./core/parametre/controllers/PutCandidatParametreLocController";
@@ -32,6 +33,7 @@ import { PutCandidatParametrePasswordController } from "./core/parametre/control
 import { PutCandidatParametreTelController } from "./core/parametre/controllers/PutCandidatParametreTelController";
 import { GetCandidatParametreUseCase } from "./core/parametre/ports/GetCandidatParametreUseCase";
 import { GetParametreLocUseCase } from "./core/parametre/ports/GetParametreLocUseCase";
+import { GetParametreSuggestedCommuneUseCase } from "./core/parametre/ports/GetParametreSuggestedCommuneUseCase";
 import { PutCandidatParametreEmailUseCase } from "./core/parametre/ports/PutCandidatParametreEmailUseCase";
 import { PutCandidatParametreInfoUseCase } from "./core/parametre/ports/PutCandidatParametreInfoUseCase";
 import { PutCandidatParametreLocUseCase } from "./core/parametre/ports/PutCandidatParametreLocUseCase";
@@ -92,6 +94,8 @@ export async function main(): Promise<void> {
     const getCandidatParametreController = new GetCandidatParametreController(getCandidatParametreUseCase);
     const getParametreLocUseCase = new GetParametreLocUseCase(postgreRepository);
     const getParametreLocController = new GetParametreLocController(getParametreLocUseCase);
+    const getParametreSuggestedCommuneUseCase = new GetParametreSuggestedCommuneUseCase(postgreRepository);
+    const getParametreSuggestedCommuneController = new GetParametreSuggestedCommuneController(getParametreSuggestedCommuneUseCase);
     const putCandidatParametreInfoUseCase = new PutCandidatParametreInfoUseCase(postgreRepository);
     const putCandidatParametreInfoController = new PutCandidatParametreInfoController(putCandidatParametreInfoUseCase);
     const putCandidatParametreLocUseCase = new PutCandidatParametreLocUseCase(postgreRepository);
@@ -127,6 +131,7 @@ export async function main(): Promise<void> {
     // Parameter routes
     const parametersRouter = Router();
     parametersRouter.route("/v1/parameters/loc").get(getParametreLocController.handle);
+    parametersRouter.route("/v1/parameters/suggestedCommunes").post(getParametreSuggestedCommuneController.handle);
     parametersRouter.route("/v1/parameters").get(getCandidatInfoMiddleware.handle, getCandidatParametreController.handle);
     parametersRouter.route("/v1/parameters/info").put(getCandidatInfoMiddleware.handle, putCandidatParametreInfoController.handle);
     parametersRouter.route("/v1/parameters/loc").put(getCandidatInfoMiddleware.handle, putCandidatParametreLocController.handle);

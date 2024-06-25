@@ -1,4 +1,4 @@
-import { authenticatedGet, authenticatedPut } from "@/auth/helper";
+import { authenticatedGet, authenticatedPost, authenticatedPut } from "@/auth/helper";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -209,10 +209,12 @@ export default function Settings() {
     let timeBeforeReq = 0;
     const startTime = Date.now();
 
-    const tick = (): void => {
+    const tick = async (): Promise<void> => {
       timeBeforeReq = Date.now() - startTime;
       if (needLocSearchReq === true && timeBeforeReq >= 1000) {
-        console.log("req", userParamLoc);
+        const token = await getAccessTokenSilently();
+        const results: string[] = await authenticatedPost(token, '/v1/parameters/suggestedCommunes', userParamLoc);
+        console.log(results[0])
         setNeedLocSearchReq(false);
       }
 

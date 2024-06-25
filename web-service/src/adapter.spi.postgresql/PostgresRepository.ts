@@ -330,6 +330,17 @@ export class PostgresRepository
         }
     }
 
+    async getParametreSuggestedCommune(nd: string, nc: string): Promise<string[]> {
+        const client = await this._pool.connect();
+        try {
+            const ncWithWildcard = `${nc}%`;
+            const results = await client.query("SELECT DISTINCT nom_commune FROM commune WHERE nom_departement = $1 AND nom_commune LIKE $2", [nd, ncWithWildcard]);
+            return results.rows;
+        } finally {
+            client.release();
+        }
+    }
+
     async getCandidatParametre(input: TCandidatId): Promise<CandidatParametre> {
         const client = await this._pool.connect();
         try {

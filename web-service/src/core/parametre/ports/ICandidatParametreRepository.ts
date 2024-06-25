@@ -32,6 +32,7 @@ export type TDepAndCo = {
 export interface ICandidatParametreRepository {
     getCandidatParametre(input: TCandidatId): Promise<CandidatParametre>;
     getParametreLoc(): Promise<TDepAndCo>;
+    getParametreSuggestedCommune(nd: string, nc: string): Promise<string[]>;
     putCandidatParametreInfo(input: TParamInfo): Promise<void>;
     putCandidatParametreLoc(input: TParamLoc): Promise<void>;
     putCandidatParametrePassword(input: TParamPassword): Promise<void>;
