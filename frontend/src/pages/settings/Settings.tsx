@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import { useAuth0 } from "@auth0/auth0-react";
-import { ChangeEvent, Fragment, MouseEvent, SetStateAction, useEffect, useState } from "react";
+import { ChangeEvent, Fragment, MouseEvent, SetStateAction, useEffect, useRef, useState } from "react";
 
 export type CandidatParameters = {
   id: number,
@@ -26,9 +26,8 @@ export type CandidatParameters = {
   telephone: string,
 }
 
-type TDepAndCo = {
+type TDepartement = {
   noms_departement: string[],
-  noms_commune: string[],
 }
 
 type TParamInfo = {
@@ -53,9 +52,8 @@ export default function Settings() {
   const { getAccessTokenSilently } = useAuth0();
   const { toast } = useToast();
   const [userInformations, setUserInformations] = useState<CandidatParameters | null>(null);
-  const [localisation, setLocalisation] = useState<TDepAndCo>({
+  const [localisation, setLocalisation] = useState<TDepartement>({
     noms_departement: [],
-    noms_commune: [],
   });
   const [userParamInfo, setUserParamInfo] = useState<TParamInfo>({
     nom: "",
@@ -70,6 +68,8 @@ export default function Settings() {
     tel: ""
   });
   const [needLocSearchReq, setNeedLocSearchReq] = useState<boolean>(false);
+  const [suggestedCommunes, setSuggestedCommunes] = useState<string[]>([]);
+  const communeRef = useRef(null);
 
   useEffect(() => {
     const getUserInformations = async () => {
@@ -93,7 +93,7 @@ export default function Settings() {
     const getLocInformations = async () => {
       try {
         const token = await getAccessTokenSilently();
-        const data: TDepAndCo = await authenticatedGet(token, '/v1/parameters/loc');
+        const data: TDepartement = await authenticatedGet(token, '/v1/parameters/loc');
         setLocalisation(data);
       } catch (err) {
         console.log(err);
@@ -187,6 +187,7 @@ export default function Settings() {
         [name]: value
       });
       setNeedLocSearchReq(true);
+      setSuggestedCommunes([]);
     }
   }
 
@@ -213,8 +214,9 @@ export default function Settings() {
       timeBeforeReq = Date.now() - startTime;
       if (needLocSearchReq === true && timeBeforeReq >= 1000) {
         const token = await getAccessTokenSilently();
-        const results: string[] = await authenticatedPost(token, '/v1/parameters/suggestedCommunes', userParamLoc);
-        console.log(results[0])
+        const results = await authenticatedPost(token, '/v1/parameters/suggestedCommunes', userParamLoc);
+        const communes: string[] = results[0];
+        setSuggestedCommunes(communes);
         setNeedLocSearchReq(false);
       }
 
@@ -372,7 +374,21 @@ export default function Settings() {
                     </SelectContent>
                   </Select>
                   {/* TODO FORM INPUT SEARCH THROTTLE */}
-                  <Input name='nom_commune' onChange={handleChangeCommune} placeholder="Ville" defaultValue={userInformations?.nom_commune} />
+                  <div className="flex h-10 w-full relative">
+                    <Input ref={communeRef} className="w-full" name='nom_commune' onChange={handleChangeCommune} placeholder="Ville" defaultValue={userInformations?.nom_commune} />
+                    {suggestedCommunes.length > 0 && <div className="suggestedCommunes">
+                      {suggestedCommunes.map((value, index) => <button type="button" key={index} className="suggested" onClick={() => {
+                        setUserParamLoc({
+                          ...userParamLoc,
+                          'nom_commune': value
+                        });
+                        (communeRef.current! as HTMLInputElement).value = value;
+                        setSuggestedCommunes([]);
+                      }}>
+                        {value}
+                      </button>)}
+                    </div>}
+                  </div>
                 </form>
               </CardContent>
               <CardFooter className="border-t px-6 py-4">
@@ -458,7 +474,7 @@ export default function Settings() {
             </Card>
           </div>
         </div>
-      </main>
-    </div>
+      </main >
+    </div >
   );
 }

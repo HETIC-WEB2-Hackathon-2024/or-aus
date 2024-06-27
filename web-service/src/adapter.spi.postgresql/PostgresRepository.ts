@@ -18,7 +18,7 @@ import { IOfferRepository } from "../core/offre/ports/IOfferRepository";
 import { FilterHelper } from "../core/offre/shared/Filter-helper";
 import { TContract } from "../core/offre/shared/TContract";
 import { CandidatParametre } from "../core/parametre/domains/CandidatParametre";
-import { TDepAndCo, TParamEmail, TParamInfo, TParamLoc, TParamPassword, TParamTel } from "../core/parametre/ports/ICandidatParametreRepository";
+import { TDepartement, TParamEmail, TParamInfo, TParamLoc, TParamPassword, TParamTel } from "../core/parametre/ports/ICandidatParametreRepository";
 import { Secteur } from "../core/secteur/domain/Secteur";
 import { ISecteurRepository } from "../core/secteur/ports/ISecteurRepository";
 
@@ -306,22 +306,16 @@ export class PostgresRepository
         }
     }
 
-    async getParametreLoc(): Promise<TDepAndCo> {
+    async getParametreLoc(): Promise<TDepartement> {
         const client = await this._pool.connect();
         try {
             const results1 = await client.query<{ nom_departement: string }>("SELECT DISTINCT nom_departement FROM commune ORDER BY nom_departement ASC;", []);
-            const results2 = await client.query<{ nom_commune: string }>("SELECT DISTINCT nom_commune FROM commune ORDER BY nom_commune ASC;", []);
             const results = {
                 noms_departement: [],
-                noms_commune: [],
             }
 
             for (const result of results1.rows) {
                 results.noms_departement.push(result.nom_departement as never);
-            }
-
-            for (const result of results2.rows) {
-                results.noms_commune.push(result.nom_commune as never);
             }
 
             return results;
@@ -334,8 +328,14 @@ export class PostgresRepository
         const client = await this._pool.connect();
         try {
             const ncWithWildcard = `${nc}%`;
-            const results = await client.query("SELECT DISTINCT nom_commune FROM commune WHERE nom_departement = $1 AND nom_commune LIKE $2", [nd, ncWithWildcard]);
-            return results.rows;
+            const results = await client.query("SELECT DISTINCT nom_commune FROM commune WHERE nom_departement = $1 AND nom_commune LIKE $2 ORDER BY nom_commune ASC LIMIT 10", [nd, ncWithWildcard]);
+
+            const communes: string[] = [];
+            for (const c of results.rows) {
+                communes.push(c.nom_commune);
+            }
+
+            return communes;
         } finally {
             client.release();
         }
@@ -372,7 +372,7 @@ export class PostgresRepository
     async putCandidatParametrePassword(input: TParamPassword): Promise<void> {
         const client = await this._pool.connect();
         try {
-            throw Error('TODO')
+            throw Error('TODO');
         } finally {
             client.release();
         }
@@ -381,6 +381,7 @@ export class PostgresRepository
     async putCandidatParametreEmail(input: TParamEmail): Promise<void> {
         const client = await this._pool.connect();
         try {
+            throw Error('TODO');
             // const results = await client.query<CandidatParametre>("UPDATE candidat SET email = $1 WHERE id=$2", [email, input.id]);
         } finally {
             client.release();

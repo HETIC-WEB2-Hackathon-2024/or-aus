@@ -54,6 +54,7 @@
     @apply border-border;
     font-family: "Inter", sans-serif;
   }
+
   body {
     @apply bg-background text-foreground;
     font-family: "Inter", sans-serif;
@@ -71,4 +72,32 @@
 canvas {
   height: 100% !important;
   width: 100% !important;
+}
+
+.suggestedCommunes {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  padding: 0.5dvh;
+  gap: 5px;
+  min-width: 100%;
+  border: 1px solid #88888855;
+  font-size: 14px;
+  z-index: 1;
+}
+
+.suggestedCommunes button {
+  width: 100%;
+  text-align: left;
+  padding: 0.5dvh 1dvh;
+}
+
+.suggestedCommunes button:hover {
+  background-color: #CCCCCC55;
 }

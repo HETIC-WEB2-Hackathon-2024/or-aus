@@ -24,14 +24,13 @@ export type TParamTel = TCandidatId & {
     tel: string,
 }
 
-export type TDepAndCo = {
+export type TDepartement = {
     noms_departement: string[],
-    noms_commune: string[],
 }
 
 export interface ICandidatParametreRepository {
     getCandidatParametre(input: TCandidatId): Promise<CandidatParametre>;
-    getParametreLoc(): Promise<TDepAndCo>;
+    getParametreLoc(): Promise<TDepartement>;
     getParametreSuggestedCommune(nd: string, nc: string): Promise<string[]>;
     putCandidatParametreInfo(input: TParamInfo): Promise<void>;
     putCandidatParametreLoc(input: TParamLoc): Promise<void>;
