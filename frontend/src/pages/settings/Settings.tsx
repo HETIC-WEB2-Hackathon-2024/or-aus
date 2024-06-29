@@ -148,15 +148,15 @@ export default function Settings() {
     }, 1000);
   };
 
-  const showToast = (status: number): void => {
+  const showToast = (status: number, title: string): void => {
     if (status === 201) {
       toast({
-        title: "Informations personnelles",
+        title: `Succès : ${title}`,
         description: "Modifications enregistrées !",
       });
     } else if (status === 400) {
       toast({
-        title: "Informations personnelles",
+        title: `Erreur : ${title}`,
         description: "Problème avec les informations saisies...",
       });
     }
@@ -176,7 +176,7 @@ export default function Settings() {
     e.preventDefault();
     const token = await getAccessTokenSilently();
     const resultStatus: number = await authenticatedPut(token, '/v1/parameters/info', userParamInfo);
-    showToast(resultStatus);
+    showToast(resultStatus, "Informations personnelles");
   }
 
   const handleChangeCommune = (e: ChangeEvent<HTMLInputElement>): void => {
@@ -201,21 +201,23 @@ export default function Settings() {
   const handleUpdateLoc = async (e: MouseEvent<HTMLButtonElement>): Promise<void> => {
     e.preventDefault();
     const token = await getAccessTokenSilently();
-    const resultStatus: number = await authenticatedPut(token, '/v1/parameters/info', userParamInfo);
-    showToast(resultStatus);
+    const resultStatus: number = await authenticatedPut(token, '/v1/parameters/Loc', userParamLoc);
+    showToast(resultStatus, "Localisation");
   }
 
   useEffect(() => {
     let frame: number;
     let timeBeforeReq = 0;
     const startTime = Date.now();
+    let needReq: boolean = true;
 
     const tick = async (): Promise<void> => {
       timeBeforeReq = Date.now() - startTime;
-      if (needLocSearchReq === true && timeBeforeReq >= 1000) {
+      if (needLocSearchReq && needReq && timeBeforeReq >= 300) {
         const token = await getAccessTokenSilently();
         const results = await authenticatedPost(token, '/v1/parameters/suggestedCommunes', userParamLoc);
         const communes: string[] = results[0];
+        needReq = false;
         setSuggestedCommunes(communes);
         setNeedLocSearchReq(false);
       }
@@ -240,8 +242,8 @@ export default function Settings() {
   const handleUpdateTel = async (e: MouseEvent<HTMLButtonElement>): Promise<void> => {
     e.preventDefault();
     const token = await getAccessTokenSilently();
-    const resultStatus: number = await authenticatedPut(token, '/v1/parameters/tel', userParamTel);
-    showToast(resultStatus);
+    const resultStatus: number = await authenticatedPut(token, '/v1/parameters/tel', userParamLoc);
+    showToast(resultStatus, "Numéro de téléphone");
   }
 
   return (
@@ -373,7 +375,6 @@ export default function Settings() {
                       </SelectGroup>
                     </SelectContent>
                   </Select>
-                  {/* TODO FORM INPUT SEARCH THROTTLE */}
                   <div className="flex h-10 w-full relative">
                     <Input ref={communeRef} className="w-full" name='nom_commune' onChange={handleChangeCommune} placeholder="Ville" defaultValue={userInformations?.nom_commune} />
                     {suggestedCommunes.length > 0 && <div className="suggestedCommunes">
@@ -392,7 +393,7 @@ export default function Settings() {
                 </form>
               </CardContent>
               <CardFooter className="border-t px-6 py-4">
-                <Button onClick={handleUpdateInfo}>Enregistrer</Button>
+                <Button onClick={handleUpdateLoc}>Enregistrer</Button>
               </CardFooter>
             </Card>
             {/* <Card

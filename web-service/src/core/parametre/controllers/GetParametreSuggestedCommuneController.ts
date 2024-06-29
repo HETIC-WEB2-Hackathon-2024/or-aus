@@ -12,6 +12,7 @@ export class GetParametreSuggestedCommuneController implements IController {
         try {
             if (!req.body.nom_departement || !req.body.nom_commune) throw Error('Need more information');
             const results = await this._useCase.execute({ nd: req.body.nom_departement, nc: req.body.nom_commune });
+            console.log(results)
             res.send(results);
         } catch (e) {
             if (e instanceof Error) res.status(400).send({ error: e.message, reason: e });

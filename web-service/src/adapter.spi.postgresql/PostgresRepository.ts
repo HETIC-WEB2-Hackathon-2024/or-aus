@@ -328,7 +328,7 @@ export class PostgresRepository
         const client = await this._pool.connect();
         try {
             const ncWithWildcard = `${nc}%`;
-            const results = await client.query("SELECT DISTINCT nom_commune FROM commune WHERE nom_departement = $1 AND nom_commune LIKE $2 ORDER BY nom_commune ASC LIMIT 10", [nd, ncWithWildcard]);
+            const results = await client.query("SELECT DISTINCT nom_commune FROM commune WHERE nom_departement = $1 AND LOWER(nom_commune) LIKE LOWER($2) ORDER BY nom_commune ASC LIMIT 10", [nd, ncWithWildcard]);
 
             const communes: string[] = [];
             for (const c of results.rows) {
@@ -363,7 +363,10 @@ export class PostgresRepository
     async putCandidatParametreLoc(input: TParamLoc): Promise<void> {
         const client = await this._pool.connect();
         try {
-            // const results = await client.query<CandidatParametre>("UPDATE candidat_communes SET commune_id = (SELECT id FROM commune WHERE nom_departement = $1 AND nom_commune = $2) WHERE id=$3", [nom_departement, nom_commune, input.id]);
+            console.log(input)
+            const commune_id = await client.query<CandidatParametre>("SELECT id FROM commune WHERE nom_departement = $1 AND nom_commune = $2", [input.nom_departement, input.nom_commune]);
+            if (!commune_id.rows[0].id) throw Error("Commune id not found");
+            await client.query<CandidatParametre>("UPDATE candidat_communes SET commune_id = $1 WHERE candidat_id = $2", [commune_id.rows[0].id, input.id]);
         } finally {
             client.release();
         }
